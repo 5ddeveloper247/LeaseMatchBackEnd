@@ -1,0 +1,44 @@
+@charset 'UTF-8';
+
+/* Slider */
+.slick-slider {position: relative;display: block;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;-webkit-touch-callout: none;-khtml-user-select: none;-ms-touch-action: pan-y;touch-action: pan-y;-webkit-tap-highlight-color: transparent;}
+.slick-carousel:not(.slick-initialized) {display: none;}
+.slick-list {position: relative;display: block;overflow: hidden;margin: 0;padding: 0;}
+.slick-list:focus {outline: none;}
+.slick-list.dragging {cursor: pointer;cursor: hand;}
+.slick-slider .slick-track,
+.slick-slider .slick-list {-webkit-transform: translate3d(0, 0, 0);-ms-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0);}
+.slick-track {position: relative;top: 0;left: 0;display: block;margin-left: auto;margin-right: auto;}
+.slick-track:before,
+.slick-track:after {display: table;content: "";}
+.slick-track:after {clear: both;}
+.slick-loading .slick-track {visibility: hidden;}
+.slick-slide {float: left;height: 100%;min-height: 0.1rem;}
+[dir="rtl"] .slick-slide {float: right;}
+.slick-slide img {display: block;}
+.slick-slide.slick-loading img {display: none;}
+.slick-slide.dragging img {pointer-events: none;}
+.slick-loading .slick-slide {visibility: hidden;}
+.slick-vertical .slick-slide {display: block;height: auto;}
+.slick-arrow.slick-hidden {display: none;}
+
+/* Arrows */
+.slick-arrow {font-size: 0;line-height: 0;position: absolute;top: 50%;display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;-webkit-box-pack: center;-ms-flex-pack: center;justify-content: center;width: 4rem;height: 4rem;padding: 0;-webkit-transform: translate(0, -50%);-ms-transform: translate(0, -50%);transform: translate(0, -50%);cursor: pointer;color: transparent;border: none;outline: none;background: #000;border-radius: 75%;z-index: 2;}
+.slick-arrow.slick-disabled {opacity: 0.25;}
+.slick-arrow:hover {opacity: 1;}
+.slick-prev {left: -4rem;}
+[dir="rtl"] .slick-prev {right: -4rem;left: auto;}
+.slick-next {right: -4rem;}
+[dir="rtl"] .slick-next {right: auto;left: -4rem;}
+.slick-arrow:before {content: "";display: block;width: 1.4rem;height: 1.4rem;background-position: center;background-repeat: no-repeat;background-size: contain;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+.slick-prev:before,
+[dir="rtl"] .slick-next:before {background-image: url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="rem" y="rem" width="2rem" height="2rem" viewBox="-481.4169922 271.0341797 20 20" style="enable-background:new -481.4169922 271.0341797 20 20;" fill="%232e4eba"><path d="M-467.5097046,271.2515869c0.5028076,0,1.0072327,0.1921692,1.3915405,0.5764771 c0.7686462,0.7686462,0.7686462,2.0144958,0,2.7831421l-6.4229736,6.4229736l6.4229736,6.4229736 c0.7686462,0.7686462,0.7686462,2.0144958,0,2.7831421s-2.0144653,0.7686462-2.7831116,0l-7.8145752-7.8145447 c-0.7686157-0.7686462-0.7686157-2.0144958,0-2.7831421l7.8145752-7.8145447 C-468.5169678,271.4437561-468.0125427,271.2515869-467.5097046,271.2515869z"/></svg>');margin-left: -0.2rem;}
+.slick-next:before,
+[dir="rtl"] .slick-prev:before {background-image: url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="rem" y="rem" width="2rem" height="2rem" viewBox="-481.4169922 271.0341797 20 20" style="enable-background:new -481.4169922 271.0341797 20 20;" fill="%232e4eba"><path d="M-475.3242798,290.8167725c-0.5028076,0-1.0072327-0.1921387-1.3915405-0.5764771 c-0.7686462-0.7686462-0.7686462-2.0144958,0-2.7831421l6.4229736-6.4229736l-6.4229736-6.4229736 c-0.7686462-0.7686462-0.7686462-2.0144958,0-2.7831421c0.7686157-0.7686462,2.0144653-0.7686462,2.7831116,0l7.8145447,7.8145447 c0.7686462,0.7686462,0.7686462,2.0144958,0,2.7831421l-7.8145447,7.8145447 C-474.3170166,290.6246338-474.8214417,290.8167725-475.3242798,290.8167725z"/></svg>');margin-right: -0.2rem;}
+
+/* Dots */
+.slick-dots {left: 0;right: 0;bottom: 2rem;display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;-webkit-box-pack: center;-ms-flex-pack: center;justify-content: center;gap: 0 0.5rem;padding: 0;margin: 2rem 0 0;list-style: none;text-align: center;}
+.slick-dots li {position: relative;cursor: pointer;}
+.slick-dots li button {font-size: 0;line-height: 0;display: block;width: 2.4rem;height: 0.3rem;padding: 0;cursor: pointer;color: transparent;border: 0;outline: none;background: #fff;}
+
+.slick-dots li:not(.slick-active) button:not(:hover) {opacity: 0.5;}
