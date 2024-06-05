@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('phone_number', 20);
             $table->string('company_name', 255)->nullable();
+            $table->smallInteger('status')->comment('0=>InActive, 1=>Active')->nullable();
             $table->timestamps();
         });
     }

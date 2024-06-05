@@ -21,6 +21,7 @@
     <link type="image/png" rel="icon" href="{{ asset('assets/images/favicon.png') }}">
 
 </head>
+
 <script>
     var base_url = "{{url('/')}}";
 </script>

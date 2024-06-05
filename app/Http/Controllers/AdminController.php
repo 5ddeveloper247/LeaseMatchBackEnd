@@ -15,6 +15,13 @@ use App\Models\Pricing_plan;
 use App\Models\Menu;
 use App\Models\MenuControl;
 
+use App\Models\Api\LandlordPersonal;
+use App\Models\Api\LandlordProperty;
+use App\Models\Api\LandlordRental;
+use App\Models\Api\LandlordTenant;
+use App\Models\Api\LandlordAdditional;
+use App\Models\Api\LandlordPropertyImages;
+
 class AdminController extends Controller
 {
     /**
@@ -23,7 +30,6 @@ class AdminController extends Controller
      * @return void
      */
     
-
     // Use dependency injection to bring in the PaymentEncode class
     public function __construct()
     {
@@ -61,7 +67,6 @@ class AdminController extends Controller
                 $request->session()->flash('error', 'The user is not active, please contact admin.');
                 return redirect('admin/login');
             }
-            
         }
 
         $request->session()->flash('error', 'The provided credentials do not match our records.');
@@ -70,9 +75,7 @@ class AdminController extends Controller
 
     public function logout(Request $request)
     {
-
         $request->session()->forget('user');
-
         return redirect('admin');
     }
 
@@ -102,14 +105,8 @@ class AdminController extends Controller
         return view('admin/landlord')->with($data);
     }
 
-
-
-    
-
-
-
-
-    public function editSpecificPlan(Request $request){
+    public function editSpecificPlan(Request $request)
+    {
 
         $plan_id = $request->plan_id;
         
@@ -163,9 +160,6 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => "Plan updated successfully!"]);
     }
 
-
-
-
     public function get_admin_users_list()
     {
         $data['admin_list'] = User::where('type','2')->get();
@@ -174,7 +168,9 @@ class AdminController extends Controller
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
-    public function add_user(Request $request){
+
+    public function add_user(Request $request)
+    {
         $validatedData = $request->validate([
             'first_name' => 'required|max:50',
             'middle_name' => 'max:50',
@@ -217,19 +213,24 @@ class AdminController extends Controller
             sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
             return response()->json(['status' => 200, 'message' => "Admin user created successfully"]);
     }
-    public function delete_user(Request $request){
-            $user_id = $request->del_id;
-            $user = User::where('id',$user_id)->where('type','2')->first();
 
-            if(!$user){
-                return response()->json(['status' => 402, 'message' => "User Not found"]);
-            }
-            else{
-                $user->delete();
-                return response()->json(['status' => 200, 'message' => "User Deleted Successfully"]);
-            }
-            }
-    public function change_status(Request $request){
+    public function delete_user(Request $request)
+    {
+
+        $user_id = $request->del_id;
+        $user = User::where('id',$user_id)->where('type','2')->first();
+
+        if(!$user){
+            return response()->json(['status' => 402, 'message' => "User Not found"]);
+        }
+        else{
+            $user->delete();
+            return response()->json(['status' => 200, 'message' => "User Deleted Successfully"]);
+        }
+    }
+
+    public function change_status(Request $request)
+    {
         $user_id = $request->id;
         $user = User::where('id',$user_id)->first();
         if($user->status == 0){
@@ -245,7 +246,9 @@ class AdminController extends Controller
             return response()->json(['status' => 200, 'message' => "Status Updated Successfully"]);
         }
     }
-    public function get_user_data(Request $request){
+
+    public function get_user_data(Request $request)
+    {
         $user_id = $request->id;
         $user = User::where('id', $user_id)->with(['menuControls'])->first();
         if(!$user){
@@ -255,7 +258,9 @@ class AdminController extends Controller
             return response()->json(['status' => 200, 'data' => $user]);
         }
     }
-    public function update_user(Request $request){
+
+    public function update_user(Request $request)
+    {
         $validatedData = $request->validate([
             'first_name_edit' => 'required|max:50',
             'middle_name_edit' => 'max:50',
@@ -290,8 +295,14 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => "User Updated Successfully"]);
     }
 
-
-
+    public function get_landlord_data()
+    {
+        $data['landlord_list'] = LandlordPersonal::with(['propertyDetail'])->get();
+        $data['total'] = LandlordPersonal::count();
+        $data['total_inactive'] = LandlordPersonal::where('status', '0')->count();
+        $data['total_active'] = LandlordPersonal::where('status', '1')->count();
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
 
 
 

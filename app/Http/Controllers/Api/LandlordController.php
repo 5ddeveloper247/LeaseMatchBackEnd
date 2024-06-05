@@ -74,6 +74,7 @@ class LandlordController extends Controller
             $personal->email = $request->input('email');
             $personal->phone_number = $request->input('phone_number');
             $personal->company_name = $request->input('company_name');
+            $personal->status = 0; // 0 inactive , 1 active
             $personal->save();
 
             $property = new LandlordProperty();

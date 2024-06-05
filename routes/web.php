@@ -45,13 +45,9 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/landlord', [AdminController::class, 'landlord'])->name('admin.landlord');
         });
         
-        
-        
-
         /************** AJAX ROUTES ******************/
         Route::post('/editSpecificPlan', [AdminController::class, 'editSpecificPlan'])->name('admin.editSpecificPlan');
         Route::post('/savePlanDetail', [AdminController::class, 'savePlanDetail'])->name('admin.savePlanDetail');
-
 
         Route::get('/getAdminUserList', [AdminController::class, 'get_admin_users_list'])->name('admin.getAdminUserList');
         Route::post('/deleteUser', [AdminController::class, 'delete_user'])->name('admin.deleteUser');
@@ -59,6 +55,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/getuserdata', [AdminController::class, 'get_user_data'])->name('admin.getuserdata');
         Route::post('/updateUser', [AdminController::class, 'update_user'])->name('admin.updateUser');
         Route::post('/addUser', [AdminController::class, 'add_user'])->name('admin.addUser');
+        
+        Route::post('/getLandlordPageData', [AdminController::class, 'get_landlord_data'])->name('admin.getLandlordPageData');
         
         
         
