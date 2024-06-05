@@ -129,7 +129,7 @@ class RegistrationController extends Controller
             // If validation passes, handle the incoming request data and save it accordingly
             $User = new User();
             $User->type = '3';
-            $User->name = $request->input('user_name');
+            $User->first_name = $request->input('user_name');
             $User->email = $request->input('user_email');
             $User->password = bcrypt($request->input('password'));
             $User->status = '1';
