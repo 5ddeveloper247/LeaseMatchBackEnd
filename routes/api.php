@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\LandlordController;
+use App\Http\Controllers\Api\RegistrationController;
+use App\Http\Controllers\Api\PricingController;
+use App\Http\Controllers\Api\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +20,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::prefix('5d/v1')->group(function () {
+    Route::post('landlord/store', [LandlordController::class, 'storeLandlord'])->name('lanlord.storeLandlord');
+    Route::post('landlord/validate', [LandlordController::class, 'validateForm'])->name('lanlord.validateForm');
+    
+    Route::post('registration/store', [RegistrationController::class, 'storeRegistration'])->name('registration.storeRegistration');
+    Route::post('registration/validate', [RegistrationController::class, 'validateForm'])->name('registration.validateForm');
+
+    Route::get('pricing/getAllPricingList', [PricingController::class, 'getAllPricings'])->name('pricing.getAllPricingList');
+    Route::post('contact/send', [ContactController::class, 'storeContactUs'])->name('contact.send');
+
+    
 });

@@ -21,7 +21,7 @@ class UserAuth
         	$request->session()->flash('error', 'Access Denied');
     		  return redirect('login');
     	
-        }else if(session('user')->type != 'user'){
+        }else if(session('user')->type != '3'){ // 3=> user
     		
     		return redirect('logout');
     	

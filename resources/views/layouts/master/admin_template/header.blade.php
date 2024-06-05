@@ -20,7 +20,7 @@
                 <div class="drop_cnt">
                     <ul class="drop_lst">
                         <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-                        <li><a href="login.php">Logout</a></li>
+                        <li><a href="{{route('admin.logout')}}">Logout</a></li>
                     </ul>
                 </div>
             </div>

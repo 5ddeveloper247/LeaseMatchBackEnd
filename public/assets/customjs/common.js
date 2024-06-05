@@ -33,14 +33,14 @@ $(document).ready(function(){
     $(document).ajaxStop(function() {
         setTimeout(function(){
             $('#uiBlocker').hide();
-        },500);
+        },200);
     });
 
     // Alternatively, you can use ajaxComplete for specific handling
     $(document).ajaxComplete(function(event, xhr, settings) {
         setTimeout(function(){
             $('#uiBlocker').hide();
-        },500);
+        },200);
         
     });
 });

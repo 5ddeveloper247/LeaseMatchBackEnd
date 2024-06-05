@@ -12,18 +12,19 @@
     </div>
     <div class="inside">
         <ul>
-            <li class="{{$page == 'Dashboard' ? 'active' : ''}}">
-                <a href="{{route('admin.dashboard')}}">
-                    <img src="{{asset('assets/images/icon-home.svg')}}" alt="">
-                    <em>Dashboard</em>
-                </a>
-            </li>
-            <li class="{{$page == 'Subscription' ? 'active' : ''}}">
-                <a href="{{route('admin.subscription')}}">
-                    <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">
-                    <em>Subscriptions</em>
-                </a>
-            </li>
+            <?php 
+                $menu = getLeftMenu();
+            ?>
+            @if(count($menu) > 0)
+                @foreach($menu as $value)
+                    <li class="{{$page == $value->name ? 'active' : ''}}">
+                        <a href="{{route($value->route)}}">
+                            <img src="{{asset($value->image)}}" alt="">
+                            <em>{{$value->name}}</em>
+                        </a>
+                    </li>
+                @endforeach
+            @endif
             
             <li class="">
                 <a href="{{route('admin.logout')}}">

@@ -47,6 +47,7 @@ class Kernel extends HttpKernel
 
     		'AdminAuth'=>\App\Http\Middleware\AdminAuth::class,
     	],
+        
         'UserAuth' => [
 
     		'UserAuth'=>\App\Http\Middleware\UserAuth::class,
@@ -72,5 +73,10 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+
+    protected $routeMiddleware = [
+        // Other middleware
+        'check.subadmin.access' => \App\Http\Middleware\CheckSubAdminAccess::class,
     ];
 }

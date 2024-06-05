@@ -4,6 +4,7 @@
 <head>
     <title>Lease Match</title>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <!-- Css Files -->
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/slick.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
     <!-- Favicon -->
     <link type="image/png" rel="icon" href="{{ asset('assets/images/favicon.png') }}">
