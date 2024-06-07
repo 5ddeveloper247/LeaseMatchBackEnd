@@ -95,7 +95,7 @@ class LandlordController extends Controller
             $rental->number_of_bathrooms = $request->input('number_of_bathrooms');
             $rental->rental_type = $request->input('rental_type');
             $rental->monthly_rent = $request->input('monthly_rent');
-            $rental->security_deposit = $request->input('year_buisecurity_depositlt');
+            $rental->security_deposit = $request->input('security_deposit');
             $rental->lease_duration = $request->input('lease_duration');
             $rental->renwal_option = $request->input('renwal_option');
             $rental->list_of_amenities = $request->input('list_of_amenities');
@@ -136,7 +136,7 @@ class LandlordController extends Controller
                     $propertyImages = new LandlordPropertyImages();
                     $propertyImages->landlord_id = $personal->id;
                     $propertyImages->file_name = $file->getClientOriginalName();
-                    $propertyImages->path = url('/').$savedFilePaths;
+                    $propertyImages->path = $savedFilePaths;
                     $propertyImages->save();
                 }
             }

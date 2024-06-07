@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('landlord_personal', function (Blueprint $table) {
+        Schema::create('api_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name', 255);
-            $table->string('email', 255)->unique();
-            $table->string('phone_number', 20);
-            $table->string('company_name', 255)->nullable();
+            $table->string('secret_key', 100)->nullable();
+            $table->string('publishable_key', 100)->nullable();
             $table->smallInteger('status')->comment('0=>InActive, 1=>Active')->nullable();
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('landlord_personal');
+        Schema::dropIfExists('api_settings');
     }
 };

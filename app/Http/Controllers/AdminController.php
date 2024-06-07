@@ -14,13 +14,30 @@ use App\Models\User;
 use App\Models\Pricing_plan;
 use App\Models\Menu;
 use App\Models\MenuControl;
-
+use App\Models\ApiSettings;
+// landlord models
 use App\Models\Api\LandlordPersonal;
 use App\Models\Api\LandlordProperty;
 use App\Models\Api\LandlordRental;
 use App\Models\Api\LandlordTenant;
 use App\Models\Api\LandlordAdditional;
 use App\Models\Api\LandlordPropertyImages;
+// tenant user models
+use App\Models\Api\UserPersonalInfo;
+use App\Models\Api\ResidentialPreference;
+use App\Models\Api\FinancialInfo;
+use App\Models\Api\RentalAssistance;
+use App\Models\Api\LivingSituation;
+use App\Models\Api\HouseholdInfo;
+use App\Models\Api\PetInformation;
+use App\Models\Api\AccommodationRequirements;
+use App\Models\Api\AdditionalInfo;
+use App\Models\Api\LegalCompliance;
+use App\Models\Api\UserReferences;
+use App\Models\Api\AdditionalNotes;
+use App\Models\Api\UserDocuments;
+
+
 
 class AdminController extends Controller
 {
@@ -93,16 +110,29 @@ class AdminController extends Controller
         return view('admin/subscriptions')->with($data);
     }
 
-    public function adminUser()
+    public function adminUser(Request $request)
     {
         $data['page'] = 'Admin Users';
         return view('admin/admin_users')->with($data);
     }
 
-    public function landlord()
+    public function landlord(Request $request)
     {
         $data['page'] = 'Landlord';
         return view('admin/landlord')->with($data);
+    }
+
+    public function tenant(Request $request)
+    {
+        $data['page'] = 'Tenant';
+        return view('admin/tenant')->with($data);
+    }
+
+    public function apiSettings(Request $request)
+    {
+        $data['page'] = 'API Settings';
+        $data['apiSettings'] = ApiSettings::first();
+        return view('admin/api_settings')->with($data);
     }
 
     public function editSpecificPlan(Request $request)
@@ -160,7 +190,7 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => "Plan updated successfully!"]);
     }
 
-    public function get_admin_users_list()
+    public function get_admin_users_list(Request $request)
     {
         $data['admin_list'] = User::where('type','2')->get();
         $data['inactive_users'] = User::where('type','2')->where('status', 0)->count();
@@ -295,7 +325,7 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => "User Updated Successfully"]);
     }
 
-    public function get_landlord_data()
+    public function get_landlord_data(Request $request)
     {
         $data['landlord_list'] = LandlordPersonal::with(['propertyDetail'])->get();
         $data['total'] = LandlordPersonal::count();
@@ -304,6 +334,149 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'data' => $data]);
     }
 
+    public function change_status_landlord(Request $request)
+    {
+        $landlord_id = $request->id;
+        $landlord = LandlordPersonal::where('id',$landlord_id)->first();
+        
+        if($landlord->status == 0){
+            $landlord->status = 1;
+        } else {
+            $landlord->status = 0;
+        }
+        
+        $landlord->updated_by = Auth::user()->id;
+        $landlord->save();
 
+        return response()->json(['status' => 200, 'message' => "Status Updated Successfully!"]);
+    }
 
+    public function get_specific_landlord(Request $request)
+    {
+        $landlord_id = $request->id;
+        $data['details'] = LandlordPersonal::where('id', $landlord_id)
+                                        ->with(['propertyDetail','rentalDetail','tenantDetail',
+                                                'additionalDetail','propertyImages'])
+                                        ->first();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function delete_landlord(Request $request){
+        $landlord_id = $request->id;
+        $images = LandlordPropertyImages::where('landlord_id', $landlord_id)->get();
+
+        LandlordPersonal::where('id', $landlord_id)->delete();
+        LandlordProperty::where('landlord_id', $landlord_id)->delete();
+        LandlordRental::where('landlord_id', $landlord_id)->delete();
+        LandlordTenant::where('landlord_id', $landlord_id)->delete();
+        LandlordAdditional::where('landlord_id', $landlord_id)->delete();
+        LandlordPropertyImages::where('landlord_id', $landlord_id)->delete();
+        
+        if($images != null){
+            foreach($images as $image){
+                deleteImage($image->path);
+            }
+        }
+        
+        return response()->json(['status' => 200, 'message' => "Deleted Successfully!"]);
+    }
+
+    public function get_tenant_data(Request $request)
+    {
+        $data['tenant_list'] = User::where('type', 3)->with(['personalInfo'])->get();
+        $data['total'] = User::where('type', 3)->count();
+        $data['total_inactive'] = User::where('type', 3)->where('status', '0')->count();
+        $data['total_active'] = User::where('type', 3)->where('status', '1')->count();
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function change_status_tenant(Request $request)
+    {
+        $user_id = $request->id;
+        $user = User::where('id',$user_id)->where('type', 3)->first();
+        if($user){
+            if($user->status == 0){
+                $user->status = 1;
+            } else {
+                $user->status = 0;
+            }
+
+            $user->updated_by = Auth::user()->id;
+            $user->save();
+
+            return response()->json(['status' => 200, 'message' => "Status Updated Successfully!"]);
+        
+        }else{
+            return response()->json(['status' => 402, 'message' => "Something went wrong!"]);
+        }
+    }
+
+    public function delete_tenant(Request $request){
+        $user_id = $request->id;
+        $docs = UserDocuments::where('id',$user_id)->get();
+
+        User::where('id', $user_id)->where('type', 3)->delete();
+        UserPersonalInfo::where('user_id', $user_id)->delete();
+        ResidentialPreference::where('user_id', $user_id)->delete();
+        FinancialInfo::where('user_id', $user_id)->delete();
+        RentalAssistance::where('user_id', $user_id)->delete();
+        LivingSituation::where('user_id', $user_id)->delete();
+        HouseholdInfo::where('user_id', $user_id)->delete();
+        PetInformation::where('user_id', $user_id)->delete();
+        AccommodationRequirements::where('user_id', $user_id)->delete();
+        AdditionalInfo::where('user_id', $user_id)->delete();
+        LegalCompliance::where('user_id', $user_id)->delete();
+        UserReferences::where('user_id', $user_id)->delete();
+        AdditionalNotes::where('user_id', $user_id)->delete();
+        UserDocuments::where('user_id', $user_id)->delete();
+        
+        if($docs != null){
+            foreach($docs as $doc){
+                deleteImage($doc->doc_url);
+            }
+        }
+        
+        return response()->json(['status' => 200, 'message' => "Deleted Successfully!"]);
+    }
+
+    public function get_specific_tenant(Request $request)
+    {
+        $tenant_id = $request->id;
+        $data['details'] = User::where('id', $tenant_id)->where('type', 3)
+                                        ->with(['personalInfo','residentialInfo','financialInfo',
+                                                'rentalInfo','livingInfo','householdInfo',
+                                                'petInfo','accomodationInfo','additionalInfo',
+                                                'legalInfo','references','additionalNote','userDocs'])
+                                        ->first();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function save_api_settings(Request $request)
+    {
+        $validatedData = $request->validate([
+            'secret_key' => 'required|max:100',
+            'publishable_key' => 'required|max:100',
+        ]);
+
+        $apiSettings = ApiSettings::first();
+        if(!isset($apiSettings->id)){
+            $apiSettings = new ApiSettings();
+        }
+        
+        $apiSettings->secret_key = $request->secret_key;
+        $apiSettings->publishable_key = $request->publishable_key;
+        $apiSettings->status = '1';
+        if(isset($apiSettings->id)){
+            $apiSettings->updated_by = Auth::user()->id;
+        }else{
+            $apiSettings->created_by = Auth::user()->id;
+        }
+        // Save the changes
+        $apiSettings->save();
+
+        //Handle Registeration Payment
+        return response()->json(['status' => 200, 'message' => "Settings added successfully!"]);
+    }
 }

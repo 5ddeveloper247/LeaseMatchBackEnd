@@ -58,16 +58,13 @@ function editPricingPlanResponse(response){
     $(".addPricing_section").show(1000);
 }
 $(document).on('click', '#save_plan_submit', function (e) {
-    console.log('hamza');
+    
 	e.preventDefault();
 	let type = 'POST';
 	let url = '/admin/savePlanDetail';
 	let message = '';
 	let form = $('#addPlan_form');
 	let data = new FormData(form[0]);
-	// if ($(this).text() == 'Submit') {
-	//     url = url;
-	// }
 	    
 	// PASSING DATA TO FUNCTION
 	$('[name]').removeClass('is-invalid');

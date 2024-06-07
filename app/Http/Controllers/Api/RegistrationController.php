@@ -132,7 +132,7 @@ class RegistrationController extends Controller
             $User->first_name = $request->input('user_name');
             $User->email = $request->input('user_email');
             $User->password = bcrypt($request->input('password'));
-            $User->status = '1';
+            $User->status = '0';
             $User->save();
 
             //personal Information
@@ -236,7 +236,6 @@ class RegistrationController extends Controller
             $UserAdditionalNotes->work_with_broker = $request->input('work_with_broker');
             $UserAdditionalNotes->save();
 
-            
             $req_file = 'documents';
             $path = '/uploads/user_documents';
 

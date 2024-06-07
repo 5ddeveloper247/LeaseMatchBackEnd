@@ -3,4 +3,8 @@
 .form-select.is-invalid, .was-validated .form-select:invalid {
     border-color: #dc3545 !important;
 }
+
+.is-invalid{
+    border-color: #ff0000;
+}
     
