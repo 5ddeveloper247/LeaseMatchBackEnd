@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CustomerController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LandlordController;
@@ -74,4 +75,46 @@ Route::group(['prefix' => 'admin'], function () {
         
 
     });
+});
+
+// customer routes start 
+Route::group(['prefix' => 'customer'], function () {
+    
+    Route::get('/', [CustomerController::class, 'login'])->name('/');
+    Route::get('/login', [CustomerController::class, 'login'])->name('customer.login');
+        Route::post('/loginSubmit', [CustomerController::class, 'loginSubmit'])->name('customer.loginSubmit');
+        Route::get('/logout', [CustomerController::class, 'logout'])->name('customer.logout');
+        Route::get('/noaccess', [CustomerController::class, 'noaccess'])->name('customer.noaccess');
+        Route::get('/forgotpassword', [CustomerController::class, 'forgotpassword'])->name('customer.forgotpassword');
+        
+        
+        
+        
+        
+        
+        Route::post('/forgetpasswordemailvalidate', [CustomerController::class, 'forgot_password_validate_email'])->name('customer.forgetpasswordemailvalidate');
+        Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
+        Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
+
+
+        Route::group(['middleware' => ['UserAuth']], function () {
+            
+            
+        /************** PAGE ROUTES ******************/
+        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
+            
+            
+            
+
+            
+            
+            
+         /************** AJAX ROUTES ******************/
+
+            
+            
+            
+            
+
+});
 });

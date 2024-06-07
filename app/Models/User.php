@@ -35,6 +35,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'otp',
+        'otp_created_at',
     ];
 
     /**

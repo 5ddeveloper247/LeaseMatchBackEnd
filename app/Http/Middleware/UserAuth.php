@@ -23,7 +23,7 @@ class UserAuth
     	
         }else if(session('user')->type != '3'){ // 3=> user
     		
-    		return redirect('logout');
+    		return redirect('customer/logout');
     	
     	}
     	
