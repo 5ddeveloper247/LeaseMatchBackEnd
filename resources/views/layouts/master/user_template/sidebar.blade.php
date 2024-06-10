@@ -20,6 +20,18 @@
                     <em>My Subscription</em>
                 </a>
             </li>
+            <li class="{{$page == 'My Account' ? 'active' : ''}}">
+                <a href="{{route('customer.account_info')}}">
+                    <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">
+                    <em>My Account</em>
+                </a>
+            </li>
+            <li class="{{$page == 'Property Information' ? 'active' : ''}}">
+                <a href="{{route('customer.property_info')}}">
+                    <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">
+                    <em>Property Information</em>
+                </a>
+            </li>
             
             <li class="">
                 <a href="{{route('customer.logout')}}">

@@ -75,17 +75,17 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/deleteTenant', [AdminController::class, 'delete_tenant'])->name('admin.deleteTenant');
         
         Route::post('/saveApiSettings', [AdminController::class, 'save_api_settings'])->name('admin.saveApiSettings');
-
+        
         Route::post('/getPaymentsPageData', [AdminController::class, 'get_payment_data'])->name('admin.getPaymentsPageData');
         Route::post('/getPaymentListWrtUser', [AdminController::class, 'get_payment_list_user'])->name('admin.getPaymentListWrtUser');
-
+        
         Route::post('/getSubscriptionsPageData', [AdminController::class, 'get_subscriptions_data'])->name('admin.getSubscriptionsPageData');
         Route::post('/getSubscriptionsListWrtUser', [AdminController::class, 'get_subscriptions_list_user'])->name('admin.getSubscriptionsListWrtUser');
-
+        
         Route::post('/getContactUsPageData', [AdminController::class, 'get_contactus_page_data'])->name('admin.getContactUsPageData');
         
         
-
+        
     });
 });
 
@@ -98,24 +98,26 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/logout', [CustomerController::class, 'logout'])->name('customer.logout');
         Route::get('/noaccess', [CustomerController::class, 'noaccess'])->name('customer.noaccess');
         Route::get('/forgotpassword', [CustomerController::class, 'forgotpassword'])->name('customer.forgotpassword');
-            
-            
-            
-            
-            
-            
+        
+        
+        
+        
+        
+        
         Route::post('/forgetpasswordemailvalidate', [CustomerController::class, 'forgot_password_validate_email'])->name('customer.forgetpasswordemailvalidate');
         Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
         Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
-
-
+        
+        
         Route::group(['middleware' => ['UserAuth']], function () {
-                
-                
-        /************** PAGE ROUTES ******************/
-        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
-        Route::get('/mySubscription', [CustomerController::class, 'my_subscription'])->name('customer.mySubscription');
-                
+            
+            
+            /************** PAGE ROUTES ******************/
+            Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
+            Route::get('/mySubscription', [CustomerController::class, 'my_subscription'])->name('customer.mySubscription');
+            Route::get('/myAccount', [CustomerController::class, 'my_account'])->name('customer.account_info');
+        Route::get('/propertyInformation', [CustomerController::class, 'property_info'])->name('customer.property_info');
+        
                 
     
         
@@ -123,16 +125,20 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/subscribe', [PaymentController::class, 'processSubscription'])->name('subscribe.process');
         Route::get('/subscription-success', [PaymentController::class, 'subscriptionSuccess'])->name('subscribe.success');
         Route::get('/subscription-error', [PaymentController::class, 'subscriptionError'])->name('subscribe.error');
-
-                
-                
+        
+        
+        
                 
         /************** AJAX ROUTES ******************/
-
-            
-            
-            
-            
-
+        
+        Route::get('/getSpecificTenantDetail', [CustomerController::class, 'get_specific_tenant'])->name('customer.getSpecificTenantDetail');
+        Route::get('/getprofiledata', [CustomerController::class, 'get_profiledata'])->name('customer.getprofiledata');
+        Route::post('/updateprofile', [CustomerController::class, 'update_profile'])->name('customer.updateprofile');
+        Route::post('/updatepersonaldata', [CustomerController::class, 'update_personal_data'])->name('customer.updatepersonaldata');
+        
+        
+        
+        
+        
     });
 });
