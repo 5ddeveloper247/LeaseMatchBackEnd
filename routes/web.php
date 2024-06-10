@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LandlordController;
 use App\Http\Controllers\Api\RegistrationController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ use App\Http\Controllers\Api\RegistrationController;
 // }
 
 Route::get('/', function () {
-    return redirect('/admin/login');// view('welcome');
+    return redirect('/customer/login');// view('welcome');
 });
  
 Route::group(['prefix' => 'admin'], function () {
@@ -46,7 +47,10 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/landlord', [AdminController::class, 'landlord'])->name('admin.landlord');
             Route::get('/tenant', [AdminController::class, 'tenant'])->name('admin.tenant');
             Route::get('/api_settings', [AdminController::class, 'apiSettings'])->name('admin.api_settings');
-
+            Route::get('/user_payments', [AdminController::class, 'userPayments'])->name('admin.user_payments');
+            Route::get('/user_subscriptions', [AdminController::class, 'userSubscriptions'])->name('admin.user_subscriptions');
+            Route::get('/contact_us', [AdminController::class, 'contactUs'])->name('admin.contact_us');
+            
         });
         
         /************** AJAX ROUTES ******************/
@@ -72,49 +76,63 @@ Route::group(['prefix' => 'admin'], function () {
         
         Route::post('/saveApiSettings', [AdminController::class, 'save_api_settings'])->name('admin.saveApiSettings');
 
+        Route::post('/getPaymentsPageData', [AdminController::class, 'get_payment_data'])->name('admin.getPaymentsPageData');
+        Route::post('/getPaymentListWrtUser', [AdminController::class, 'get_payment_list_user'])->name('admin.getPaymentListWrtUser');
+
+        Route::post('/getSubscriptionsPageData', [AdminController::class, 'get_subscriptions_data'])->name('admin.getSubscriptionsPageData');
+        Route::post('/getSubscriptionsListWrtUser', [AdminController::class, 'get_subscriptions_list_user'])->name('admin.getSubscriptionsListWrtUser');
+
+        Route::post('/getContactUsPageData', [AdminController::class, 'get_contactus_page_data'])->name('admin.getContactUsPageData');
+        
         
 
     });
 });
 
 // customer routes start 
-Route::group(['prefix' => 'customer'], function () {
-    
-    Route::get('/', [CustomerController::class, 'login'])->name('/');
-    Route::get('/login', [CustomerController::class, 'login'])->name('customer.login');
+    Route::group(['prefix' => 'customer'], function () {
+        
+        Route::get('/', [CustomerController::class, 'login'])->name('/');
+        Route::get('/login', [CustomerController::class, 'login'])->name('customer.login');
         Route::post('/loginSubmit', [CustomerController::class, 'loginSubmit'])->name('customer.loginSubmit');
         Route::get('/logout', [CustomerController::class, 'logout'])->name('customer.logout');
         Route::get('/noaccess', [CustomerController::class, 'noaccess'])->name('customer.noaccess');
         Route::get('/forgotpassword', [CustomerController::class, 'forgotpassword'])->name('customer.forgotpassword');
-        
-        
-        
-        
-        
-        
+            
+            
+            
+            
+            
+            
         Route::post('/forgetpasswordemailvalidate', [CustomerController::class, 'forgot_password_validate_email'])->name('customer.forgetpasswordemailvalidate');
         Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
         Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
 
 
         Route::group(['middleware' => ['UserAuth']], function () {
-            
-            
+                
+                
         /************** PAGE ROUTES ******************/
         Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
-            
-            
-            
+        Route::get('/mySubscription', [CustomerController::class, 'my_subscription'])->name('customer.mySubscription');
+                
+                
+    
+        
+        
+        Route::post('/subscribe', [PaymentController::class, 'processSubscription'])->name('subscribe.process');
+        Route::get('/subscription-success', [PaymentController::class, 'subscriptionSuccess'])->name('subscribe.success');
+        Route::get('/subscription-error', [PaymentController::class, 'subscriptionError'])->name('subscribe.error');
+
+                
+                
+                
+        /************** AJAX ROUTES ******************/
 
             
             
             
-         /************** AJAX ROUTES ******************/
-
-            
-            
-            
             
 
-});
+    });
 });

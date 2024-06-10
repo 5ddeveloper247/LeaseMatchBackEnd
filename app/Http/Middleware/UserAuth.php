@@ -19,7 +19,7 @@ class UserAuth
         if(!$request->session()->has('user')){
     		
         	$request->session()->flash('error', 'Access Denied');
-    		  return redirect('login');
+    		  return redirect('customer/logout');
     	
         }else if(session('user')->type != '3'){ // 3=> user
     		

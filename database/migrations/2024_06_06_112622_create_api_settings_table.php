@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('api_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('secret_key', 100)->nullable();
-            $table->string('publishable_key', 100)->nullable();
+            $table->string('secret_key', 255)->nullable();
+            $table->string('publishable_key', 255)->nullable();
             $table->smallInteger('status')->comment('0=>InActive, 1=>Active')->nullable();
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();

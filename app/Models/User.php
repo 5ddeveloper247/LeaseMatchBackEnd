@@ -31,13 +31,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'otp',
-        'otp_created_at',
-    ];
+    // protected $fillable = [
+    //     'name',
+    //     'email',
+    //     'password',
+    //     'otp',
+    //     'otp_created_at',
+    // ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -128,4 +128,15 @@ class User extends Authenticatable
     {
     	return $this->hasMany(UserDocuments::class, 'user_id');
     }
+
+    public function userPayments()
+    {
+    	return $this->hasMany(UserPayments::class, 'user_id');
+    }
+
+    public function userSubscriptions()
+    {
+    	return $this->hasMany(UserSubscription::class, 'user_id');
+    }
+    
 }

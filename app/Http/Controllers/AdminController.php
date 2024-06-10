@@ -37,6 +37,8 @@ use App\Models\Api\UserReferences;
 use App\Models\Api\AdditionalNotes;
 use App\Models\Api\UserDocuments;
 
+use App\Models\Api\ContactUs;
+
 
 
 class AdminController extends Controller
@@ -106,7 +108,7 @@ class AdminController extends Controller
     public function subscription(Request $request)
     {
         $data['page'] = 'Subscriptions';
-        $data['plans'] = Pricing_plan::get();//orderBy('created_at', 'asc')->
+        $data['plans'] = Pricing_plan::get();
         return view('admin/subscriptions')->with($data);
     }
 
@@ -134,6 +136,29 @@ class AdminController extends Controller
         $data['apiSettings'] = ApiSettings::first();
         return view('admin/api_settings')->with($data);
     }
+
+    public function userPayments(Request $request)
+    {
+        $data['page'] = 'User Payments';
+        return view('admin/user_payments')->with($data);
+    }
+
+    public function userSubscriptions(Request $request)
+    {
+        $data['page'] = 'User Subscriptions';
+        return view('admin/user_subscriptions')->with($data);
+    }
+
+    public function contactUs(Request $request)
+    {
+        $data['page'] = 'User Subscriptions';
+        return view('admin/contact_us')->with($data);
+    }
+
+
+
+
+
 
     public function editSpecificPlan(Request $request)
     {
@@ -456,8 +481,8 @@ class AdminController extends Controller
     public function save_api_settings(Request $request)
     {
         $validatedData = $request->validate([
-            'secret_key' => 'required|max:100',
-            'publishable_key' => 'required|max:100',
+            'secret_key' => 'required|max:255',
+            'publishable_key' => 'required|max:255',
         ]);
 
         $apiSettings = ApiSettings::first();
@@ -479,4 +504,45 @@ class AdminController extends Controller
         //Handle Registeration Payment
         return response()->json(['status' => 200, 'message' => "Settings added successfully!"]);
     }
+
+    public function get_payment_data(Request $request)
+    {
+        $data['payment_user_list'] = User::where('type', 3)->withCount(['userPayments'])->with(['personalInfo'])->get();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+    
+    public function get_payment_list_user(Request $request)
+    {
+        $user_id = $request->id;
+
+        $data['detail'] = User::where('id', $user_id)->where('type', 3)->with(['userPayments','personalInfo','userPayments.plan'])->first();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function get_subscriptions_data(Request $request)
+    {
+        $data['subscriptions_user_list'] = User::where('type', 3)->withCount(['userSubscriptions'])->with(['personalInfo'])->get();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function get_subscriptions_list_user(Request $request)
+    {
+        $user_id = $request->id;
+
+        $data['detail'] = User::where('id', $user_id)->where('type', 3)->with(['userSubscriptions','personalInfo','userSubscriptions.plan'])->first();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+    
+
+    public function get_contactus_page_data(Request $request)
+    {
+        $data['contactus_list'] = ContactUs::with(['replied_by'])->get();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+    
 }

@@ -10,4 +10,9 @@ class ContactUs extends Model
     use HasFactory;
 
     protected $table = 'contact_us';
+
+    public function replied_by()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

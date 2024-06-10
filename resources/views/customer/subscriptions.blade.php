@@ -1,4 +1,5 @@
-@extends('layouts.master.admin_template.master')
+<?php use Carbon\Carbon; ?>
+@extends('layouts.master.user_template.master')
 
 @push('css')
 @endpush
@@ -12,15 +13,6 @@
                 <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                 <li>Subscriptions</li>
             </ul>
-            <div class="form_row row pricingList_section" style="margin-bottom: 2vw;">
-				<div class="col-xs-2">
-                @if(count($plans) < 3)
-					<div class="btn_blk form_btn" style="margin-top: 2vw;">
-		             	<button class="site_btn block" onclick="addNewReceord();">Add Plan</button>
-		          	</div>
-                @endif
-				</div>
-			</div>
             <div id="slick-pricing" class="slick-carousel pricingList_section">
                 @foreach($plans as $key => $plan)
                 
@@ -73,9 +65,23 @@
                                     
                                     
                                 </ul>
-                                <div class="btn_blk">
-                                    <a href="javascript:;" onclick="editPricingPlan({{@$plan->id}});">Edit Plan</a>
-                                </div>
+                                @if(@$currentPlan->plan_id == $plan->id)
+                                    @if(Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
+                                        <div class="btn_blk">
+                                            <a href="javascript:;" >Renew</a>
+                                        </div>
+                                    @else
+                                        <div class="btn_blk">
+                                            <a href="javascript:;" >Selected</a>
+                                        </div>
+                                    @endif
+                                    
+                                @else
+                                    <div class="btn_blk">
+                                        <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">Buy Plan</a>
+                                    </div>
+                                @endif
+                                
                             </div>
                             <div class="off"><!-- 50% off if price is under £1000 --></div>
                             <div class="price_blk">
@@ -96,70 +102,44 @@
                         <div class="contain">
                             <div class="_inner">
                                 <button type="button" class="x_btn" onclick="backToList();"></button>
-                                <h4 >Update Package</h4>
-                                <form id="addPlan_form">
+                                <h4 >Buy Plan</h4>
+                                <form action="{{ route('subscribe.process') }}" method="POST" id="payment-form">
+                                    @csrf
                                     <div class="form_row row">
                                         <input type="hidden" id="plan_id" name="plan_id" value="">
-                                        <div class="col-sm-6 offset-sm-6">
-                                            <h6>
-                                                Title<sup>**</sup>
-                                            </h6>
-                                            <div class="form_blk">
-                                                <input type="text" name="package_title" id="package_title" class="form-control text_box" placeholder="Tier 01">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 offset-sm-6">
-                                            <h6>
-                                                Initial Price<sup>**</sup>
-                                            </h6>
-                                            <div class="form_blk">
-                                                <input type="number" name="initial_price" id="initial_price" class="form-control text_box" placeholder="0.00">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 offset-sm-6">
-                                            <h6>
-                                                Monthly Price<sup>**</sup>
-                                            </h6>
-                                            <div class="form_blk">
-                                                <input type="number" name="monthly_price" id="monthly_price" class="form-control text_box" placeholder="0.00">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 offset-sm-6">
-                                            <h6>
-                                                Number of matches<sup>**</sup>
-                                            </h6>
-                                            <div class="form_blk">
-                                                <input type="number" name="number_matches" id="number_matches" class="form-control text_box" placeholder="0">
-                                            </div>
-                                        </div>
-                                        
                                         <div class="col-sm-4">
+                                            <h6>Card Number</h6>
                                             <div class="form_blk">
-                                                <div class="lbl_btn">
-                                                    <input type="checkbox" name="tenant_directly_contact" id="tenant_directly_contact">
-                                                    <label for="tenant_directly_contact">Tenant Directly Contact</label>
-                                                </div>
+                                                <div id="card-number-element" class="form-control text_box stripe-element"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+
+                                        <div class="col-sm-2">
+                                            <h6>Expiration Date</h6>
                                             <div class="form_blk">
-                                                <div class="lbl_btn">
-                                                    <input type="checkbox" name="process_application" id="process_application">
-                                                    <label for="process_application">Process Application</label>
-                                                </div>
+                                                <div id="card-expiry-element" class="form-control text_box stripe-element"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+
+                                        <div class="col-sm-2">
+                                            <h6>CVC</h6>
                                             <div class="form_blk">
-                                                <div class="lbl_btn">
-                                                    <input type="checkbox" name="necessary_document" id="necessary_document">
-                                                    <label for="necessary_document">Attach Necessary Document</label>
-                                                </div>
+                                                <div id="card-cvc-element" class="form-control text_box stripe-element"></div>
                                             </div>
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <h6>ZIP Code</h6>
+                                            <div class="form_blk">
+                                                <div id="card-zip-element" class="form-control text_box stripe-element"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-2">
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="btn_blk">
-                                                <button type="button" class="site_btn md auto" id="save_plan_submit">Save</button>
+                                                <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy Now</button>
                                             </div>
                                         </div>
                                         
@@ -178,6 +158,75 @@
 
 @push('script')
     
-    <script src="{{ asset('assets_admin/customjs/script_adminsubscription.js') }}"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{ asset('assets_customer/customjs/script_subscription.js') }}"></script>
     
+    <script>
+        $(document).ready(function () {
+            @if (Session::has('success'))
+                setTimeout(function(){
+                    toastr.success("{{ Session::get('success') }}", '', {timeOut: 5000});
+                }, 1000);
+            @endif
+            @if (Session::has('error'))
+                setTimeout(function(){
+                    toastr.error("{{ Session::get('error') }}", '', {timeOut: 5000});
+                }, 1000);
+            @endif
+        });
+        
+        var stripe = Stripe('{{ getStripePk() }}');//env('STRIPE_KEY')
+        var elements = stripe.elements();
+
+        // Create individual elements for each field
+        var style = {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+
+        var cardNumber = elements.create('cardNumber', { style: style });
+        cardNumber.mount('#card-number-element');
+
+        var cardExpiry = elements.create('cardExpiry', { style: style });
+        cardExpiry.mount('#card-expiry-element');
+
+        var cardCvc = elements.create('cardCvc', { style: style });
+        cardCvc.mount('#card-cvc-element');
+
+        var cardZip = elements.create('postalCode', { style: style });
+        cardZip.mount('#card-zip-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            stripe.createToken(cardNumber).then(function(result) {
+                if (result.error) {
+                    // Display error.message in your UI.
+                    toastr.error(result.error.message, '', {
+                        timeOut: 3000
+                    });
+                } else {
+                    $("#buyNow_btn").prop('disabled', true);
+                    $('#uiBlocker').show();
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.setAttribute('type', 'hidden');
+                    hiddenInput.setAttribute('name', 'stripeToken');
+                    hiddenInput.setAttribute('value', result.token.id);
+                    form.appendChild(hiddenInput);
+                    form.submit();
+                }
+            });
+        });
+    </script>
 @endpush

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamp('otp_created_at')->nullable();
             $table->smallInteger('status')->default('1')->comment('1=active, 0 = inactive');
             $table->rememberToken();
+            $table->string('stripe_customer_id', 100)->nullable();
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();

@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 use App\Models\Menu;
 use App\Models\MenuControl;
+use App\Models\UserSubscription;
+use App\Models\ApiSettings;
 
 if (!function_exists('saveMultipleImages')) {
 
@@ -127,6 +130,52 @@ if (!function_exists('getAllMenu')) {
     {
         $menu = Menu::get();
         return $menu;
+    }
+}
+
+if (!function_exists('checkUserSubscription')) {
+
+    function checkUserSubscription()
+    {
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
+        
+        if($currentPlan != null){
+            
+            if(Carbon::now()->format('Y-m-d') > $currentPlan->end_date){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+}
+
+if (!function_exists('getStripePk')) {
+
+    function getStripePk()
+    {
+        $apiSettings = ApiSettings::where('status', '1')->first();
+        
+        if(isset($apiSettings->publishable_key)){
+            return $apiSettings->publishable_key;
+        }else{
+            return false;
+        }
+    }
+}
+if (!function_exists('getStripeSk')) {
+
+    function getStripeSk()
+    {
+        $apiSettings = ApiSettings::where('status', '1')->first();
+        
+        if(isset($apiSettings->secret_key)){
+            return $apiSettings->secret_key;
+        }else{
+            return false;
+        }
     }
 }
 

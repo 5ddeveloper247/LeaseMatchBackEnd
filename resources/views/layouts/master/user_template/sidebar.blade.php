@@ -8,12 +8,18 @@
     
     <div class="inside">
         <ul>
-        <li class="active">
-                        <a href="{{route('customer.dashboard')}}">
-                            <img src="{{asset('assets/images/icon-home.svg')}}" alt="">
-                            <em>Dashboard</em>
-                        </a>
-                    </li>
+            <li class="{{$page == 'Dashboard' ? 'active' : ''}}">
+                <a href="{{route('customer.dashboard')}}">
+                    <img src="{{asset('assets/images/icon-home.svg')}}" alt="">
+                    <em>Dashboard</em>
+                </a>
+            </li>
+            <li class="{{$page == 'Subscription' ? 'active' : ''}}">
+                <a href="{{route('customer.mySubscription')}}">
+                    <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">
+                    <em>My Subscription</em>
+                </a>
+            </li>
             
             <li class="">
                 <a href="{{route('customer.logout')}}">

@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Pricing_plan;
 use App\Models\Menu;
 use App\Models\MenuControl;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
@@ -144,15 +145,29 @@ class CustomerController extends Controller
             $user->password = bcrypt($request->input('password'));
             $user->save();
             return response()->json(['status' => 200, 'message' => "Passwrd changed successfully, kindly return to login page and login again"]);
-
         }
         
     }
 
     public function dashboard(Request $request)
     {
-        $data['page'] = 'Dashboard';
+        if(checkUserSubscription() == true){
+            $data['page'] = 'Dashboard';
         
-        return view('customer/dashboard')->with($data);
+            return view('customer/dashboard')->with($data);
+        }else{
+            return redirect()->route('customer.mySubscription');
+        }
+    }
+
+    public function my_subscription(Request $request)
+    {
+        $data['page'] = 'Subscription';
+        $data['plans'] = Pricing_plan::get();
+
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
+        $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
+
+        return view('customer/subscriptions')->with($data);
     }
 }

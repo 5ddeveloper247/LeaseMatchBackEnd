@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('subject', 255)->nullable();
             $table->string('phone', 15)->nullable();
             $table->text('message')->nullable();
+            $table->text('reply')->nullable();
+            $table->unsignedInteger('replied_by')->nullable();
             $table->date('date')->nullable();
             $table->timestamps();
         });
