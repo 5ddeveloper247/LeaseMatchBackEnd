@@ -16,6 +16,14 @@ use App\Models\MenuControl;
 use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Validator;
 
+// landlord models
+use App\Models\Api\LandlordPersonal;
+use App\Models\Api\LandlordProperty;
+use App\Models\Api\LandlordRental;
+use App\Models\Api\LandlordTenant;
+use App\Models\Api\LandlordAdditional;
+use App\Models\Api\LandlordPropertyImages;
+
 class CustomerController extends Controller
 {
     public function __construct()
@@ -69,9 +77,82 @@ class CustomerController extends Controller
         return redirect('customer');
     }
 
+    public function dashboard(Request $request)
+    {
+        if(checkUserSubscription() == true){
+            $data['page'] = 'Dashboard';
+        
+            return view('customer/dashboard')->with($data);
+        }else{
+            return redirect()->route('customer.mySubscription');
+        }
+    }
+
+    public function my_subscription(Request $request)
+    {
+        $data['page'] = 'Subscription';
+        $data['plans'] = Pricing_plan::get();
+
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
+        $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
+
+        return view('customer/subscriptions')->with($data);
+    }
+
+    public function my_matches(Request $request)
+    {
+        $currentDate = Carbon::now()->format('Y-m-d');
+        
+        $data['page'] = 'Matches';
+
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
+                                                    ->where('end_date', '>=', $currentDate)
+                                                    ->with('plan')->orderBy('created_at', 'desc')->first();
+
+        if(isset($currentPlan->id)){
+            $data['properties'] = LandlordPersonal::with(['propertyDetail','rentalDetail','tenantDetail',
+                                        'additionalDetail','propertyImages'])->limit($currentPlan->plan->number_of_matches)
+                                        ->orderBy('created_at', 'desc')->get();
+        }else{
+            $data['properties'] = array();
+        }
+        
+        return view('customer/my_matches')->with($data);
+    }
+
+    public function property_detail(Request $request)
+    {
+        $currentDate = Carbon::now()->format('Y-m-d');
+
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
+                                ->where('end_date', '>=', $currentDate)
+                                ->with('plan')->orderBy('created_at', 'desc')->first();
+
+        $data['page'] = 'Matches';
+        $data['property_detail'] = LandlordPersonal::where('id', $request->landlord_id)->
+                                        with(['propertyDetail','rentalDetail','tenantDetail',
+                                        'additionalDetail','propertyImages'])
+                                ->first();
+        
+        $data['curr_plan'] = isset($currentPlan->plan) ? $currentPlan->plan : '';
+        // dd($data['property_detail']);
+        return view('customer/property_detail')->with($data);
+    }
+
     public function forgotpassword(){
         return view('customer/forgot_password');
     }
+
+
+
+
+
+
+
+
+
+
+
     public function forgot_password_validate_email(Request $request){
       
         $request->validate([
@@ -149,25 +230,25 @@ class CustomerController extends Controller
         
     }
 
-    public function dashboard(Request $request)
-    {
-        if(checkUserSubscription() == true){
-            $data['page'] = 'Dashboard';
+    public function view_contact_info(Request $request){
         
-            return view('customer/dashboard')->with($data);
+        $landlord_id = $request->id;
+        $currentDate = Carbon::now()->format('Y-m-d');
+
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
+                                ->where('end_date', '>=', $currentDate)
+                                ->with('plan')->orderBy('created_at', 'desc')->first();
+        
+        if(isset($currentPlan->plan) && $currentPlan->plan->directly_contact_flag == 1){
+
+            $data['landlord_detail'] = LandlordPersonal::find($landlord_id);
+            return response()->json(['status' => 200, 'message' => "", 'data' => $data]);
+        
         }else{
-            return redirect()->route('customer.mySubscription');
+        
+            return response()->json(['status' => 402, 'message' => "Unable to view landlord information, please update/buy package to view contact information."]);
         }
     }
-
-    public function my_subscription(Request $request)
-    {
-        $data['page'] = 'Subscription';
-        $data['plans'] = Pricing_plan::get();
-
-        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
-        $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
-
-        return view('customer/subscriptions')->with($data);
-    }
+    
+    
 }

@@ -151,7 +151,7 @@ class AdminController extends Controller
 
     public function contactUs(Request $request)
     {
-        $data['page'] = 'User Subscriptions';
+        $data['page'] = 'Contact Us';
         return view('admin/contact_us')->with($data);
     }
 
@@ -263,7 +263,7 @@ class AdminController extends Controller
             $mailData['email'] = $user->email;
             $mailData['password'] = $password;
             $body = view('emails.user_created', $mailData);
-            $userEmailsSend[] = 'hamza@5dsolutions.ae';//$user->email;
+            $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
             sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
             return response()->json(['status' => 200, 'message' => "Admin user created successfully"]);
@@ -400,7 +400,7 @@ class AdminController extends Controller
         
         if($images != null){
             foreach($images as $image){
-                deleteImage($image->path);
+                deleteImage(str_replace('/public',"",$image->path));
             }
         }
         
@@ -458,7 +458,7 @@ class AdminController extends Controller
         
         if($docs != null){
             foreach($docs as $doc){
-                deleteImage($doc->doc_url);
+                deleteImage(str_replace('/public',"",$doc->doc_url));
             }
         }
         
@@ -544,5 +544,41 @@ class AdminController extends Controller
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
-    
+
+    public function get_specific_contactus_detail(Request $request)
+    {
+        $contact_id = $request->id;
+
+        $data['detail'] = ContactUs::where('id', $contact_id)->first();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function save_contact_reply(Request $request)
+    {
+        $validatedData = $request->validate([
+            'contact_id' => 'required',
+            'reply_message' => 'required',
+        ]);
+
+        $contact = ContactUs::find($request->contact_id);
+        if(isset($contact->id)){
+            
+            $contact->reply = $request->reply_message;
+            $contact->replied_by = Auth::user()->id;
+            // Save the changes
+            $contact->save();
+
+            $contact_detail = ContactUs::find($request->contact_id);
+            $body = view('emails.contact_us_reply', $contact_detail);
+            $userEmailsSend[] = $contact_detail->email;//'hamza@5dsolutions.ae';//
+            // to username, to email, from username, subject, body html
+            sendMail($contact_detail->name, $userEmailsSend, 'LEASE MATCH', 'Contact Us', $body); // send_to_name, send_to_email, email_from_name, subject, body
+            
+
+            return response()->json(['status' => 200, 'message' => "Plan updated successfully!"]);
+        }else{
+            return response()->json(['status' => 402, 'message' => "Something went wrong!"]);
+        }
+    }
 }

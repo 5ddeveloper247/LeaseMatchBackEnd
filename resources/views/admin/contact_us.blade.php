@@ -9,6 +9,9 @@
     #users_table{
         font-size:x-small;
     }
+    .bg-success{
+        background-color: #008000 !important;
+    }
 </style>
 
 <section id="listing">
@@ -18,7 +21,7 @@
             <li>Contact Us</li>
         </ul>
         
-        <div class="blk">
+        <div class="blk listing_section">
             <div class="tbl_blk">
                 <table id="users_table" class="table table-responsive">
                     <thead>
@@ -26,15 +29,58 @@
                             <th class="col-1">S.No</th>
                             <th class="col-4">From</th>
                             <th class="col-5">Message</th>
-                            <th>Status</th>
-                            <th class="col-2">Replied By</th>
-                            <th class="col-1">Action</th>
+                            <th class="text-center">Status</th>
+                            <th class="col-2 text-center">Replied By</th>
+                            <th class="col-1 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody id="listing_html">
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!--Form for inserting data--->
+        <div class="detail_section" style="display:none;">
+            <div class="table_dv">
+                <div class="table_cell">
+                    <div class="contain">
+                        <div class="_inner">
+                            <button type="button" class="x_btn" onclick="backToList();"></button>
+                            <h4 >Reply Contact</h4>
+                            <form id="addreply_form">
+                                <div class="form_row row">
+                                    <input type="hidden" id="contact_id" name="contact_id" value="">
+                                    <div class="col-sm-12">
+                                        <h6>
+                                            Messsage
+                                        </h6>
+                                        <div class="form_blk">
+                                            <p id="contact_message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <h6>
+                                            Reply Message<sup>**</sup>
+                                        </h6>
+                                        <div class="form_blk">
+                                            <textarea name="reply_message" id="reply_message" class="form-control text_box" placeholder="Type reply here..."></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <div class="btn_blk">
+                                            <button type="button" class="site_btn md auto" id="contactReply_submit">Save</button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -87,7 +87,7 @@ if (!function_exists('sendMail')) {
             $mail_val = [
                 'send_to_name' => $send_to_name,
                 'send_to' => $send_to_email,
-                'email_from' => 'noreply@pancard.com',
+                'email_from' => 'noreply@leasematch.com',
                 'email_from_name' => $email_from_name,
                 'subject' => $subject,
             ];
@@ -175,6 +175,17 @@ if (!function_exists('getStripeSk')) {
             return $apiSettings->secret_key;
         }else{
             return false;
+        }
+    }
+}
+if (!function_exists('trimText')) {
+
+    function trimText($string, $limit = 200, $end = '...')
+    {
+        if (mb_strlen($string) > $limit) {
+            return mb_substr($string, 0, $limit) . $end;
+        } else {
+            return $string;
         }
     }
 }

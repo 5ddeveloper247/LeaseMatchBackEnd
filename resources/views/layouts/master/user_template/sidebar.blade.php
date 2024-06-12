@@ -14,6 +14,12 @@
                     <em>Dashboard</em>
                 </a>
             </li>
+            <li class="{{$page == 'Matches' ? 'active' : ''}}">
+                <a href="{{route('customer.myMatches')}}">
+                    <img src="{{asset('assets/images/icon-search.svg')}}" alt="">
+                    <em>My Matches</em>
+                </a>
+            </li>
             <li class="{{$page == 'Subscription' ? 'active' : ''}}">
                 <a href="{{route('customer.mySubscription')}}">
                     <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">

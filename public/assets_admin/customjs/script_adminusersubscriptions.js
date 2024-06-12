@@ -70,24 +70,24 @@ function viewDetailResponse(response) {
     var html = '';
 
     if(detail != null){
-        $("#user_name").val(detail.first_name);
-        $("#user_email").val(detail.email);
+        $("#user_name").text(detail.first_name);
+        $("#user_email").text(detail.email);
 
-        $("#user_phone").val(detail.personal_info.phone_number);
-        $("#user_dob").val(detail.personal_info.date_of_birth);
+        $("#user_phone").text(detail.personal_info.phone_number);
+        $("#user_dob").text(formatDate(detail.personal_info.date_of_birth));
 
     }
 
     if(subscriptions_list.length > 0){
         $.each(subscriptions_list, function (index, value) {
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${detail.first_name}</td>
-						<td>${value.plan != null ? value.plan.title : ''}</td>
-						<td>${value.plan != null ? formatCurrency(value.plan.monthly_price) : '0.00'}</td>
-						<td class="nowrap" >${value.duration_days}</td>
-                        <td class="nowrap" >${formatDate(value.start_date)}</td>
-						<td class="nowrap" >${formatDate(value.end_date)}</td>
+			html += `<tr class="identify">
+						<td class="nowrap grid-p-searchby">${index + 1}</td>
+						<td class="grid-p-searchby">${detail.first_name}</td>
+						<td class="grid-p-searchby">${value.plan != null ? value.plan.title : ''}</td>
+						<td class="grid-p-searchby">${value.plan != null ? formatCurrency(value.plan.monthly_price) : '0.00'}</td>
+						<td class="nowrap grid-p-searchby" >${value.duration_days}</td>
+                        <td class="nowrap grid-p-searchby" >${formatDate(value.start_date)}</td>
+						<td class="nowrap grid-p-searchby" >${formatDate(value.end_date)}</td>
 					</tr>`;
 		});
     }else{
@@ -134,8 +134,26 @@ $(document).ready(function () {
 
     getSubscriptionsPageData();
     
-    $("[name]").prop('disabled', true);
+    // $("[name]").prop('disabled', true);
 });
 
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide().addClass("d-none").removeClass("d-flex");
+		el.fadeIn().removeClass("d-none");
+	} else {
+		tr.fadeIn().removeClass("d-none");
+    }
+});
 
 

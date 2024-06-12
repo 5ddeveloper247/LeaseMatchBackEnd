@@ -53,7 +53,7 @@ class LandlordController extends Controller
             'income_requirements' => 'required|max:100',
             'rental_history' => 'required|max:100',
         
-            'special_note' => 'required|max:255',
+            'special_note' => 'required',
             'property_photos' => 'required',
             'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -131,7 +131,7 @@ class LandlordController extends Controller
                     $date_append = Str::random(32);
                     $file->move(public_path($path), $date_append . '.' . $file_extension);
     
-                    $savedFilePaths = $path . '/' . $date_append . '.' . $file_extension;
+                    $savedFilePaths = '/public' . $path . '/' . $date_append . '.' . $file_extension;
 
                     $propertyImages = new LandlordPropertyImages();
                     $propertyImages->landlord_id = $personal->id;
@@ -210,7 +210,7 @@ class LandlordController extends Controller
         if($request->input('step') == '5'){
             // Define validation rules
             $validator = Validator::make($request->all(), [
-                'special_note' => 'required|max:255',
+                'special_note' => 'required',
                 'property_photos' => 'required',
                 'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);

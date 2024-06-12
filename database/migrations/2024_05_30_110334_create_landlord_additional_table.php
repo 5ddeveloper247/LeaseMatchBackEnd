@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('landlord_additional', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('landlord_id');
-            $table->string('special_note', 255)->nullable();
+            $table->text('special_note')->nullable();
             $table->text('property_photos')->nullable();
             $table->timestamps();
         });

@@ -83,6 +83,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/getSubscriptionsListWrtUser', [AdminController::class, 'get_subscriptions_list_user'])->name('admin.getSubscriptionsListWrtUser');
 
         Route::post('/getContactUsPageData', [AdminController::class, 'get_contactus_page_data'])->name('admin.getContactUsPageData');
+        Route::post('/getSpecificContactUsDetail', [AdminController::class, 'get_specific_contactus_detail'])->name('admin.getSpecificContactUsDetail');
+        Route::post('/saveContactReply', [AdminController::class, 'save_contact_reply'])->name('admin.saveContactReply');
         
         
 
@@ -98,7 +100,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/logout', [CustomerController::class, 'logout'])->name('customer.logout');
         Route::get('/noaccess', [CustomerController::class, 'noaccess'])->name('customer.noaccess');
         Route::get('/forgotpassword', [CustomerController::class, 'forgotpassword'])->name('customer.forgotpassword');
-            
+        Route::get('/myMatches', [CustomerController::class, 'my_matches'])->name('customer.myMatches');
+        Route::post('/propertyDetail', [CustomerController::class, 'property_detail'])->name('customer.propertyDetail');
+        
             
             
             
@@ -116,7 +120,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
         Route::get('/mySubscription', [CustomerController::class, 'my_subscription'])->name('customer.mySubscription');
                 
-                
+        Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');        
     
         
         

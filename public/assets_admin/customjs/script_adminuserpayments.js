@@ -70,11 +70,11 @@ function viewDetailResponse(response) {
     var html = '';
 
     if(detail != null){
-        $("#user_name").val(detail.first_name);
-        $("#user_email").val(detail.email);
+        $("#user_name").text(detail.first_name);
+        $("#user_email").text(detail.email);
 
-        $("#user_phone").val(detail.personal_info.phone_number);
-        $("#user_dob").val(detail.personal_info.date_of_birth);
+        $("#user_phone").text(detail.personal_info.phone_number);
+        $("#user_dob").text(formatDate(detail.personal_info.date_of_birth));
 
     }
 
@@ -83,24 +83,20 @@ function viewDetailResponse(response) {
 			var payment = JSON.parse(value.response);
 			var receiptUrl = payment.receipt_url;
 
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${detail.first_name}</td>
-						<td>${value.plan != null ? value.plan.title : ''}</td>
-						<td class="nowrap" >${value.transaction_id}</td>
-                        <td class="nowrap" >${value.amount != null ? formatCurrency(value.amount) : '0.00'}</td>
-                        <td class="nowrap" >${formatDate(value.date)}</td>
-						<td class="nowrap" >${value.status}</td>
+			html += `<tr class="identify">
+						<td class="nowrap grid-p-searchby">${index + 1}</td>
+						<td class="grid-p-searchby">${detail.first_name}</td>
+						<td class="grid-p-searchby">${value.plan != null ? value.plan.title : ''}</td>
+						<td class="nowrap grid-p-searchby" >${value.transaction_id}</td>
+                        <td class="nowrap grid-p-searchby" >${value.amount != null ? formatCurrency(value.amount) : '0.00'}</td>
+                        <td class="nowrap grid-p-searchby" >${formatDate(value.date)}</td>
+						<td class="nowrap grid-p-searchby" >${value.status}</td>
 						<td class="nowrap" data-center>
 							<div class="act_btn">
 								<a class="copy" href="${receiptUrl}" target="_blank" title="View Payment Receipt"></a>
 							</div>
 						</td>
 					</tr>`;
-
-				    
-    
-				
 		});
     }else{
 		html = `<tr>
@@ -146,8 +142,26 @@ $(document).ready(function () {
 
     getPaymentsPageData();
     
-    $("[name]").prop('disabled', true);
+    // $("[name]").prop('disabled', true);
 });
 
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide().addClass("d-none").removeClass("d-flex");
+		el.fadeIn().removeClass("d-none");
+	} else {
+		tr.fadeIn().removeClass("d-none");
+    }
+});
 
 

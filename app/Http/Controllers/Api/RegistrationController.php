@@ -252,7 +252,7 @@ class RegistrationController extends Controller
                     $date_append = Str::random(32);
                     $file->move(public_path($path), $date_append . '.' . $file_extension);
     
-                    $savedFilePaths = $path . '/' . $date_append . '.' . $file_extension;
+                    $savedFilePaths = '/public' . $path . '/' . $date_append . '.' . $file_extension;
 
                     $UserDocuments = new UserDocuments();
                     $UserDocuments->user_id = $User->id;
