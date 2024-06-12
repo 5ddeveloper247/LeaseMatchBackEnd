@@ -14,7 +14,6 @@ use App\Models\Pricing_plan;
 use App\Models\Menu;
 use App\Models\MenuControl;
 use App\Models\UserSubscription;
-use App\Models\Api\LandlordPersonal;
 use App\Models\Api\UserPersonalInfo;
 use Illuminate\Support\Facades\Validator;
 

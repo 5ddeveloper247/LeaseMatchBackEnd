@@ -120,25 +120,25 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
             Route::get('/mySubscription', [CustomerController::class, 'my_subscription'])->name('customer.mySubscription');
             Route::get('/myAccount', [CustomerController::class, 'my_account'])->name('customer.account_info');
-        Route::get('/propertyInformation', [CustomerController::class, 'property_info'])->name('customer.property_info');
+            Route::get('/propertyInformation', [CustomerController::class, 'property_info'])->name('customer.property_info');
         
-        Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');        
+            Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');        
     
         
         
-        Route::post('/subscribe', [PaymentController::class, 'processSubscription'])->name('subscribe.process');
-        Route::get('/subscription-success', [PaymentController::class, 'subscriptionSuccess'])->name('subscribe.success');
-        Route::get('/subscription-error', [PaymentController::class, 'subscriptionError'])->name('subscribe.error');
+            Route::post('/subscribe', [PaymentController::class, 'processSubscription'])->name('subscribe.process');
+            Route::get('/subscription-success', [PaymentController::class, 'subscriptionSuccess'])->name('subscribe.success');
+            Route::get('/subscription-error', [PaymentController::class, 'subscriptionError'])->name('subscribe.error');
         
         
         
                 
-        /************** AJAX ROUTES ******************/
-        
-        Route::get('/getSpecificTenantDetail', [CustomerController::class, 'get_specific_tenant'])->name('customer.getSpecificTenantDetail');
-        Route::get('/getprofiledata', [CustomerController::class, 'get_profiledata'])->name('customer.getprofiledata');
-        Route::post('/updateprofile', [CustomerController::class, 'update_profile'])->name('customer.updateprofile');
-        Route::post('/updatepersonaldata', [CustomerController::class, 'update_personal_data'])->name('customer.updatepersonaldata');
+            /************** AJAX ROUTES ******************/
+            
+            Route::get('/getSpecificTenantDetail', [CustomerController::class, 'get_specific_tenant'])->name('customer.getSpecificTenantDetail');
+            Route::get('/getprofiledata', [CustomerController::class, 'get_profiledata'])->name('customer.getprofiledata');
+            Route::post('/updateprofile', [CustomerController::class, 'update_profile'])->name('customer.updateprofile');
+            Route::post('/updatepersonaldata', [CustomerController::class, 'update_personal_data'])->name('customer.updatepersonaldata');
         
         
         
