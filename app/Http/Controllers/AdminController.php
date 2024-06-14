@@ -159,10 +159,16 @@ class AdminController extends Controller
         return view('admin/my_account')->with($data);
     }
 
-    public function enquiryProcess(){
-        $data['page'] = 'Enquiry Process';
-        return view('admin/enquiry_process')->with($data);
+    public function propertyMatches(){
+        $data['page'] = 'Property Matches';
+        return view('admin/user_property_matches')->with($data);
     }
+    
+
+    // public function enquiryProcess(){
+    //     $data['page'] = 'Enquiry Process';
+    //     return view('admin/enquiry_process')->with($data);
+    // }
 
 
 
@@ -648,5 +654,12 @@ class AdminController extends Controller
         // $data['listing'] = EnquiryProcess::with(['user','landlord','landlord.propertyDetail'])->get();
         
         // return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function get_matches_data(Request $request)
+    {
+        $data['user_list'] = User::where('type', 3)->with(['personalInfo'])->get();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
     }
 }

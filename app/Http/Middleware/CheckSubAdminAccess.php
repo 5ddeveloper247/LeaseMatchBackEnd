@@ -24,7 +24,7 @@ class CheckSubAdminAccess
             // Get the current route name
             $currentRouteName = $request->route()->getName();
 
-            $menu = Menu::where('route', $currentRouteName)->first();
+            $menu = Menu::where('route', $currentRouteName)->where('enable', '1')->first();
 
             if (!$menu) {
                 // If no menu item is found for the current route, deny access
