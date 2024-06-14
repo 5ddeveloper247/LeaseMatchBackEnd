@@ -39,6 +39,7 @@ use App\Models\Api\UserDocuments;
 
 use App\Models\Api\ContactUs;
 use App\Models\EnquiryHeader;
+use App\Models\RequiredDocuments;
 
 class AdminController extends Controller
 {
@@ -661,5 +662,89 @@ class AdminController extends Controller
         $data['user_list'] = User::where('type', 3)->with(['personalInfo'])->get();
         
         return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function required_documents(){
+        $data['page'] = 'Required Documents';
+        return view('admin/required_documents')->with($data);
+    }
+    public function required_documentsPageData(){
+        $data['list'] = RequiredDocuments::all();
+        $data['active'] = RequiredDocuments::where('status',1)->count();
+        $data['inactive'] = RequiredDocuments::where('status',0)->count();
+        $data['total'] = RequiredDocuments::count();
+        return response()->json(['status' => 200, 'data' => $data]);
+
+    }
+
+    public function add_new_required_document(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'required|max:50',
+            'description' => 'required',
+            ]);
+        $document = new RequiredDocuments;
+        $document->name = $request->name;
+        $document->description = $request->description;
+        $document->status = '1';
+        $document->created_by = Auth::id();
+        $document->save();
+        return response()->json(['status' => 200, 'message' => 'Document Added Successfully']);
+
+    }
+    public function changeRequiredDocumentStatus(Request $request){
+        $document_id  = $request->id;
+        $document = RequiredDocuments::find($document_id);
+        if($document->status == 1  || $document->status == '1'){
+            $document->status = 0;
+        }
+       else{
+            $document->status = 1;
+        }
+        $document->save();
+        return response()->json(['status' => 200, 'message' => 'Document Status Updated Successfully']);
+    }
+
+    public function deleteRequiredDocument(Request $request){
+        $document_id  = $request->id;
+        $document = RequiredDocuments::find($document_id);
+        if($document){
+            $document->delete();
+            return response()->json(['status' => 200, 'message' => 'Document Deleted Successfully']);
+        }
+        else{
+            return response()->json(['status' => 402, 'message' => 'Document Not found']);
+        }
+    }
+    public function getRequiredDocumentDetails(Request $request){
+        $document_id  = $request->id;
+        $document = RequiredDocuments::find($document_id);
+        if($document){
+            return response()->json(['status' => 200, 'data' => $document]);
+        }
+        else{
+            return response()->json(['status' => 402, 'message' => 'Document Not found']);
+        }
+    }
+    public function updateRequiredDocument(Request $request){
+        $validatedData = $request->validate([
+            'name_edit' => 'required|max:50',
+            'description_edit' => 'required',
+            ],
+            [
+                'name_edit.required' => 'Document name is required',
+                'name_edit.max' => 'Document name can not be more than 50 charatcers',
+                'description_edit.required' => 'Description is required'
+            ]);
+        $document_id  = $request->document_id_edit;
+        $document = RequiredDocuments::find($document_id);
+        if($document){
+            $document->name = $request->name_edit;
+            $document->description = $request->description_edit;
+            $document->save();
+            return response()->json(['status' => 200, 'message' => 'Document Updated Successfully']);
+        }
+        else{
+            return response()->json(['status' => 402, 'message' => 'Document Not found']);
+        }
     }
 }

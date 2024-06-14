@@ -55,6 +55,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/property_matches', [AdminController::class, 'propertyMatches'])->name('admin.property_matches');
             
             // Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
+            Route::get('/required_documents', [AdminController::class, 'required_documents'])->name('admin.required_documents');
             
         });
         
@@ -95,6 +96,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/updateprofile', [AdminController::class, 'update_profile'])->name('admin.updateprofile');
         
         Route::post('/getEnquiryPageData', [AdminController::class, 'enquiry_page_data'])->name('admin.getEnquiryPageData');
+        Route::get('/getrequired_documentsPageData', [AdminController::class, 'required_documentsPageData'])->name('admin.getrequired_documentsPageData');
+        Route::post('/add_new_required_document', [AdminController::class, 'add_new_required_document'])->name('admin.add_new_required_document');
+        Route::post('/changeRequiredDocumentStatus', [AdminController::class, 'changeRequiredDocumentStatus'])->name('admin.changeRequiredDocumentStatus');
+        Route::post('/deleteRequiredDocument', [AdminController::class, 'deleteRequiredDocument'])->name('admin.deleteRequiredDocument');
+        Route::post('/getRequiredDocumentDetails', [AdminController::class, 'getRequiredDocumentDetails'])->name('admin.getRequiredDocumentDetails');
+        Route::post('/updateRequiredDocument', [AdminController::class, 'updateRequiredDocument'])->name('admin.updateRequiredDocument');
 
         Route::post('/getMatchesPageData', [AdminController::class, 'get_matches_data'])->name('admin.getMatchesPageData');
         
