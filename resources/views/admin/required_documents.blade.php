@@ -9,6 +9,9 @@
     #users_table{
         font-size:x-small;
     }
+    table td {
+    vertical-align: middle !important;
+}  
 </style>
 
 <section id="listing">
