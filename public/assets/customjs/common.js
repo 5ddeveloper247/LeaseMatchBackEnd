@@ -136,3 +136,11 @@ function SendAjaxRequestToServer(
 //         });
 //     }
 // }
+
+
+$('input').on('keyup', function() {
+    $(this).removeClass('is-invalid');
+});
+$('textarea').on('keyup', function() {
+    $(this).removeClass('is-invalid');
+});
