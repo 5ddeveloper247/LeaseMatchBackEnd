@@ -38,8 +38,7 @@ use App\Models\Api\AdditionalNotes;
 use App\Models\Api\UserDocuments;
 
 use App\Models\Api\ContactUs;
-
-
+use App\Models\EnquiryHeader;
 
 class AdminController extends Controller
 {
@@ -155,6 +154,15 @@ class AdminController extends Controller
         return view('admin/contact_us')->with($data);
     }
 
+    public function my_account(){
+        $data['page'] = 'My Account';
+        return view('admin/my_account')->with($data);
+    }
+
+    public function enquiryProcess(){
+        $data['page'] = 'Enquiry Process';
+        return view('admin/enquiry_process')->with($data);
+    }
 
 
 
@@ -580,5 +588,65 @@ class AdminController extends Controller
         }else{
             return response()->json(['status' => 402, 'message' => "Something went wrong!"]);
         }
+    }
+
+
+    public function get_profile_data(Request $request){
+        $user_id = Auth::id();
+        $data['details'] = User::where('id', $user_id)->whereIn('type', ['1','2'])
+        ->with(['personalInfo'])
+        ->first();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+    public function update_profile(Request $request){
+        $user_id = Auth::id();
+        $user = User::find($user_id);
+        $request->validate([
+            'first_name' => 'required',
+            'phone_number' => 'max:18'
+        ]);
+        if($request->password){
+            $request->validate([
+                'first_name' => 'required',
+                'phone_number' => 'max:18',
+                'old_password' => 'required',
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8', 
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                    'confirmed',
+                ],
+            ],[
+                'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            ]);
+            $credentials = [
+                'email' => $user->email,
+                'password' => $request->old_password,
+            ];
+
+            if (Auth::attempt($credentials)) {
+                $user->first_name = $request->first_name;
+                $user->phone_number = $request->phone_number;
+                $user->password = bcrypt($request->password);
+                $user->save();
+                return response()->json(['status' => 200, 'message' => 'Profile Updated Successfully']);
+            } else {
+                return response()->json(['status' => 402, 'message' => "Old password is incorrect"]);
+            }
+        } else {
+            $user->first_name = $request->first_name;
+            $user->phone_number = $request->phone_number;
+            $user->save();
+            return response()->json(['status' => 200, 'message' => 'Profile Updated Successfully']);
+        }
+    }
+
+    public function enquiry_page_data(Request $request){
+
+        // $data['listing'] = EnquiryProcess::with(['user','landlord','landlord.propertyDetail'])->get();
+        
+        // return response()->json(['status' => 200, 'data' => $data]);
     }
 }

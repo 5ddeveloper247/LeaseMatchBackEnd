@@ -111,7 +111,7 @@ if (!function_exists('getLeftMenu')) {
     function getLeftMenu()
     {
         if(Auth::user()->type == 1){
-            $menu = Menu::get();
+            $menu = Menu::orderBy('seq_no', 'asc')->get();
         }else{
             // $menuControl = Menu::get();
             $menu = Menu::join('menu_control', 'menu.id', '=', 'menu_control.menu_id')

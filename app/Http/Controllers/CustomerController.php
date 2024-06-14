@@ -15,6 +15,7 @@ use App\Models\Menu;
 use App\Models\MenuControl;
 use App\Models\UserSubscription;
 use App\Models\Api\UserPersonalInfo;
+use App\Models\EnquiryHeader;
 use Illuminate\Support\Facades\Validator;
 
 // landlord models
@@ -124,12 +125,12 @@ class CustomerController extends Controller
     public function property_detail(Request $request)
     {
         $currentDate = Carbon::now()->format('Y-m-d');
-
+        
+        $data['page'] = 'Matches';
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
                                 ->where('end_date', '>=', $currentDate)
                                 ->with('plan')->orderBy('created_at', 'desc')->first();
 
-        $data['page'] = 'Matches';
         $data['property_detail'] = LandlordPersonal::where('id', $request->landlord_id)->
                                         with(['propertyDetail','rentalDetail','tenantDetail',
                                         'additionalDetail','propertyImages'])
@@ -350,7 +351,6 @@ class CustomerController extends Controller
         }
         if($request->date_of_birth){
             $user->date_of_birth = $request->date_of_birth;
-          
         }
         if($request->phone_number_personal){
             $user->phone_number = $request->phone_number_personal;
@@ -358,5 +358,44 @@ class CustomerController extends Controller
         $user->save();
         return response()->json(['status' => 200, 'message' => 'Profile Updated Successfully']);
 
+    }
+
+    public function process_app_request(Request $request){
+        
+        $user_id = Auth::id();
+        
+        $request->validate([
+            'landlord_id' => 'required',
+            'process_type' => 'required',
+            'process_message' => 'required|max:100',
+        ]);
+        
+        $enquiry = EnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
+        
+        // if(isset($check->id)){
+        //     return response()->json(['status' => 402, 'message' => 'Request already submitted!']);
+        // }
+        
+        if(!isset($enquiry->id)){
+            $enquiry = new EnquiryHeader();
+            $enquiry->user_id = Auth::user()->id;
+            $enquiry->landlord_id = $request->landlord_id;
+            $enquiry->date = Carbon::now()->format('Y-m-d');
+            $enquiry->status = '1'; //
+            $enquiry->created_by = Auth::user()->id;
+            $enquiry->save();
+        }
+
+        $enquiryDetail = new EnquiryDetail();
+        $enquiryDetail->enquiry_id = $enquiry->id;
+        $enquiryDetail->type = $request->type;
+        $enquiryDetail->date = Carbon::now()->format('Y-m-d');
+        $enquiryDetail->status = '1'; //
+        $enquiryDetail->created_by = Auth::user()->id;
+        $enquiryDetail->save();
+        
+    
+        return response()->json(['status' => 200, 'message' => 'Your request is submited successfully, we will respond you soon, Thanks']);
+        
     }
 }

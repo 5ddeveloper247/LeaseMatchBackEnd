@@ -95,20 +95,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="blk content">
-                        <h6 class="sub_heading">Extra FEATURES</h6>
-                        <ul class="icon_lst">
-                            <li><img src="{{asset('assets/images/glyph-gps.svg')}}" alt="">GPS</li>
-                            <li><img src="{{asset('assets/images/glyph-hot-seat.svg')}}" alt="">Heated seats</li>
-                            <li><img src="{{asset('assets/images/glyph-keyless.svg')}}" alt="">Keyless entry</li>
-                            <li><img src="{{asset('assets/images/glyph-long-term.svg')}}" alt="">Long-term car</li>
-                            <li><img src="{{asset('assets/images/glyph-sunroof.svg')}}" alt="">Sunroof</li>
-                            <li><img src="{{asset('assets/images/glyph-tool-pass.svg')}}" alt="">Toll pass</li>
-                            <li><img src="{{asset('assets/images/glyph-usb-charger.svg')}}" alt="">USB charger</li>
-                            <li><img src="{{asset('assets/images/glyph-usb-input.svg')}}" alt="">USB input</li>
-                        </ul>
-                        <hr>
-                    </div> -->
                 </div>
             </div>
             <div class="col col2">
@@ -151,7 +137,28 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="blk">
+                    @if(@$curr_plan->process_application_flag == 1)
+                        <div class="blk">
+                            <h6 class="sub_heading">Process Application Request</h6>
+                            <form action="javascript:;" id="processApp_form">
+                                <input type="hidden" name="landlord_id" value="{{@$property_detail->id}}">
+                                <input type="hidden" name="process_type" value="1">
+                                <div class="form_row row">
+                                    <div class="col-xs-12">
+                                        <h6>Message<sup>*</sup></h6>
+                                        <div class="form_blk">
+                                            <input type="text" name="process_message" id="process_message" class="text_box" placeholder="Message">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="btn_blk form_btn">
+                                    <button type="button" class="site_btn block" id="processApp_btn">Process Application</button>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
+                    
+                    <!-- <div class="blk">
                         <h6 class="sub_heading">Financing Calculator</h6>
                         <form action="" method="POST">
                             <div class="form_row row">
@@ -166,7 +173,7 @@
                                 <button type="submit" class="site_btn block">Estimate Payment</button>
                             </div>
                         </form>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

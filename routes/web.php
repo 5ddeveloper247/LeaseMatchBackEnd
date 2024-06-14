@@ -50,6 +50,8 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/user_payments', [AdminController::class, 'userPayments'])->name('admin.user_payments');
             Route::get('/user_subscriptions', [AdminController::class, 'userSubscriptions'])->name('admin.user_subscriptions');
             Route::get('/contact_us', [AdminController::class, 'contactUs'])->name('admin.contact_us');
+            Route::get('/my_account', [AdminController::class, 'my_account'])->name('admin.my_account');
+            Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
             
         });
         
@@ -86,7 +88,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/getSpecificContactUsDetail', [AdminController::class, 'get_specific_contactus_detail'])->name('admin.getSpecificContactUsDetail');
         Route::post('/saveContactReply', [AdminController::class, 'save_contact_reply'])->name('admin.saveContactReply');
         
+        Route::get('/getprofiledata', [AdminController::class, 'get_profile_data'])->name('admin.getprofiledata');
+        Route::post('/updateprofile', [AdminController::class, 'update_profile'])->name('admin.updateprofile');
         
+        Route::post('/getEnquiryPageData', [AdminController::class, 'enquiry_page_data'])->name('admin.getEnquiryPageData');
+
         
     });
 });
@@ -100,46 +106,33 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/logout', [CustomerController::class, 'logout'])->name('customer.logout');
         Route::get('/noaccess', [CustomerController::class, 'noaccess'])->name('customer.noaccess');
         Route::get('/forgotpassword', [CustomerController::class, 'forgotpassword'])->name('customer.forgotpassword');
-        Route::get('/myMatches', [CustomerController::class, 'my_matches'])->name('customer.myMatches');
-        Route::post('/propertyDetail', [CustomerController::class, 'property_detail'])->name('customer.propertyDetail');
         
-            
-            
-            
-            
-            
         Route::post('/forgetpasswordemailvalidate', [CustomerController::class, 'forgot_password_validate_email'])->name('customer.forgetpasswordemailvalidate');
         Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
         Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
         
-        
         Route::group(['middleware' => ['UserAuth']], function () {
-            
             
             /************** PAGE ROUTES ******************/
             Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
             Route::get('/mySubscription', [CustomerController::class, 'my_subscription'])->name('customer.mySubscription');
             Route::get('/myAccount', [CustomerController::class, 'my_account'])->name('customer.account_info');
             Route::get('/propertyInformation', [CustomerController::class, 'property_info'])->name('customer.property_info');
-        
-            Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');        
-    
-        
-        
+            Route::get('/myMatches', [CustomerController::class, 'my_matches'])->name('customer.myMatches');
+            Route::post('/propertyDetail', [CustomerController::class, 'property_detail'])->name('customer.propertyDetail');
+
+            /************** PAYMENT ROUTES ******************/
             Route::post('/subscribe', [PaymentController::class, 'processSubscription'])->name('subscribe.process');
             Route::get('/subscription-success', [PaymentController::class, 'subscriptionSuccess'])->name('subscribe.success');
             Route::get('/subscription-error', [PaymentController::class, 'subscriptionError'])->name('subscribe.error');
-        
-        
-        
-                
-            /************** AJAX ROUTES ******************/
             
+            /************** AJAX ROUTES ******************/
             Route::get('/getSpecificTenantDetail', [CustomerController::class, 'get_specific_tenant'])->name('customer.getSpecificTenantDetail');
             Route::get('/getprofiledata', [CustomerController::class, 'get_profiledata'])->name('customer.getprofiledata');
             Route::post('/updateprofile', [CustomerController::class, 'update_profile'])->name('customer.updateprofile');
             Route::post('/updatepersonaldata', [CustomerController::class, 'update_personal_data'])->name('customer.updatepersonaldata');
-        
+            Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');
+            Route::post('/processAppRequest', [CustomerController::class, 'process_app_request'])->name('customer.processAppRequest');
         
         
         

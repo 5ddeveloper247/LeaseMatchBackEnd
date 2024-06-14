@@ -59,8 +59,46 @@ function viewContactResponse(response) {
             timeOut: 3000
         });
     }
-    
-    
+}
+
+$('#processApp_btn').click(function(e){
+    e.preventDefault();
+	let type = 'POST';
+	let url = '/customer/processAppRequest';
+	let message = '';
+	let form = $("#processApp_form");
+	let data = new FormData(form[0]);
+	
+	// PASSING DATA TO FUNCTION
+	$('[name]').removeClass('is-invalid');
+	SendAjaxRequestToServer(type, url, data, '', processAppRequestResponse, '', '#processApp_btn'); 
+});
+
+function processAppRequestResponse(response){
+    if (response.status == 200 || response.status == '200') {
+        toastr.success(response.message, '', {
+            timeOut: 3000
+        });
+
+        $("#process_message").val('');
+        $("#processApp_btn").prop('disabled', true);
+    }else{
+        if (response.status == 402) {
+            error = response.message;
+        } else {
+            error = response.responseJSON.message;
+            var is_invalid = response.responseJSON.errors;
+
+            $.each(is_invalid, function (key) {
+                // Assuming 'key' corresponds to the form field name
+                var inputField = $('[name="' + key + '"]');
+                inputField.addClass('is-invalid');
+            });
+        }
+        toastr.error(error, '', {
+            timeOut: 3000
+        });
+    }
 }
 
 $(document).ready(function () {

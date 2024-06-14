@@ -28,13 +28,13 @@
             </li>
             <li class="{{$page == 'My Account' ? 'active' : ''}}">
                 <a href="{{route('customer.account_info')}}">
-                    <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">
+                    <img src="{{asset('assets/images/icon-user.svg')}}" alt="">
                     <em>My Account</em>
                 </a>
             </li>
             <li class="{{$page == 'Property Information' ? 'active' : ''}}">
                 <a href="{{route('customer.property_info')}}">
-                    <img src="{{asset('assets/images/icon-pricing.svg')}}" alt="">
+                    <img src="{{asset('assets/images/icon-list.svg')}}" alt="">
                     <em>Property Information</em>
                 </a>
             </li>

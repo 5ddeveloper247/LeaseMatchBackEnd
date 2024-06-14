@@ -5,11 +5,11 @@
         </div>
         <button type="button" class="toggle"><span></span></button>
     </div>
-    <div class="mini_btn">
-        <!-- <a href="?"><img src="{{asset('assets/images/symbol-comments.svg')}}" alt="">Live Chat</a> -->
-        <a href="?"><img src="{{asset('assets/images/symbol-envelope.svg')}}" alt="">Email</a>
-        <a href="?"><img src="{{asset('assets/images/symbol-headphone.svg')}}" alt="">Phone</a>
-    </div>
+    <!-- <div class="mini_btn">
+        <a href="javascript:;"><img src="{{asset('assets/images/symbol-comments.svg')}}" alt="">Live Chat</a>
+        <a href="javascript:;"><img src="{{asset('assets/images/symbol-envelope.svg')}}" alt="">Email</a>
+        <a href="javascript:;"><img src="{{asset('assets/images/symbol-headphone.svg')}}" alt="">Phone</a>
+    </div> -->
     <div class="inside">
         <ul>
             <?php 
