@@ -111,11 +111,12 @@ if (!function_exists('getLeftMenu')) {
     function getLeftMenu()
     {
         if(Auth::user()->type == 1){
-            $menu = Menu::orderBy('seq_no', 'asc')->get();
+            $menu = Menu::orderBy('seq_no', 'asc')->where('enable', '1')->get();
         }else{
             // $menuControl = Menu::get();
             $menu = Menu::join('menu_control', 'menu.id', '=', 'menu_control.menu_id')
             ->where('menu_control.user_id', Auth::user()->id)
+            ->where('menu.enable', '1')
             ->select('menu.id', 'menu.seq_no', 'menu.name', 'menu.route', 'menu.image', 'menu.created_at', 'menu.updated_at')
             ->get();
         }
@@ -128,7 +129,7 @@ if (!function_exists('getAllMenu')) {
 
     function getAllMenu()
     {
-        $menu = Menu::get();
+        $menu = Menu::where('enable', '1')->get();
         return $menu;
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 100)->nullable();
             $table->string('route', 255)->nullable();
             $table->string('image', 255)->nullable();
+            $table->smallInteger('enable')->default('1')->nullable();
             $table->timestamps();
         });
     }

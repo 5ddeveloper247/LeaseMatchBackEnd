@@ -51,7 +51,10 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/user_subscriptions', [AdminController::class, 'userSubscriptions'])->name('admin.user_subscriptions');
             Route::get('/contact_us', [AdminController::class, 'contactUs'])->name('admin.contact_us');
             Route::get('/my_account', [AdminController::class, 'my_account'])->name('admin.my_account');
-            Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
+            
+            Route::get('/property_matches', [AdminController::class, 'propertyMatches'])->name('admin.property_matches');
+            
+            // Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
             Route::get('/required_documents', [AdminController::class, 'required_documents'])->name('admin.required_documents');
             
         });
@@ -100,6 +103,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/getRequiredDocumentDetails', [AdminController::class, 'getRequiredDocumentDetails'])->name('admin.getRequiredDocumentDetails');
         Route::post('/updateRequiredDocument', [AdminController::class, 'updateRequiredDocument'])->name('admin.updateRequiredDocument');
 
+        Route::post('/getMatchesPageData', [AdminController::class, 'get_matches_data'])->name('admin.getMatchesPageData');
         
     });
 });

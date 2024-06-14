@@ -16,11 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->boolean('status')->default(true);
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
