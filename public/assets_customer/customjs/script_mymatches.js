@@ -106,3 +106,58 @@ $(document).ready(function () {
     //console.log('success');
   
 });
+
+
+$('#tenant_enquiry_document_form').submit(function(e){
+    var isValid = true;
+    $('input[type="file"]').each(function() {
+        if ($(this).val() === '') {
+            isValid = false;
+            toastr.error($(this).attr('data-name') +' is required', '', {
+                timeOut: 3000
+            });
+            
+            return false; // Break the loop
+        }
+    });
+    if (!isValid) {
+        e.preventDefault();
+        return;
+    }
+	let type = 'POST';
+	let url = '/customer/uploadTenantEnquiryDocuments';
+	let message = '';
+	let form = $("#tenant_enquiry_document_form");
+	let data = new FormData(form[0]);
+	
+	// PASSING DATA TO FUNCTION
+	$('[name]').removeClass('is-invalid');
+	SendAjaxRequestToServer(type, url, data, '', uploadTenantEnquiryDocumentsResponse, '', '#tenant_enquiry_document_form_submit_btn'); 
+});
+
+
+function uploadTenantEnquiryDocumentsResponse(response){
+    if (response.status == 200 || response.status == '200') {
+        toastr.success(response.message, '', {
+            timeOut: 3000
+        });
+
+        $("#tenant_enquiry_document_form")[0].reset();
+    }else{
+        if (response.status == 402) {
+            error = response.message;
+        } else {
+            error = response.responseJSON.message;
+            var is_invalid = response.responseJSON.errors;
+
+            $.each(is_invalid, function (key) {
+                // Assuming 'key' corresponds to the form field name
+                var inputField = $('[name="' + key + '"]');
+                inputField.addClass('is-invalid');
+            });
+        }
+        toastr.error(error, '', {
+            timeOut: 3000
+        });
+    }
+}

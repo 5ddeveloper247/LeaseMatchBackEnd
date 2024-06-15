@@ -174,6 +174,29 @@
                             </div>
                         </form>
                     </div> -->
+
+                    <div class="blk">
+                            <h6 class="sub_heading">Upload Documents</h6>
+                            <form action="javascript:;" id="tenant_enquiry_document_form" enctype="multipart/formdata">
+                               
+                               <div class="form_row row">
+                               @foreach($upload_documents as $req_doc)
+                               <input type="hidden" name="req_doc_ids[]" value={{$req_doc->id}}>
+                                    <div class="col-xs-12">
+                                        <h6>Upload {{$req_doc->required_document->name}}<sup>*</sup></h6>
+                                        <div class="form_blk">
+                                            <input type="file" name="upload_document[]" data-name="{{$req_doc->required_document->name}}">
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                               
+                                
+                                <div class="btn_blk form_btn">
+                                    <button type="submit" class="site_btn block" id="tenant_enquiry_document_form_submit_btn">Submit</button>
+                                </div>
+                            </form>
+                        </div>
                 </div>
             </div>
         </div>

@@ -16,6 +16,7 @@ use App\Models\MenuControl;
 use App\Models\UserSubscription;
 use App\Models\Api\UserPersonalInfo;
 use App\Models\EnquiryHeader;
+use App\Models\TenantEnquiryDocument;
 use Illuminate\Support\Facades\Validator;
 
 // landlord models
@@ -138,6 +139,7 @@ class CustomerController extends Controller
         
         $data['curr_plan'] = isset($currentPlan->plan) ? $currentPlan->plan : '';
         // dd($data['property_detail']);
+        $data['upload_documents'] = TenantEnquiryDocument::with('required_document')->get();
         return view('customer/property_detail')->with($data);
     }
 
@@ -397,5 +399,29 @@ class CustomerController extends Controller
     
         return response()->json(['status' => 200, 'message' => 'Your request is submited successfully, we will respond you soon, Thanks']);
         
+    }
+    public function uploadTenantEnquiryDocuments(Request $request){
+        
+        
+        $request->validate([
+            'upload_document' => 'array|required',
+            'upload_document.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
+        ]);
+        
+        $ids = $request->req_doc_ids;
+        $docs = $request->upload_document;
+        
+        foreach($ids as $i =>$id){
+            $record = TenantEnquiryDocument::find($id);
+            $path = '/uploads/tenant_enquiry_documents/'.$id;
+            if($record->path != null){
+                deleteImage(str_replace(url('/'), '', $record->path));
+            }
+            $uploadedFile = $request->file('upload_document')[$i];
+            $savedFile = saveSingleImage($uploadedFile, $path);            
+            $record->path = url('/') . $savedFile;
+            $record->save();
+        }
+        return response()->json(['status' => 200, 'message' => 'Document submitted successfully']);
     }
 }

@@ -144,6 +144,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/updatepersonaldata', [CustomerController::class, 'update_personal_data'])->name('customer.updatepersonaldata');
             Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');
             Route::post('/processAppRequest', [CustomerController::class, 'process_app_request'])->name('customer.processAppRequest');
+            Route::post('/uploadTenantEnquiryDocuments', [CustomerController::class, 'uploadTenantEnquiryDocuments'])->name('customer.uploadTenantEnquiryDocuments');
         
         
         
