@@ -17,6 +17,7 @@ use App\Models\UserSubscription;
 use App\Models\Api\UserPersonalInfo;
 use App\Models\EnquiryHeader;
 use App\Models\TenantEnquiryDocument;
+use App\Models\TenantEnquiryRequests;
 use Illuminate\Support\Facades\Validator;
 
 // landlord models
@@ -372,29 +373,38 @@ class CustomerController extends Controller
             'process_message' => 'required|max:100',
         ]);
         
-        $enquiry = EnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
+        $enquirycheck = EnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
         
-        // if(isset($check->id)){
-        //     return response()->json(['status' => 402, 'message' => 'Request already submitted!']);
-        // }
+        if(isset($enquirycheck->id)){
+            return response()->json(['status' => 402, 'message' => 'Request already in process!']);
+        }
         
         if(!isset($enquiry->id)){
+            
             $enquiry = new EnquiryHeader();
             $enquiry->user_id = Auth::user()->id;
             $enquiry->landlord_id = $request->landlord_id;
             $enquiry->date = Carbon::now()->format('Y-m-d');
-            $enquiry->status = '1'; //
+            $checkIfExist = EnquiryHeader::where('landlord_id',$request->landlord_id)->count();
+            if($checkIfExist > 0){
+                $enquiry->status = '7'; //
+            }
+            else{
+                $enquiry->status = '1';
+            }
             $enquiry->created_by = Auth::user()->id;
             $enquiry->save();
         }
 
-        $enquiryDetail = new EnquiryDetail();
-        $enquiryDetail->enquiry_id = $enquiry->id;
-        $enquiryDetail->type = $request->type;
-        $enquiryDetail->date = Carbon::now()->format('Y-m-d');
-        $enquiryDetail->status = '1'; //
-        $enquiryDetail->created_by = Auth::user()->id;
-        $enquiryDetail->save();
+        $tenantEnquiryRequest = new TenantEnquiryRequests();
+        $tenantEnquiryRequest->enquiry_id = $enquiry->id;
+        $tenantEnquiryRequest->type = $request->process_type;
+        $tenantEnquiryRequest->date = Carbon::now()->format('Y-m-d');
+        $tenantEnquiryRequest->status = $enquiry->status;
+        $tenantEnquiryRequest->message = $request->process_message;
+        $tenantEnquiryRequest->created_by = Auth::user()->id;
+        $tenantEnquiryRequest->submitted_by = Auth::user()->id;
+        $tenantEnquiryRequest->save();
         
     
         return response()->json(['status' => 200, 'message' => 'Your request is submited successfully, we will respond you soon, Thanks']);

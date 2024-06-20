@@ -20,7 +20,8 @@ return new class extends Migration
                                                     3=>Upload Docs, 
                                                     4=>Doc Attached, 
                                                     5=>Approved, 
-                                                    6=>Document Rejected')->nullable();
+                                                    6=>Document Rejected,
+                                                    7=>Waiting')->nullable();
             $table->date('date')->nullable();
             
             
