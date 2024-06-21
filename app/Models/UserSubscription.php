@@ -20,4 +20,5 @@ class UserSubscription extends Model
     {
         return $this->belongsTo(Pricing_plan::class, 'plan_id');
     }
+    
 }

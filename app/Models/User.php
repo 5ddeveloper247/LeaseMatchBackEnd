@@ -138,5 +138,17 @@ class User extends Authenticatable
     {
     	return $this->hasMany(UserSubscription::class, 'user_id');
     }
+
+    public function userMatches()
+    {
+    	return $this->hasMany(PropertyMatches::class, 'user_id');
+    }
+
+    public function activePlan()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id')
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now());
+    }
     
 }

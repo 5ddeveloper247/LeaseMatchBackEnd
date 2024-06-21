@@ -26,8 +26,8 @@
                                 <img src="{{$image}}" alt="">
                                 <div class="overlay">
                                     <ul class="social_links">
-                                        <li class="view_property_detail" data-id="{{$property->id}}" title="View Property Detail">
-                                            <a href="javascript:;"><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a>
+                                        <li class="view_property_detail pointer" data-id="{{$property->id}}" title="View Property Detail">
+                                            <a><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -38,7 +38,9 @@
                                 </ul>
                             </div>
                             <div class="txt">
-                                <h5 class="title"><a href="javascript:;">{{@$property->propertyDetail->property_type}}</a></h5>
+                                <h5 class="title">
+                                    <a class="view_property_detail pointer" data-id="{{$property->id}}" title="View Property Detail">{{@$property->propertyDetail->property_type}}</a>
+                                </h5>
                                 <div class="price"><span>&dollar;{{@$property->rentalDetail->monthly_rent}}</span></div>
                             </div>
                         </div>

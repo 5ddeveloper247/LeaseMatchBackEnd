@@ -2,38 +2,7 @@
 
 @push('css')
 @endpush
-<style>
-    .top-bar-user{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .top-header-payment-details{
-        background-color: #0078b9;
-        padding: 10px 25px;
-    }
-    .top-header-payment-details img{
-        height: 80px;
-        width: 80px;
-        border-radius: 50%;
-    }
-    .leave-summary{
-        border: 1px solid #888;
-        border-radius: 5px;
-        padding: 5px 10px;
-        margin: 15px 0px;
-    }
-    .leave-summary .label-summary{
-        color: black !important;
-    }
-    .leave-summary .value-summary{
-        color: gray;
-    }
-    .detail-image-top{
-        display: flex;
-        align-items: center;    
-    }
-</style>
+
 @section('content')
 <style>
     #users_table{

@@ -63,7 +63,7 @@
                            
                         </tr>
                     </thead>
-                    <tbody id="payments_table_body">
+                    <tbody id="listing_table_body">
 
                    
                     </tbody>
@@ -117,146 +117,153 @@
                         </p>
                     </div>
                 </div>
-                <!-- <div class="row mx-5">
-                    <div class="col-xs-12 col-md-4 my-5">
-                        <h3>Leave Summary 2024</h3>
-                        <div class="leave-summary">
-                            <div class="leave-item">
-                                <div class="label-summary">Annual Leave Entitlement Yearly</div>
-                                <div class="value-summary">30 Day(s)</div>
-                            </div>
-                            <div class="leave-item">
-                                <div class="label-summary">Availed Annual Leave</div>
-                                <div class="value-summary">0 Day(s)</div>
-                            </div>
-                            <div class="leave-item">
-                                <div class="label-summary">Outstanding Annual Leave</div>
-                                <div class="value-summary">30 Day(s)</div>
-                            </div>
-                            <div class="leave-item">
-                                <div class="label-summary">Availed Sick Leave</div>
-                                <div class="value-summary">0 Day(s)</div>
-                            </div>
-                            <div class="leave-item">
-                                <div class="label-summary">Availed Unpaid Leave</div>
-                                <div class="value-summary">0 Day(s)</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-8">
-
-                    </div>
-                </div> -->
+                
                 <br>
-                <div class="contain-fluid">
-                    <div class="top_head mt-5">
-                        <h4>All Payments</h4>
-                        <div class="form_blk">
-                            <input type="text" name="" id="searchInListing" class="text_box" placeholder="Search here">
-                            <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
-                        </div>
-                    </div>
-                    <div class="blk">
-                        <div class="tbl_blk">
-                            <table id="users_table" class="table table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th width="10">#</th>
-                                        <th>Username</th>
-                                        <th>Plan Name</th>
-                                        <th>Transaction ID</th>
-                                        <th width="40">Amount</th>
-                                        <th>Transaction Date</th>
-                                        <th width="40" >Status</th>
-                                        <th width="40" >Receipt</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="payment_list_table">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            <!-- <div class="table_dv">
-                <div class="table_cell">
-                    <div class="contain">
-                        <div class="_inner">
-                            <button type="button" class="x_btn" ></button>
-                            <h4 >User Details</h4>
-                            <form id="viewUser_form">
-                                <div class="form_row row">
-                                    <input type="hidden" id="plan_id" name="plan_id" value="">
-                                    <div class="col-sm-6 offset-sm-6">
-                                        <h6>
-                                            Name
-                                        </h6>
-                                        <div class="form_blk">
-                                            <input type="text" name="" id="user_name" class="form-control text_box" placeholder="">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 offset-sm-6">
-                                        <h6>
-                                            Email
-                                        </h6>
-                                        <div class="form_blk">
-                                            <input type="text" name="" id="user_email" class="form-control text_box" placeholder="">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 offset-sm-6">
-                                        <h6>
-                                            Phone Number
-                                        </h6>
-                                        <div class="form_blk">
-                                            <input type="text" name="" id="user_phone" class="form-control text_box" placeholder="">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 offset-sm-6">
-                                        <h6>
-                                            Date of birth
-                                        </h6>
-                                        <div class="form_blk">
-                                            <input type="date" name="" id="user_dob" class="form-control text_box" placeholder="">
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                    
+                <ul class="tab_list">
+                    <li class="active"><a href="#All" data-toggle="tab">All Landlords</a></li>
+                    <li><a href="#AssignAll" data-toggle="tab">Assigned Landlords</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="All" class="tab-pane fade in active">
+                        <div class="contain-fluid">
+                            <div class="top_head mt-5">
+                                <h4>Search Filter</h4>
+                                <div class="form_blk">
+                                    <input type="text" name="" id="searchInListing" class="text_box" placeholder="Search here">
+                                    <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
                                 </div>
-                            </form>
+                            </div>
+                            <div class="_inner">
+                                <!-- <button type="button" class="x_btn" ></button> -->
+                                <h4></h4>
+                                <form id="filter_form">
+                                    <div class="form_row row">
+                                        <input type="hidden" id="user_id" name="user_id" value="">
+                                        <div class="col-sm-3">
+                                            <h6>Landlord Username</h6>
+                                            <div class="form_blk">
+                                                <input type="text" name="landlord_username" id="landlord_username" class="form-control text_box" placeholder="Username">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h6>Landlord Email</h6>
+                                            <div class="form_blk">
+                                                <input type="text" name="landlord_email" id="landlord_email" class="form-control text_box" placeholder="abc@example.com">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h6>Property Type</h6>
+                                            <div class="form_blk">
+                                                <select id="property_type" name="property_type" class="text_box " data-container="body">
+                                                    <option value="">Please choose an option</option>
+                                                    <option value="Appartment">Appartment</option>
+                                                    <option value="Condo">Condo</option>
+                                                    <option value="House">House</option>
+                                                    <option value="Studio">Studio</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h6>Rental Type</h6>
+                                            <div class="form_blk">
+                                                <select id="rental_type" name="rental_type" class="text_box " data-container="body">
+                                                    <option value="">Please choose an option</option>
+                                                    <option value="Furnished">Furnished</option>
+                                                    <option value="Unfurnished">Unfurnished</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="btn_blk form_btn text-right">
+                                        <button type="button" class="site_btn" id="search_filter_submit">Search</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <br>
+                            <div class="blk">
+                                <div class="tbl_blk">
+                                    <table id="users_table" class="table table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th width="10">#</th>
+                                                <th>Username</th>
+                                                <th>Type</th>
+                                                <th>Apartment Number</th>
+                                                <th>Size</th>
+                                                <th>Bedrooms</th>
+                                                <th>Bathrooms</th>
+                                                <th>Rental Type</th>
+                                                <th class="text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detail_listing_table">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             
                         </div>
-                        <br>
-                        <div class="tbl_blk">
-                            <button type="button" class="x_btn" onclick="backToList();"></button>
-                            <h4 >All Payments</h4>
-                            <table id="users_table" class="table table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th width="10">#</th>
-                                        <th>Username</th>
-                                        <th>Plan Name</th>
-                                        <th>Transaction ID</th>
-                                        <th width="40">Amount</th>
-                                        <th>Transaction Date</th>
-                                        <th width="40" >Status</th>
-                                        <th width="40" >Receipt</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="payment_list_table">
-                                    
-                                </tbody>
-                            </table>
+                    </div>
+                    <div id="AssignAll" class="tab-pane fade">
+                        <div class="blk">
+                            <div class="tbl_blk">
+                                <table id="users_table" class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th width="10">#</th>
+                                            <th>Username</th>
+                                            <th>Type</th>
+                                            <th>Apartment Number</th>
+                                            <th>Size</th>
+                                            <th>Bedrooms</th>
+                                            <th>Bathrooms</th>
+                                            <th>Rental Type</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="assigned_listing_table">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div> -->
+                
+            </div>
+            
             
         </div>
         
     </div>
+
+    <!-- delete modal start  -->
+    <div class="popup sm" id="confirm_popup">
+        <div class="table_dv">
+            <div class="table_cell">
+                <div class="contain">
+                    <div class="_inner">
+                        <div class="form_row row">
+                            <input type="hidden" id="landlord_id" value="">
+                            <div class="col-sm-12 col-12" style="text-align: center;">
+                                <h5>Are you sure you want to assign this property to this user...!!!</h5>
+                            </div>
+                            <div class="col-sm-12 col-12" style="display: grid; place-items: center;">
+                                <div class="btn_blk">
+                                    <a href="javascript:;" class="site_btn sm close_confirm" style="background: #ff0505;">No</a>
+                                    <a href="javascript:;" class="site_btn sm assign_prop_confirmed" data-id="">Yes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- delete modal end  -->
+
 </section>
 
 @endsection

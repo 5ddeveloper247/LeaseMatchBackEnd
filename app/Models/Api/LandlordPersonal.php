@@ -35,4 +35,9 @@ class LandlordPersonal extends Model
     {
     	return $this->hasMany(LandlordPropertyImages::class, 'landlord_id');
     }
+
+    public function propertyMatches()
+    {
+        return $this->hasMany(PropertyMatch::class, 'landlord_id');
+    }
 }

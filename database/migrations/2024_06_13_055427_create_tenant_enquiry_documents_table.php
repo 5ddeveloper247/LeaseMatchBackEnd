@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enquiry_document', function (Blueprint $table) {
+        Schema::create('tenant_enquiry_documents', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('enquiry_id')->nullable();
-            $table->unsignedInteger('enquiry_detail_id')->nullable();
+            $table->unsignedInteger('enquiry_request_id')->nullable();
+            $table->unsignedInteger('document_id')->nullable();
             $table->string('doc_name')->nullable();
-            $table->string('doc_path')->nullable();
+            $table->string('path')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enquiry_document');
+        Schema::dropIfExists('tenant_enquiry_documents');
     }
 };

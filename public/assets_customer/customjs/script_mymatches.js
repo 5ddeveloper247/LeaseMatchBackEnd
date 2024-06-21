@@ -6,7 +6,7 @@ $(document).on('click', '.view_property_detail', function (e) {
 
     setTimeout(function(){
         $("#detail_form").submit();
-    },1000);
+    },500);
 
 });
 

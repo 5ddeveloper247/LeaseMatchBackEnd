@@ -105,6 +105,10 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::post('/getMatchesPageData', [AdminController::class, 'get_matches_data'])->name('admin.getMatchesPageData');
         
+        Route::post('/getMatchesListWrtUser', [AdminController::class, 'get_matches_list_user'])->name('admin.getMatchesListWrtUser');
+        Route::post('/assignLandlordToUser', [AdminController::class, 'assign_landlord_user'])->name('admin.assignLandlordToUser');
+        Route::post('/searchLandlordListingAssign', [AdminController::class, 'search_landlord_assign_listing'])->name('admin.searchLandlordListingAssign');
+        
     });
 });
 

@@ -40,6 +40,7 @@ use App\Models\Api\UserDocuments;
 use App\Models\Api\ContactUs;
 use App\Models\EnquiryHeader;
 use App\Models\RequiredDocuments;
+use App\Models\PropertyMatches;
 
 class AdminController extends Controller
 {
@@ -606,6 +607,7 @@ class AdminController extends Controller
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
+
     public function update_profile(Request $request){
         $user_id = Auth::id();
         $user = User::find($user_id);
@@ -659,7 +661,8 @@ class AdminController extends Controller
 
     public function get_matches_data(Request $request)
     {
-        $data['user_list'] = User::where('type', 3)->with(['personalInfo'])->get();
+        $data['user_list'] = User::where('type', 3)->withCount(['userMatches'])
+                                ->with(['personalInfo','activePlan.plan'])->get();
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
@@ -668,6 +671,7 @@ class AdminController extends Controller
         $data['page'] = 'Required Documents';
         return view('admin/required_documents')->with($data);
     }
+
     public function required_documentsPageData(){
         $data['list'] = RequiredDocuments::all();
         $data['active'] = RequiredDocuments::where('status',1)->count();
@@ -691,6 +695,7 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => 'Document Added Successfully']);
 
     }
+
     public function changeRequiredDocumentStatus(Request $request){
         $document_id  = $request->id;
         $document = RequiredDocuments::find($document_id);
@@ -715,6 +720,7 @@ class AdminController extends Controller
             return response()->json(['status' => 402, 'message' => 'Document Not found']);
         }
     }
+
     public function getRequiredDocumentDetails(Request $request){
         $document_id  = $request->id;
         $document = RequiredDocuments::find($document_id);
@@ -725,6 +731,7 @@ class AdminController extends Controller
             return response()->json(['status' => 402, 'message' => 'Document Not found']);
         }
     }
+
     public function updateRequiredDocument(Request $request){
         $validatedData = $request->validate([
             'name_edit' => 'required|max:50',
@@ -746,5 +753,98 @@ class AdminController extends Controller
         else{
             return response()->json(['status' => 402, 'message' => 'Document Not found']);
         }
+    }
+
+    public function get_matches_list_user(Request $request)
+    {
+        $user_id = $request->id;
+
+        $user_detail = User::where('id', $user_id)->where('type', 3)->with(['personalInfo','residentialInfo','activePlan.plan'])->first();
+        // dd($user_detail);
+        $propertyAssignMatchLimit = isset($user_detail->activePlan->plan->number_of_matches) ? $user_detail->activePlan->plan->number_of_matches : 0;
+        $preferredPropertyType = $user_detail->residentialInfo->preferred_property_type;
+        
+        $data['user_detail'] = $user_detail;
+        $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal','landlordPersonal.propertyDetail','landlordPersonal.rentalDetail'])->get();
+        
+        $data['landlord_listing'] = LandlordPersonal::with(['propertyDetail','rentalDetail'])
+                                                ->whereHas('propertyDetail', function ($query) use ($preferredPropertyType) {
+                                                    $query->where('property_type', $preferredPropertyType);
+                                                })->limit($propertyAssignMatchLimit)->get();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function assign_landlord_user(Request $request){
+        
+        $landlord_id = $request->id;
+        $user_id = $request->user_id;
+
+        $existMatch = PropertyMatches::where('user_id', $user_id)->where('landlord_id', $landlord_id)->first();
+        
+        if($existMatch != null){
+            return response()->json(['status' => 402, 'message' => 'Already added in match list!']);
+        }
+        
+        $propertyMatch = new PropertyMatches();
+        $propertyMatch->user_id = $user_id;
+        $propertyMatch->landlord_id = $landlord_id;
+        $propertyMatch->date = Carbon::now()->format('Y-m-d');
+        $propertyMatch->created_by = Auth::user()->id;
+        $propertyMatch->save();
+
+        $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal','landlordPersonal.propertyDetail','landlordPersonal.rentalDetail'])->get();
+
+        return response()->json(['status' => 200, 'message' => 'Added successfully!', 'data' => $data]);
+    }
+
+    public function search_landlord_assign_listing(Request $request){
+
+        $user_id = $request->user_id;
+        $landlord_username = $request->landlord_username;
+        $landlord_email = $request->landlord_email;
+        $property_type = $request->property_type;
+        $rental_type = $request->rental_type;
+
+        // check atleast one filter check
+        if(is_null($landlord_username) && is_null($landlord_email) && is_null($property_type) && is_null($rental_type)){
+            return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
+        }
+
+        $query = LandlordPersonal::with(['propertyDetail', 'rentalDetail']);
+
+        if (!is_null($landlord_username)) {
+            $query->where('full_name', 'like', '%' . $landlord_username . '%');
+        }
+
+        if (!is_null($landlord_email)) {
+            $query->where('email', 'like', '%' . $landlord_email . '%');
+        }
+
+        if (!is_null($property_type)) {
+            $query->whereHas('propertyDetail', function ($subQuery) use ($property_type) {
+                $subQuery->where('property_type', $property_type);
+            });
+        }
+
+        if (!is_null($rental_type)) {
+            $query->whereHas('rentalDetail', function ($subQuery) use ($rental_type) {
+                $subQuery->where('rental_type', $rental_type);
+            });
+        }
+
+        // Execute the query and get the results
+        $data['landlord_listing'] = $query->get();
+
+        // $data['landlord_listing'] = LandlordPersonal::with(['propertyDetail','rentalDetail'])
+        //                                         ->whereHas('propertyDetail', function ($query) use ($property_type) {
+        //                                             $query->where('property_type', $property_type);
+        //                                         })
+        //                                         ->whereHas('rentalDetail', function ($query) use ($rental_type) {
+        //                                             $query->where('rental_type', $rental_type);
+        //                                         })->get();
+        
+        return response()->json(['status' => 200, 'data' => $data]);
+
     }
 }
