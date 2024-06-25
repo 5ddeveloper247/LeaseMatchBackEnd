@@ -21,6 +21,11 @@
     background-color: #0078b9;
     padding: 10px 25px;
 }
+@media screen and (max-width: 600px) {
+    .top-header-payment-details{
+        padding: 10px 5px;
+    }
+  }
 .top-header-payment-details img{
     height: 80px;
     width: 80px;
@@ -42,4 +47,12 @@
     display: flex;
     align-items: center;    
 }
-    
+
+#nav #pro_btn {
+    margin-left: 58rem;
+}
+@media (max-width: 767px) {
+    #nav #pro_btn {
+        margin-left: 31rem;
+    }
+}
