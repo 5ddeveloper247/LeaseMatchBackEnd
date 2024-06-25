@@ -102,6 +102,17 @@ function addplanDetailResponse(response) {
 }
 
 
+$(document).on('click', '#process_application', function (e) {
+   	if($("#process_application").is(':checked')){
+		$("#necessary_document").prop('checked', true);
+	}
+});
+$(document).on('click', '#necessary_document', function (e) {
+	if(!$("#necessary_document").is(':checked')){
+	 $("#process_application").prop('checked', false);
+ }
+});
+
 
 
 $(document).ready(function () {

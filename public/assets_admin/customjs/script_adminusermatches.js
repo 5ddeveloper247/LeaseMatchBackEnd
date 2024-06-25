@@ -137,7 +137,7 @@ function makeAssignedPropertyListing(assigned_match_listing){
 						<td class="nowrap grid-p-searchby">${landlord_personal.rental_detail != null ? landlord_personal.rental_detail.rental_type : ''}</td>
 						<td class="nowrap">
 							<div class="act_btn">
-								<button class="site_btn" data-id="${value.id}" title="Remove" style="color:red;"><b>X</b></button>
+								<button class="site_btn delete_assigned_confirm" data-propMatchId="${value.id}" data-landlordId="${landlord_personal.id}" title="Remove" style="color:red;"><b>X</b></button>
 							</div>
 						</td>
 					</tr>`;
@@ -239,30 +239,70 @@ function searchLandlordListingAssignResponse(response){
 	}
 }
 
-function formatDate(dateString) {
-    const months = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
+$(document).on('click', '.delete_assigned_confirm', function (e) {
+    
+    $("#property_match_id").val($(this).attr('data-propMatchId'));
+    $("#match_landlord_id").val($(this).attr('data-landlordId'));
 
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
+	$("html").addClass("flow");
+	$("#confirm_delete_popup").fadeIn();	
+});
 
-    return `${day} ${month} ${year}`;
+$(document).on('click', '.close_delete_confirm', function (e) {
+    
+	$("#property_match_id").val('');
+    $("#match_landlord_id").val('');
+	
+	$("html").removeClass("flow");
+	$("#confirm_delete_popup").fadeOut();	
+});
+
+$(document).on('click', '.delete_assigned_confirmed', function (e) {
+    
+    var property_match_id = $("#property_match_id").val();
+    var match_landlord_id = $("#match_landlord_id").val();
+	var user_id = $("#user_id").val();
+
+	e.preventDefault();
+	let type = 'POST';
+	let url = '/admin/removeAssignedPropertyUser';
+	let message = '';
+	let form = '';
+	let data = new FormData();
+	data.append('property_match_id', property_match_id);
+	data.append('match_landlord_id', match_landlord_id);
+	data.append('user_id', user_id);
+
+	// PASSING DATA TO FUNCTION
+	SendAjaxRequestToServer(type, url, data, '', removeAssignedPropertyUserResponse, '', '.delete_assigned_confirmed');
+});
+
+function removeAssignedPropertyUserResponse(response){
+	
+	$("html").removeClass("flow");
+	$("#confirm_delete_popup").fadeOut();	
+
+	if (response.status == 200 || response.status == '200') {
+
+		var data = response.data;
+		var assigned_match_listing = data.assigned_match_listing;
+
+		makeAssignedPropertyListing(assigned_match_listing);
+
+		toastr.success(response.message, '', {
+            timeOut: 3000
+        });
+
+	}else{
+		toastr.error(response.message, '', {
+            timeOut: 3000
+        });
+	}
 }
-
-function formatCurrency(amount) {
-	return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-
-
-
 
 
 function backToList(){
+	getMatchesPageData();
     $(".detail_section").hide();
     $(".listing_section").show(1000);
 }

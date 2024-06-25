@@ -1,3 +1,6 @@
+<?php
+    use App\Models\TenantEnquiryHeader;
+?>
 @extends('layouts.master.user_template.master')
 
 @push('css')
@@ -7,7 +10,7 @@
 <style>
     #users_table{
         font-size:x-small;
-    }
+    } 
 </style>
 
 <section id="detail">
@@ -137,66 +140,80 @@
                             </ul>
                         </div>
                     </div>
-                    @if(@$curr_plan->process_application_flag == 1)
-                        <div class="blk">
-                            <h6 class="sub_heading">Process Application Request</h6>
-                            <form action="javascript:;" id="processApp_form">
-                                <input type="hidden" name="landlord_id" value="{{@$property_detail->id}}">
-                                <input type="hidden" name="process_type" value="1">
-                                <div class="form_row row">
-                                    <div class="col-xs-12">
-                                        <h6>Message<sup>*</sup></h6>
-                                        <div class="form_blk">
-                                            <input type="text" name="process_message" id="process_message" class="text_box" placeholder="Message">
+                    @if(@$enquiry_detail == null)
+                        
+                        @if($property_detail->enquiry_status != 3)
+                            <div class="blk">
+                                <h6 class="sub_heading">Process Application Request</h6>
+                                <form action="javascript:;" id="processApp_form">
+                                    <input type="hidden" name="landlord_id" value="{{@$property_detail->id}}">
+                                    @if(@$curr_plan->process_application_flag == 1)
+                                        <input type="hidden" name="process_type" value="1">
+                                    @elseif(@$curr_plan->necessary_doc_flag == 1)
+                                        <input type="hidden" name="process_type" value="2">
+                                    @endif
+                                    <div class="form_row row">
+                                        <div class="col-xs-12">
+                                            <h6>Message<sup>*</sup></h6>
+                                            <div class="form_blk">
+                                                <input type="text" name="process_message" id="process_message" class="text_box" placeholder="Message">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="btn_blk form_btn">
-                                    <button type="button" class="site_btn block" id="processApp_btn">Process Application</button>
-                                </div>
-                            </form>
-                        </div>
+                                    <div class="btn_blk form_btn">
+                                        <button type="button" class="site_btn block" id="processApp_btn">Process Application</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @else
+                            <div class="blk">
+                                    <div class="btn_blk form_btn">
+                                        <label><b>Status</b></label>
+                                        <button type="button" class="site_btn block">Booked</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
+                        
+                    @else
+                        @if(@$enquiry_detail->status == '4' || @$enquiry_detail->status == '7')
+                            <div class="blk">
+                                <h6 class="sub_heading">Upload Documents {{@$enquiry_detail->status == 7 ? 'Again' : ''}}</h6>
+                                <form action="javascript:;" id="tenant_enquiry_document_form" enctype="multipart/formdata">
+                                    
+                                    <input type="hidden" id="enquiry_id" name="enquiry_id" value="{{@$enquiry_detail->id}}">
+                                    <div class="form_row row">
+                                    @foreach(@$upload_documents as $req_doc)
+                                    <input type="hidden" name="req_doc_ids[]" value={{$req_doc->id}}>
+                                        <div class="col-xs-12">
+                                            <h6>Upload {{$req_doc->required_document->name}}<sup>*</sup></h6>
+                                            <div class="form_blk">
+                                                <input type="file" name="upload_document[]" data-name="{{$req_doc->required_document->name}}">
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    
+                                    
+                                    <div class="btn_blk form_btn">
+                                        <button type="submit" class="site_btn block" id="tenant_enquiry_document_form_submit_btn">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @else
+                            <div class="blk">
+                                    <div class="btn_blk form_btn">
+                                        <label><b>Status</b></label>
+                                        <button type="button" class="site_btn block">{{@TenantEnquiryHeader::STATUS_LABELS[@$enquiry_detail->status]}}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
                     @endif
                     
-                    <!-- <div class="blk">
-                        <h6 class="sub_heading">Financing Calculator</h6>
-                        <form action="" method="POST">
-                            <div class="form_row row">
-                                <div class="col-xs-12">
-                                    <h6>Down Payment<sup>*</sup></h6>
-                                    <div class="form_blk">
-                                        <input type="text" name="" id="" class="text_box" placeholder="eg: 1200">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="btn_blk form_btn">
-                                <button type="submit" class="site_btn block">Estimate Payment</button>
-                            </div>
-                        </form>
-                    </div> -->
+                    
 
-                    <div class="blk">
-                            <h6 class="sub_heading">Upload Documents</h6>
-                            <form action="javascript:;" id="tenant_enquiry_document_form" enctype="multipart/formdata">
-                               
-                               <div class="form_row row">
-                               @foreach($upload_documents as $req_doc)
-                               <input type="hidden" name="req_doc_ids[]" value={{$req_doc->id}}>
-                                    <div class="col-xs-12">
-                                        <h6>Upload {{$req_doc->required_document->name}}<sup>*</sup></h6>
-                                        <div class="form_blk">
-                                            <input type="file" name="upload_document[]" data-name="{{$req_doc->required_document->name}}">
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                               
-                                
-                                <div class="btn_blk form_btn">
-                                    <button type="submit" class="site_btn block" id="tenant_enquiry_document_form_submit_btn">Submit</button>
-                                </div>
-                            </form>
-                        </div>
+                    
                 </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ use App\Models\Menu;
 use App\Models\MenuControl;
 use App\Models\UserSubscription;
 use App\Models\ApiSettings;
+use App\Models\RequiredDocuments;
 
 if (!function_exists('saveMultipleImages')) {
 
@@ -188,6 +189,16 @@ if (!function_exists('trimText')) {
         } else {
             return $string;
         }
+    }
+}
+
+if (!function_exists('getReqDocs')) {
+
+    function getReqDocs()
+    {
+        $reqDocs = RequiredDocuments::orderBy('created_at', 'desc')->where('status', '1')->get();
+        
+        return $reqDocs;
     }
 }
 

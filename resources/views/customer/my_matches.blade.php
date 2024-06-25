@@ -18,8 +18,12 @@
         </ul>
         <div class="main_row flex_row">
             @if(!empty($properties))
-                @foreach($properties as $property)
-                   <?php $image = isset($property->propertyImages[0]->path) ? $property->propertyImages[0]->path : asset('assets/images/property_default.jpg'); ?>
+                @foreach($properties as $value)
+                    
+                    <?php 
+                        $property = $value->landlordPersonal;
+                        $image = isset($property->propertyImages[0]->path) ? $property->propertyImages[0]->path : asset('assets/images/property_default.jpg'); 
+                    ?>
                     <div class="col">
                         <div class="item_blk">
                             <div class="image">

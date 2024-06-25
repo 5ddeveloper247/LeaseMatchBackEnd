@@ -41,6 +41,10 @@ use App\Models\Api\ContactUs;
 use App\Models\EnquiryHeader;
 use App\Models\RequiredDocuments;
 use App\Models\PropertyMatches;
+use App\Models\TenantEnquiryHeader;
+use App\Models\TenantEnquiryRequests;
+use App\Models\TenantEnquiryDocument;
+
 
 class AdminController extends Controller
 {
@@ -165,6 +169,12 @@ class AdminController extends Controller
         $data['page'] = 'Property Matches';
         return view('admin/user_property_matches')->with($data);
     }
+    
+    public function enquiry_requests(){
+        $data['page'] = 'Enquiry Requests';
+        return view('admin/enquiry_requests')->with($data);
+    }
+
     
 
     // public function enquiryProcess(){
@@ -811,6 +821,7 @@ class AdminController extends Controller
             return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
         }
 
+        // make query for get listing
         $query = LandlordPersonal::with(['propertyDetail', 'rentalDetail']);
 
         if (!is_null($landlord_username)) {
@@ -836,15 +847,174 @@ class AdminController extends Controller
         // Execute the query and get the results
         $data['landlord_listing'] = $query->get();
 
-        // $data['landlord_listing'] = LandlordPersonal::with(['propertyDetail','rentalDetail'])
-        //                                         ->whereHas('propertyDetail', function ($query) use ($property_type) {
-        //                                             $query->where('property_type', $property_type);
-        //                                         })
-        //                                         ->whereHas('rentalDetail', function ($query) use ($rental_type) {
-        //                                             $query->where('rental_type', $rental_type);
-        //                                         })->get();
-        
         return response()->json(['status' => 200, 'data' => $data]);
+    }
 
+    public function remove_assigned_property_user(Request $request){
+
+        $user_id = $request->user_id;
+        $property_match_id = $request->property_match_id;
+        $match_landlord_id = $request->match_landlord_id;
+        
+        $checkExist = TenantEnquiryHeader::where('user_id', $user_id)->where('landlord_id', $match_landlord_id)->first();
+        // check atleast one filter check
+        if(!is_null($checkExist)){
+            return response()->json(['status' => 402, 'message' => 'Unable to remove, request already in process!']);
+        }
+
+        $delete = PropertyMatches::where('id', $property_match_id)->delete();
+        $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal','landlordPersonal.propertyDetail','landlordPersonal.rentalDetail'])->get();
+        
+        return response()->json(['status' => 200, 'message' => 'Removed successfully!', 'data' => $data]);
+    }
+    
+    public function get_enquiries_data(Request $request){
+
+        $data['enquiries'] = TenantEnquiryHeader::where('status', '!=', TenantEnquiryHeader::WAITING)->with(['enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail'])->get();
+        $data['waiting_enquiries'] = TenantEnquiryHeader::where('status', '=', TenantEnquiryHeader::WAITING)->with(['enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail'])->get();
+        
+        return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
+    }
+    
+    public function get_specific_enquiry(Request $request)
+    {
+        $enquiry_id = $request->id;
+        $data['enquiry_detail'] = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests','landlord',
+                                                                                'landlord.propertyDetail',
+                                                                                'landlord.rentalDetail',
+                                                                                'landlord.tenantDetail',
+                                                                                'landlord.additionalDetail',
+                                                                                'landlord.propertyImages'])->first();
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function change_enquiry_status_confirmed(Request $request){
+
+        $enquiry_id = $request->id;
+
+        $enquiryDetail = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests'])->first();
+        
+        $landlord_id = $enquiryDetail->landlord_id;
+
+        $inprocessEnquiry = TenantEnquiryHeader::where('landlord_id', $landlord_id)->where('id','!=',$enquiry_id)->where('status','!=', '8')->first();
+
+        if($inprocessEnquiry == null){
+            $process_type = isset($enquiryDetail->enquiryRequests[0]->type) ? $enquiryDetail->enquiryRequests[0]->type : '1';
+        
+            TenantEnquiryHeader::where('id', $enquiry_id)->update([
+                'status' => TenantEnquiryHeader::APPLICATION_CONFIRMED,
+            ]);
+
+            // add entry for enquiry lines
+            $tenantEnquiryRequest = new TenantEnquiryRequests();
+            $tenantEnquiryRequest->enquiry_id = $enquiry_id;
+            $tenantEnquiryRequest->type = $process_type;
+            $tenantEnquiryRequest->date = Carbon::now()->format('Y-m-d');
+            $tenantEnquiryRequest->status = TenantEnquiryHeader::APPLICATION_CONFIRMED;
+            $tenantEnquiryRequest->message = 'Application confirmed by admin';
+            $tenantEnquiryRequest->created_by = Auth::user()->id;
+            $tenantEnquiryRequest->submitted_by = Auth::user()->id;
+            $tenantEnquiryRequest->save();
+
+            return response()->json(['status' => 200, 'message' => 'Application confirmed successfully!']);
+        }else{
+
+            if($inprocessEnquiry->status == '6'){
+                return response()->json(['status' => 402, 'message' => 'Landlord is already booked by customer!']);
+            }else{
+                return response()->json(['status' => 402, 'message' => 'Landlord is already in process!']);
+            }
+        }
+    }
+
+    public function change_enquiry_status_req_doc(Request $request){
+
+        $validatedData = $request->validate([
+            'enquiry_id' => 'required',
+            'req_docs' => 'required',
+        ],[
+            'req_docs.required' => 'Choose atleast one required document.'
+        ]);
+        
+        $enquiry_id = $request->enquiry_id;
+
+        $enquiryDetail = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests'])->first();
+
+        $process_type = isset($enquiryDetail->enquiryRequests[0]->type) ? $enquiryDetail->enquiryRequests[0]->type : '1';
+        
+        TenantEnquiryHeader::where('id', $enquiry_id)->update([
+            'status' => TenantEnquiryHeader::WAITING_FOR_DOC_UPLOAD,
+        ]);
+
+        // add entry for enquiry lines
+        $tenantEnquiryRequest = new TenantEnquiryRequests();
+        $tenantEnquiryRequest->enquiry_id = $enquiry_id;
+        $tenantEnquiryRequest->type = $process_type;
+        $tenantEnquiryRequest->date = Carbon::now()->format('Y-m-d');
+        $tenantEnquiryRequest->status = TenantEnquiryHeader::WAITING_FOR_DOC_UPLOAD;
+        $tenantEnquiryRequest->message = 'Request for documents by admin';
+        $tenantEnquiryRequest->created_by = Auth::user()->id;
+        $tenantEnquiryRequest->submitted_by = Auth::user()->id;
+        $tenantEnquiryRequest->save();
+
+        $req_docs = isset($request->req_docs) ? $request->req_docs : [];
+        if(count($req_docs) > 0){
+            foreach($req_docs as $value){
+                $EnquiryDocs = new TenantEnquiryDocument();
+                $EnquiryDocs->enquiry_id =  $enquiry_id;
+                $EnquiryDocs->enquiry_request_id =  $tenantEnquiryRequest->id;
+                $EnquiryDocs->document_id =  $value;
+                $EnquiryDocs->save();
+            }
+        }
+
+        return response()->json(['status' => 200, 'message' => 'Application confirmed successfully!']);
+    }
+   
+    public function view_enquiry_docs(Request $request){
+
+        $enquiry_id = $request->enquiry_id;
+
+        $data['enquiry_docs'] = TenantEnquiryDocument::where('enquiry_id', $enquiry_id)->with('required_document')->get();
+
+        return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
+
+    }
+
+    public function change_enquiry_status(Request $request){
+        
+        $enquiry_id = $request->enquiry_id;
+        $status = $request->status;
+
+        $enquiryDetail = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests'])->first();
+
+        $process_type = isset($enquiryDetail->enquiryRequests[0]->type) ? $enquiryDetail->enquiryRequests[0]->type : '1';
+        
+        TenantEnquiryHeader::where('id', $enquiry_id)->update([
+            'status' => $status,
+        ]);
+
+        // add entry for enquiry lines
+        $tenantEnquiryRequest = new TenantEnquiryRequests();
+        $tenantEnquiryRequest->enquiry_id = $enquiry_id;
+        $tenantEnquiryRequest->type = $process_type;
+        $tenantEnquiryRequest->date = Carbon::now()->format('Y-m-d');
+        $tenantEnquiryRequest->status = $status;
+        $tenantEnquiryRequest->message = TenantEnquiryHeader::STATUS_LABELS[$status].' by admin';
+        $tenantEnquiryRequest->created_by = Auth::user()->id;
+        $tenantEnquiryRequest->submitted_by = Auth::user()->id;
+        $tenantEnquiryRequest->save();
+
+        if($status == '6'){ // Approved
+            LandlordPersonal::where('id', $enquiryDetail->landlord_id)->update([
+                'enquiry_status' => '3', // Booked
+            ]);
+        }
+        if($status == '8'){ // Cancel
+            LandlordPersonal::where('id', $enquiryDetail->landlord_id)->update([
+                'enquiry_status' => '1', // Available
+            ]);
+        }
+        return response()->json(['status' => 200, 'message' => 'Application status updated successfully!']);
     }
 }

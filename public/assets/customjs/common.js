@@ -89,6 +89,28 @@ function SendAjaxRequestToServer(
     });
 }
 
+function trimText(textString, length=50) {
+    
+    return textString.length > length ? textString.substring(0, length) + '...' : textString;
+}
+
+function formatDate(dateString) {
+    const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${day} ${month} ${year}`;
+}
+
+function formatCurrency(amount) {
+	return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 // $(document).on('click', '#guest_form_submit', function (e) {
 //     console.log('hamza');

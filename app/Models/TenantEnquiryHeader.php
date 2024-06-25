@@ -4,14 +4,39 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// landlord models
+use App\Models\Api\LandlordPersonal;
+use App\Models\Api\LandlordProperty;
+use App\Models\Api\LandlordRental;
+use App\Models\Api\LandlordTenant;
+use App\Models\Api\LandlordAdditional;
+use App\Models\Api\LandlordPropertyImages;
 
-class TenantEnquiryRequests extends Model
+class TenantEnquiryHeader extends Model
 {
     use HasFactory;
-    protected $table = 'tenant_enquiry_requests';
-    protected $fillable = [
-        'enquiry_id','type','message','status','submitted_by','created_by','updated_by','date'
-    ];
+
+    protected $table = 'tenant_enquiry_header';
+
+    public function landlord()
+    {
+        return $this->belongsTo(LandlordPersonal::class, 'landlord_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function enquiryRequests()
+    {
+    	return $this->hasMany(TenantEnquiryRequests::class, 'enquiry_id');
+    }
+
+    public function enquiryDocs()
+    {
+    	return $this->hasMany(TenantEnquiryDocument::class, 'enquiry_id');
+    }
 
     const APPLICATION_REQUESTED = 1;
     const APPLICATION_CONFIRMED = 2;
@@ -31,7 +56,7 @@ class TenantEnquiryRequests extends Model
         self::DOCUMENT_UPLOADED => 'Document Uploaded',
         self::APPLICATION_APPROVED => 'Approved',
         self::APPLICATION_RETURN => 'Returned',
-        self::APPLICATION_CANCEL => 'Canceled',
+        self::APPLICATION_CANCEL => 'Cancelled',
         self::WAITING => 'Waiting',
     ];
 

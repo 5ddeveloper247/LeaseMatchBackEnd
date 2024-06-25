@@ -2,38 +2,7 @@
 
 @push('css')
 @endpush
-<style>
-    .top-bar-user{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .top-header-payment-details{
-        background-color: #0078b9;
-        padding: 10px 25px;
-    }
-    .top-header-payment-details img{
-        height: 80px;
-        width: 80px;
-        border-radius: 50%;
-    }
-    .leave-summary{
-        border: 1px solid #888;
-        border-radius: 5px;
-        padding: 5px 10px;
-        margin: 15px 0px;
-    }
-    .leave-summary .label-summary{
-        color: black !important;
-    }
-    .leave-summary .value-summary{
-        color: gray;
-    }
-    .detail-image-top{
-        display: flex;
-        align-items: center;    
-    }
-</style>
+
 @section('content')
 <style>
     #users_table{
@@ -254,6 +223,31 @@
                                 <div class="btn_blk">
                                     <a href="javascript:;" class="site_btn sm close_confirm" style="background: #ff0505;">No</a>
                                     <a href="javascript:;" class="site_btn sm assign_prop_confirmed" data-id="">Yes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- delete modal end  -->
+    <!-- delete modal start  -->
+    <div class="popup sm" id="confirm_delete_popup">
+        <div class="table_dv">
+            <div class="table_cell">
+                <div class="contain">
+                    <div class="_inner">
+                        <div class="form_row row">
+                            <input type="hidden" id="match_landlord_id" value="">
+                            <input type="hidden" id="property_match_id" value="">
+                            <div class="col-sm-12 col-12" style="text-align: center;">
+                                <h5>Are you sure you want to remove this from assigned landlord...!!!</h5>
+                            </div>
+                            <div class="col-sm-12 col-12" style="display: grid; place-items: center;">
+                                <div class="btn_blk">
+                                    <a href="javascript:;" class="site_btn sm close_delete_confirm" style="background: #ff0505;">No</a>
+                                    <a href="javascript:;" class="site_btn sm delete_assigned_confirmed" data-id="">Yes</a>
                                 </div>
                             </div>
                         </div>

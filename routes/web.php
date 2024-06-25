@@ -56,6 +56,7 @@ Route::group(['prefix' => 'admin'], function () {
             
             // Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
             Route::get('/required_documents', [AdminController::class, 'required_documents'])->name('admin.required_documents');
+            Route::get('/enquiry_requests', [AdminController::class, 'enquiry_requests'])->name('admin.enquiry_requests');
             
         });
         
@@ -108,6 +109,14 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/getMatchesListWrtUser', [AdminController::class, 'get_matches_list_user'])->name('admin.getMatchesListWrtUser');
         Route::post('/assignLandlordToUser', [AdminController::class, 'assign_landlord_user'])->name('admin.assignLandlordToUser');
         Route::post('/searchLandlordListingAssign', [AdminController::class, 'search_landlord_assign_listing'])->name('admin.searchLandlordListingAssign');
+        Route::post('/removeAssignedPropertyUser', [AdminController::class, 'remove_assigned_property_user'])->name('admin.removeAssignedPropertyUser');
+        
+        Route::post('/getEnquiriesPageData', [AdminController::class, 'get_enquiries_data'])->name('admin.getEnquiriesPageData');
+        Route::post('/getEnquiryLandlordDetail', [AdminController::class, 'get_specific_enquiry'])->name('admin.getEnquiryLandlordDetail');
+        Route::post('/changeEnquiryStatusConfirmed', [AdminController::class, 'change_enquiry_status_confirmed'])->name('admin.changeEnquiryStatusConfirmed');
+        Route::post('/changeEnquiryStatusReqDoc', [AdminController::class, 'change_enquiry_status_req_doc'])->name('admin.changeEnquiryStatusReqDoc');
+        Route::post('/viewEnquiryDocs', [AdminController::class, 'view_enquiry_docs'])->name('admin.viewEnquiryDocs');
+        Route::post('/changeEnquiryStatus', [AdminController::class, 'change_enquiry_status'])->name('admin.changeEnquiryStatus');
         
     });
 });

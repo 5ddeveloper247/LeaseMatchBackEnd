@@ -150,23 +150,7 @@ function backToList(){
     $(".listing_section").show(1000);
 }
 
-function trimText(textString, length=50) {
-    
-    return textString.length > length ? textString.substring(0, length) + '...' : textString;
-}
-function formatDate(dateString) {
-    const months = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
 
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-
-    return `${day} ${month} ${year}`;
-}
 
 $(document).ready(function () {
 

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone_number', 20);
             $table->string('company_name', 255)->nullable();
             $table->smallInteger('status')->comment('0=>InActive, 1=>Active')->nullable();
+            $table->smallInteger('enquiry_status')->comment('1=>Available, 2=>Blocked, 3=>Booked')->default('1')->nullable();
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();

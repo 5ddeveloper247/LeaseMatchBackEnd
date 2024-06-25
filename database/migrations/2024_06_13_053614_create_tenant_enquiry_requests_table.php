@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enquiry_detail', function (Blueprint $table) {
+        Schema::create('tenant_enquiry_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('enquiry_id')->nullable();
             $table->smallInteger('type')->comment('1=>Application Request, 2=>Doc Upload')->nullable();
             $table->text('message')->nullable();
-            $table->smallInteger('status')->comment('1=>Application Request, 
-                                                    2=>Application request confirm, 
-                                                    3=>Upload Docs, 
-                                                    4=>Doc Attached, 
-                                                    5=>Approved, 
-                                                    6=>Document Rejected')->nullable();
+            $table->smallInteger('status')->comment('1=>Application Requested, 
+                                                    2=>Application confirmed, 
+                                                    3=>waiting for doc confirm, 
+                                                    4=>waiting for doc upload, 
+                                                    5=>document uploaded, 
+                                                    6=>Document approved, 
+                                                    7=>Document return, 
+                                                    8=>Document cancel, 
+                                                    9=>waiting')->nullable();
             $table->date('date')->nullable();
             $table->string('submitted_by', 100)->comment('1=>Customer, 2=>Admin')->nullable();
             $table->unsignedInteger('created_by')->nullable();
@@ -35,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enquiry_detail');
+        Schema::dropIfExists('tenant_enquiry_requests');
     }
 };

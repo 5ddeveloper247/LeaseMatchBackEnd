@@ -15,7 +15,7 @@ use App\Models\Menu;
 use App\Models\MenuControl;
 use App\Models\UserSubscription;
 use App\Models\Api\UserPersonalInfo;
-use App\Models\EnquiryHeader;
+use App\Models\TenantEnquiryHeader;
 use App\Models\TenantEnquiryDocument;
 use App\Models\TenantEnquiryRequests;
 use Illuminate\Support\Facades\Validator;
@@ -27,6 +27,8 @@ use App\Models\Api\LandlordRental;
 use App\Models\Api\LandlordTenant;
 use App\Models\Api\LandlordAdditional;
 use App\Models\Api\LandlordPropertyImages;
+
+use App\Models\PropertyMatches;
 
 class CustomerController extends Controller
 {
@@ -114,9 +116,12 @@ class CustomerController extends Controller
                                                     ->with('plan')->orderBy('created_at', 'desc')->first();
 
         if(isset($currentPlan->id)){
-            $data['properties'] = LandlordPersonal::with(['propertyDetail','rentalDetail','tenantDetail',
-                                        'additionalDetail','propertyImages'])->limit($currentPlan->plan->number_of_matches)
-                                        ->orderBy('created_at', 'desc')->get();
+            $data['properties'] = PropertyMatches::where('user_id', Auth::user()->id)->with(['landlordPersonal',
+                                                                                            'landlordPersonal.propertyDetail',
+                                                                                            'landlordPersonal.rentalDetail',
+                                                                                            'landlordPersonal.tenantDetail',
+                                                                                            'landlordPersonal.additionalDetail',
+                                                                                            'landlordPersonal.propertyImages'])->get();
         }else{
             $data['properties'] = array();
         }
@@ -139,8 +144,14 @@ class CustomerController extends Controller
                                 ->first();
         
         $data['curr_plan'] = isset($currentPlan->plan) ? $currentPlan->plan : '';
-        // dd($data['property_detail']);
-        $data['upload_documents'] = TenantEnquiryDocument::with('required_document')->get();
+        
+        $enquiry_detail = TenantEnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
+        $data['enquiry_detail'] = $enquiry_detail;
+
+        if(isset($enquiry_detail->id) && ($enquiry_detail->status == '4' || $enquiry_detail->status == '7')){
+            $data['upload_documents'] = TenantEnquiryDocument::where('enquiry_id', $enquiry_detail->id)->with('required_document')->get();
+        }
+        
         return view('customer/property_detail')->with($data);
     }
 
@@ -254,14 +265,11 @@ class CustomerController extends Controller
             return response()->json(['status' => 402, 'message' => "Unable to view landlord information, please update/buy package to view contact information."]);
         }
     }
-    
-    
 
     public function my_account(){
         $data['page'] = 'My Account';
         return view('customer/my_account')->with($data);
     }
-    
     
     public function property_info(){
         $user_id = Auth::id();
@@ -293,6 +301,7 @@ class CustomerController extends Controller
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
+
     public function update_profile(Request $request){
         $user_id = Auth::id();
         $user = User::find($user_id);
@@ -342,6 +351,7 @@ class CustomerController extends Controller
 
         
     }
+
     public function update_personal_data(Request $request){
         $user_id = Auth::id();
         $user = UserPersonalInfo::where('user_id',$user_id)->first();
@@ -373,29 +383,29 @@ class CustomerController extends Controller
             'process_message' => 'required|max:100',
         ]);
         
-        $enquirycheck = EnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
+        $enquirycheck = TenantEnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
         
         if(isset($enquirycheck->id)){
             return response()->json(['status' => 402, 'message' => 'Request already in process!']);
         }
-        
-        if(!isset($enquiry->id)){
             
-            $enquiry = new EnquiryHeader();
-            $enquiry->user_id = Auth::user()->id;
-            $enquiry->landlord_id = $request->landlord_id;
-            $enquiry->date = Carbon::now()->format('Y-m-d');
-            $checkIfExist = EnquiryHeader::where('landlord_id',$request->landlord_id)->count();
-            if($checkIfExist > 0){
-                $enquiry->status = '7'; //
-            }
-            else{
-                $enquiry->status = '1';
-            }
-            $enquiry->created_by = Auth::user()->id;
-            $enquiry->save();
+        // create enquiry header entry
+        $enquiry = new TenantEnquiryHeader();
+        $enquiry->user_id = Auth::user()->id;
+        $enquiry->landlord_id = $request->landlord_id;
+        $enquiry->date = Carbon::now()->format('Y-m-d');
+        $checkIfExist = TenantEnquiryHeader::where('landlord_id',$request->landlord_id)->count();
+        
+        if($checkIfExist > 0){
+            $enquiry->status = TenantEnquiryHeader::WAITING;
+        } else {
+            $enquiry->status = TenantEnquiryHeader::APPLICATION_REQUESTED;
         }
-
+        
+        $enquiry->created_by = Auth::user()->id;
+        $enquiry->save();
+        
+        // add entry for enquiry lines
         $tenantEnquiryRequest = new TenantEnquiryRequests();
         $tenantEnquiryRequest->enquiry_id = $enquiry->id;
         $tenantEnquiryRequest->type = $request->process_type;
@@ -406,18 +416,22 @@ class CustomerController extends Controller
         $tenantEnquiryRequest->submitted_by = Auth::user()->id;
         $tenantEnquiryRequest->save();
         
-    
+        LandlordPersonal::where('id', $request->landlord_id)->update([
+            'enquiry_status' => '2', // blocked
+        ]);
+
         return response()->json(['status' => 200, 'message' => 'Your request is submited successfully, we will respond you soon, Thanks']);
         
     }
+    
     public function uploadTenantEnquiryDocuments(Request $request){
-        
         
         $request->validate([
             'upload_document' => 'array|required',
             'upload_document.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
         
+        $enquiry_id = $request->enquiry_id;
         $ids = $request->req_doc_ids;
         $docs = $request->upload_document;
         
@@ -429,9 +443,30 @@ class CustomerController extends Controller
             }
             $uploadedFile = $request->file('upload_document')[$i];
             $savedFile = saveSingleImage($uploadedFile, $path);            
+            $record->doc_name = $uploadedFile->getClientOriginalName();
             $record->path = url('/') . $savedFile;
             $record->save();
         }
+
+        $enquiryDetail = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests'])->first();
+
+        $process_type = isset($enquiryDetail->enquiryRequests[0]->type) ? $enquiryDetail->enquiryRequests[0]->type : '1';
+        
+        TenantEnquiryHeader::where('id', $enquiry_id)->update([
+            'status' => TenantEnquiryHeader::DOCUMENT_UPLOADED,
+        ]);
+
+        // add entry for enquiry lines
+        $tenantEnquiryRequest = new TenantEnquiryRequests();
+        $tenantEnquiryRequest->enquiry_id = $enquiry_id;
+        $tenantEnquiryRequest->type = $process_type;
+        $tenantEnquiryRequest->date = Carbon::now()->format('Y-m-d');
+        $tenantEnquiryRequest->status = TenantEnquiryHeader::DOCUMENT_UPLOADED;
+        $tenantEnquiryRequest->message = 'Documents uploaded by customer';
+        $tenantEnquiryRequest->created_by = Auth::user()->id;
+        $tenantEnquiryRequest->submitted_by = Auth::user()->id;
+        $tenantEnquiryRequest->save();
+
         return response()->json(['status' => 200, 'message' => 'Document submitted successfully']);
     }
 }
