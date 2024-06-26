@@ -263,13 +263,13 @@ class RegistrationController extends Controller
                 }
             }
             
-            $mailData['name'] = $user->first_name;
-            $mailData['email'] = $user->email;
+            $mailData['name'] = $User->first_name;
+            $mailData['email'] = $User->email;
             $mailData['password'] = $password;
             $body = view('emails.tenant_created', $mailData);
-            $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
+            $userEmailsSend[] = $User->email;//'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
-            sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
+            sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
 
             return response()->json([
                 'success' => true,

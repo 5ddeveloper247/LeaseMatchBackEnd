@@ -3,13 +3,6 @@
         <div id="nav">
             <nav class="ease"></nav>
            
-            <ul id="icon_btn">
-                <li id="noti">
-                    <a href="javascript:;">
-                        <img src="{{asset('assets/images/icon-bell.svg')}}" alt="">
-                    </a>
-                </li>
-            </ul>
             <div id="pro_btn" class="drop_down">
                 <div class="drop_btn">
                     <div class="ico">

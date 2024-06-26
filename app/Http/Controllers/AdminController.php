@@ -960,7 +960,7 @@ class AdminController extends Controller
         
         $landlord_id = $enquiryDetail->landlord_id;
 
-        $inprocessEnquiry = TenantEnquiryHeader::where('landlord_id', $landlord_id)->where('id','!=',$enquiry_id)->where('status','!=', '8')->first();
+        $inprocessEnquiry = TenantEnquiryHeader::where('landlord_id', $landlord_id)->where('id','!=',$enquiry_id)->whereNotIn('status', ['8','9'])->first();
 
         if($inprocessEnquiry == null){
             $process_type = isset($enquiryDetail->enquiryRequests[0]->type) ? $enquiryDetail->enquiryRequests[0]->type : '1';
@@ -980,6 +980,24 @@ class AdminController extends Controller
             $tenantEnquiryRequest->submitted_by = Auth::user()->id;
             $tenantEnquiryRequest->save();
 
+            $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
+
+            $mailData['name'] = $enquiryDetails->user->first_name;
+            $mailData['username'] = $enquiryDetails->user->first_name;
+            $mailData['user_email'] = $enquiryDetails->user->email;
+            $mailData['enquiry_type'] = $process_type == '1' ? 'Application Request' : 'Document Upload';
+            $mailData['property_type'] = $enquiryDetails->landlord->propertyDetail->property_type;
+            $mailData['enquiry_message'] = $tenantEnquiryRequest->message;
+            $mailData['enquiry_date'] = Carbon::now()->format('d-M-Y');
+            $mailData['enquiry_status'] = TenantEnquiryHeader::STATUS_LABELS[$enquiryDetails->status];
+            $mailData['subject'] = 'Enquiry Process Application Confirmed';
+            $mailData['email_message'] = 'Your application request is confirmed by admin. Our team will contact you shortly with further details.';
+            
+            $body = view('emails.enquiry_email', $mailData);
+            $userEmailsSend[] = $enquiryDetails->user->email;//'hamza@5dsolutions.ae';//
+            // to username, to email, from username, subject, body html
+            sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+            
             return response()->json(['status' => 200, 'message' => 'Application confirmed successfully!']);
         }else{
 
@@ -1032,6 +1050,24 @@ class AdminController extends Controller
             }
         }
 
+        $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
+
+        $mailData['name'] = $enquiryDetails->user->first_name;
+        $mailData['username'] = $enquiryDetails->user->first_name;
+        $mailData['user_email'] = $enquiryDetails->user->email;
+        $mailData['enquiry_type'] = $process_type == '1' ? 'Application Request' : 'Document Upload';
+        $mailData['property_type'] = $enquiryDetails->landlord->propertyDetail->property_type;
+        $mailData['enquiry_message'] = $tenantEnquiryRequest->message;
+        $mailData['enquiry_date'] = Carbon::now()->format('d-M-Y');
+        $mailData['enquiry_status'] = TenantEnquiryHeader::STATUS_LABELS[$enquiryDetails->status];
+        $mailData['subject'] = 'Enquiry Process Application Request Document';
+        $mailData['email_message'] = 'Your application request is in process kindly upload requested documents for further process.';
+        
+        $body = view('emails.enquiry_email', $mailData);
+        $userEmailsSend[] = $enquiryDetails->user->email;//'hamza@5dsolutions.ae';//
+        // to username, to email, from username, subject, body html
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+
         return response()->json(['status' => 200, 'message' => 'Application confirmed successfully!']);
     }
    
@@ -1079,6 +1115,36 @@ class AdminController extends Controller
                 'enquiry_status' => '1', // Available
             ]);
         }
+
+        $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
+
+        $mailData['name'] = $enquiryDetails->user->first_name;
+        $mailData['username'] = $enquiryDetails->user->first_name;
+        $mailData['user_email'] = $enquiryDetails->user->email;
+        $mailData['enquiry_type'] = $process_type == '1' ? 'Application Request' : 'Document Upload';
+        $mailData['property_type'] = $enquiryDetails->landlord->propertyDetail->property_type;
+        $mailData['enquiry_message'] = $tenantEnquiryRequest->message;
+        $mailData['enquiry_date'] = Carbon::now()->format('d-M-Y');
+        $mailData['enquiry_status'] = TenantEnquiryHeader::STATUS_LABELS[$enquiryDetails->status];
+        
+        if($status == '6'){ // Approved
+            $mailData['subject'] = 'Enquiry Process Application Approved';
+            $mailData['email_message'] = 'Your application request is approved by admin.';
+        }
+        if($status == '7'){ // Returned
+            $mailData['subject'] = 'Enquiry Process Application Returned';
+            $mailData['email_message'] = 'Your application request is returned by admin. Kindly reupload document and submit.';
+        }
+        if($status == '8'){ // Cancelled
+            $mailData['subject'] = 'Enquiry Process Application Cancelled';
+            $mailData['email_message'] = 'Your application request is cancelled by admin. if you have any query contact admin.';
+        }
+        
+        $body = view('emails.enquiry_email', $mailData);
+        $userEmailsSend[] = 'hamza@5dsolutions.ae';//$enquiryDetails->user->email;//
+        // to username, to email, from username, subject, body html
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+
         return response()->json(['status' => 200, 'message' => 'Application status updated successfully!']);
     }
 }

@@ -421,6 +421,33 @@ class CustomerController extends Controller
             'enquiry_status' => '2', // blocked
         ]);
 
+        $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry->id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
+
+        $mailData['name'] = $enquiryDetails->user->first_name;
+        $mailData['username'] = $enquiryDetails->user->first_name;
+        $mailData['user_email'] = $enquiryDetails->user->email;
+        $mailData['enquiry_type'] = $request->process_type == '1' ? 'Application Request' : 'Document Upload';
+        $mailData['property_type'] = $enquiryDetails->landlord->propertyDetail->property_type;
+        $mailData['enquiry_message'] = $tenantEnquiryRequest->message;
+        $mailData['enquiry_date'] = Carbon::now()->format('d-M-Y');
+        $mailData['enquiry_status'] = TenantEnquiryHeader::STATUS_LABELS[$enquiryDetails->status];
+        $mailData['subject'] = 'Enquiry Process Application Submitted';
+        $mailData['email_message'] = 'Thank you for submitting your application request. We have received your application and it is currently under review. Our team will contact you shortly with further details.';
+        
+        $body = view('emails.enquiry_email', $mailData);
+        $userEmailsSend[] = $enquiryDetails->user->email;//'hamza@5dsolutions.ae';//
+        // to username, to email, from username, subject, body html
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+        
+        $mailData['name'] = "Admin";
+        $mailData['email_message'] = 'I have submitted my application. Please let me know if any further information or actions are required on my part.';
+        
+        $body = view('emails.enquiry_email', $mailData);
+        $userEmailsSend[] = env('MAIL_ADMIN');
+        // to username, to email, from username, subject, body html
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request Admin', $body);
+        
+
         return response()->json(['status' => 200, 'message' => 'Your request is submited successfully, we will respond you soon, Thanks']);
         
     }
@@ -467,6 +494,24 @@ class CustomerController extends Controller
         $tenantEnquiryRequest->created_by = Auth::user()->id;
         $tenantEnquiryRequest->submitted_by = Auth::user()->id;
         $tenantEnquiryRequest->save();
+
+        $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
+
+        $mailData['name'] = 'Admin';
+        $mailData['username'] = $enquiryDetails->user->first_name;
+        $mailData['user_email'] = $enquiryDetails->user->email;
+        $mailData['enquiry_type'] = $process_type == '1' ? 'Application Request' : 'Document Upload';
+        $mailData['property_type'] = $enquiryDetails->landlord->propertyDetail->property_type;
+        $mailData['enquiry_message'] = $tenantEnquiryRequest->message;
+        $mailData['enquiry_date'] = Carbon::now()->format('d-M-Y');
+        $mailData['enquiry_status'] = TenantEnquiryHeader::STATUS_LABELS[$enquiryDetails->status];
+        $mailData['subject'] = 'Enquiry Process Application Documents Upload';
+        $mailData['email_message'] = 'I have submitted my requested documents against enquiry. Please let me know if any further information or actions are required.';
+        
+        $body = view('emails.enquiry_email', $mailData);
+        $userEmailsSend[] = env('MAIL_ADMIN');
+        // to username, to email, from username, subject, body html
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
 
         return response()->json(['status' => 200, 'message' => 'Document submitted successfully']);
     }
