@@ -83,7 +83,6 @@ if (!function_exists('deleteImage')) {
 if (!function_exists('sendMail')) {
     function sendMail($send_to_name, $send_to_email, $email_from_name, $subject, $body)
     {
-
         try {
             $mail_val = [
                 'send_to_name' => $send_to_name,

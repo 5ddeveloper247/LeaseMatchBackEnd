@@ -52,17 +52,26 @@
                             <form id="addreply_form">
                                 <div class="form_row row">
                                     <input type="hidden" id="contact_id" name="contact_id" value="">
+                                    <div class="col-sm-6">
+                                        <h6><b>Email Address</b></h6>
+                                        <div class="form_blk">
+                                            <p id="contact_email"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h6><b>Phone Number</b></h6>
+                                        <div class="form_blk">
+                                            <p id="contact_phone"></p>
+                                        </div>
+                                    </div>
                                     <div class="col-sm-12">
-                                        <h6>
-                                            Messsage
-                                        </h6>
+                                        <h6><b>Messsage</b></h6>
                                         <div class="form_blk">
                                             <p id="contact_message"></p>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
-                                        <h6>
-                                            Reply Message<sup>**</sup>
+                                        <h6><b>Reply Message</b><sup>**</sup>
                                         </h6>
                                         <div class="form_blk">
                                             <textarea name="reply_message" id="reply_message" class="form-control text_box" placeholder="Type reply here..."></textarea>

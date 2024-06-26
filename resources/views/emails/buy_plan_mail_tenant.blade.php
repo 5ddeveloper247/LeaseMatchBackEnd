@@ -12,21 +12,21 @@
         <tr style="min-height: 22.5pt;">
             <td style="border: solid #DFE0E2 1.0pt; padding: 0in 0in 0in 0in; min-height: 22.5pt;" colspan="4">
                 <p class="yiv7050401279MsoNormal" style="margin-bottom: 12.0pt;"><span style="font-size: 10.0pt;">
-                        <strong>Subject: </strong>Welcome to LEASE MATCH!</span>
+                        <strong>Subject: </strong>User Buy Subscription!</span>
                 </p>
                 <p class="yiv7050401279MsoNormal" style="margin-bottom: 12.0pt;"><span style="font-size: 10.0pt;">
                         <strong>Hello {{@$name}},</strong></span>
                 </p>
                 <p class="yiv7050401279MsoNormal" style="margin-bottom: 12.0pt;">
                     <span style="font-size: 10.0pt;">
-                        We're excited to have you on board.
+                    We are pleased to inform you that your subscription to {{@$plan_name}} has been successfully purchased. Below are the details of your subscription:
                     </span>
                 </p>
                 <p class="yiv7050401279MsoNormal" style="margin-bottom: 12.0pt;">
                     
                 </p>
                 <p class="yiv7050401279MsoNormal" style="margin-bottom: 12.0pt;"><span style="font-size: 10.0pt;">
-                        <strong>Login Details: </strong></span>
+                        <strong>Subscription  Details: </strong></span>
                 </p>
             </td>
         </tr>
@@ -41,43 +41,50 @@
                     <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>UserName</strong></span></p>
                 </td>
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;{{@$name}}</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="min-height: 22.5pt;">
+                <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>Email</strong></span></p>
+                </td>
+                <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
                     <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;{{@$email}}</span>
                     </p>
                 </td>
             </tr>
+            
             <tr style="min-height: 22.5pt;">
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
-                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>Password</strong></span></p>
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>Plan</strong></span></p>
                 </td>
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
-                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;{{@$password}}</span>
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;{{@$plan_name}}</span>
                     </p>
                 </td>
             </tr>
             
             <tr style="min-height: 22.5pt;">
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
-                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>Company Name</strong></span></p>
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>Start Date</strong></span></p>
                 </td>
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
-                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;LEASE MATCH</span>
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;{{@$plan_start}}</span>
                     </p>
                 </td>
             </tr>
+
             <tr style="min-height: 22.5pt;">
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
-                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>Login Link</strong></span></p>
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; <strong>End Date</strong></span></p>
                 </td>
                 <td style="border: solid #DFE0E2 1.0pt; padding: .75pt .75pt .75pt .75pt; min-height: 22.5pt;">
-                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;
-                <a href="{{url('/login')}}">Click here to login</a>
-                </span>
+                    <p class="yiv7050401279MsoNormal"><span style="font-size: 9.0pt;">&nbsp; &nbsp;{{@$plan_end}}</span>
                     </p>
                 </td>
             </tr>
             
-           
-           
             
 
             <tr>

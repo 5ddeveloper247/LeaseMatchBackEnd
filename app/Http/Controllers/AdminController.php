@@ -269,6 +269,7 @@ class AdminController extends Controller
             $user->last_name = $request->last_name;
             $user->email = $request->email;
             $user->phone_number = $request->phone_number;
+            $user->status = 0;
             $user->created_by = Auth::user()->id;
             $password = Str::random(10);
             $user->password = bcrypt($password);//Hash::make();
@@ -285,19 +286,18 @@ class AdminController extends Controller
                 }
             }
 
-            $mailData['name'] = $user->first_name;
+            $mailData['name'] = $user->first_name." ".$user->last_name;
             $mailData['email'] = $user->email;
             $mailData['password'] = $password;
-            $body = view('emails.user_created', $mailData);
+            $body = view('emails.admin_user_created', $mailData);
             $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
-            sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
+            sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'Admin User Created', $body);
             return response()->json(['status' => 200, 'message' => "Admin user created successfully"]);
     }
 
     public function delete_user(Request $request)
     {
-
         $user_id = $request->del_id;
         $user = User::where('id',$user_id)->where('type','2')->first();
 
@@ -306,6 +306,15 @@ class AdminController extends Controller
         }
         else{
             $user->delete();
+
+            $mailData['name'] = $user->first_name." ".$user->last_name;
+            $mailData['email'] = $user->email;
+            $mailData['phone_number'] = $user->phone_number;
+            $body = view('emails.admin_user_deleted', $mailData);
+            $userEmailsSend[] = env('MAIL_ADMIN');
+            // to username, to email, from username, subject, body html
+            sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'Admin User Deleted', $body);
+
             return response()->json(['status' => 200, 'message' => "User Deleted Successfully"]);
         }
     }
@@ -318,6 +327,15 @@ class AdminController extends Controller
             $user->status = 1;
             $user->updated_by = Auth::user()->id;
             $user->save();
+
+            $mailData['name'] = $user->first_name." ".$user->last_name;
+            $mailData['email'] = $user->email;
+            $mailData['phone_number'] = $user->phone_number;
+            $body = view('emails.admin_user_active', $mailData);
+            $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
+            // to username, to email, from username, subject, body html
+            sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'Admin User Activated', $body);
+            
             return response()->json(['status' => 200, 'message' => "Status Updated Successfully"]);
         }
         else{
@@ -388,7 +406,7 @@ class AdminController extends Controller
     public function change_status_landlord(Request $request)
     {
         $landlord_id = $request->id;
-        $landlord = LandlordPersonal::where('id',$landlord_id)->first();
+        $landlord = LandlordPersonal::where('id',$landlord_id)->with(['propertyDetail'])->first();
         
         if($landlord->status == 0){
             $landlord->status = 1;
@@ -398,6 +416,20 @@ class AdminController extends Controller
         
         $landlord->updated_by = Auth::user()->id;
         $landlord->save();
+
+        if($landlord->status == 1){ // if user is active then send mail
+
+            $mailData['name'] = $landlord->full_name;
+            $mailData['email'] = $landlord->email;
+            $mailData['phone_number'] = $landlord->phone_number;
+            $mailData['property_type'] = $landlord->propertyDetail->property_type;
+            
+            $body = view('emails.landlord_active', $mailData);
+            $userEmailsSend[] = $landlord->email;//'hamza@5dsolutions.ae';//
+            // to username, to email, from username, subject, body html
+            sendMail($landlord->full_name, $userEmailsSend, 'LEASE MATCH', 'Landlord Activated', $body);
+            
+        }
 
         return response()->json(['status' => 200, 'message' => "Status Updated Successfully!"]);
     }
@@ -415,6 +447,8 @@ class AdminController extends Controller
 
     public function delete_landlord(Request $request){
         $landlord_id = $request->id;
+
+        $landlord = LandlordPersonal::where('id',$landlord_id)->with(['propertyDetail'])->first();
         $images = LandlordPropertyImages::where('landlord_id', $landlord_id)->get();
 
         LandlordPersonal::where('id', $landlord_id)->delete();
@@ -429,6 +463,16 @@ class AdminController extends Controller
                 deleteImage(str_replace('/public',"",$image->path));
             }
         }
+
+        $mailData['name'] = $landlord->full_name;
+        $mailData['email'] = $landlord->email;
+        $mailData['phone_number'] = $landlord->phone_number;
+        $mailData['property_type'] = $landlord->propertyDetail->property_type;
+        
+        $body = view('emails.landlord_deleted', $mailData);
+        $userEmailsSend[] = env('MAIL_ADMIN');
+        // to username, to email, from username, subject, body html
+        sendMail($landlord->full_name, $userEmailsSend, 'LEASE MATCH', 'Landlord Deleted', $body);
         
         return response()->json(['status' => 200, 'message' => "Deleted Successfully!"]);
     }
@@ -456,6 +500,17 @@ class AdminController extends Controller
             $user->updated_by = Auth::user()->id;
             $user->save();
 
+            if($user->status == 1){ // if user is active then send mail
+
+                $mailData['name'] = $user->first_name." ".$user->last_name;
+                $mailData['email'] = $user->email;
+                $mailData['phone_number'] = $user->phone_number;
+                $body = view('emails.tenant_active', $mailData);
+                $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
+                // to username, to email, from username, subject, body html
+                sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'User Activated', $body); // send_to_name, send_to_email, email_from_name, subject, body
+                
+            }
             return response()->json(['status' => 200, 'message' => "Status Updated Successfully!"]);
         
         }else{
@@ -466,6 +521,8 @@ class AdminController extends Controller
     public function delete_tenant(Request $request){
         $user_id = $request->id;
         $docs = UserDocuments::where('id',$user_id)->get();
+        
+        $user = User::where('id', $user_id)->where('type', 3)->first();
 
         User::where('id', $user_id)->where('type', 3)->delete();
         UserPersonalInfo::where('user_id', $user_id)->delete();
@@ -488,6 +545,14 @@ class AdminController extends Controller
             }
         }
         
+        $mailData['name'] = $user->first_name." ".$user->last_name;
+        $mailData['email'] = $user->email;
+        $mailData['phone_number'] = $user->phone_number;
+        $body = view('emails.tenant_deleted', $mailData);
+        $userEmailsSend[] = env('MAIL_ADMIN');
+        // to username, to email, from username, subject, body html
+        sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'User Deleted', $body); // send_to_name, send_to_email, email_from_name, subject, body
+
         return response()->json(['status' => 200, 'message' => "Deleted Successfully!"]);
     }
 
@@ -601,7 +666,6 @@ class AdminController extends Controller
             // to username, to email, from username, subject, body html
             sendMail($contact_detail->name, $userEmailsSend, 'LEASE MATCH', 'Contact Us', $body); // send_to_name, send_to_email, email_from_name, subject, body
             
-
             return response()->json(['status' => 200, 'message' => "Plan updated successfully!"]);
         }else{
             return response()->json(['status' => 402, 'message' => "Something went wrong!"]);

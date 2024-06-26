@@ -109,8 +109,8 @@ $(document).on('click', '#process_application', function (e) {
 });
 $(document).on('click', '#necessary_document', function (e) {
 	if(!$("#necessary_document").is(':checked')){
-	 $("#process_application").prop('checked', false);
- }
+		$("#process_application").prop('checked', false);
+	}
 });
 
 

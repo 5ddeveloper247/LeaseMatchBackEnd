@@ -23,7 +23,7 @@ function makeContactUsListing(contactus_list){
 	if(contactus_list.length > 0){
 		$.each(contactus_list, function (index, value) {
 			
-			if(value.reply == null){
+			if(value.reply == null || value.reply == ''){
 				var status = `<span class="badge rounded-pill bg-danger">New</span>`;
 				var reply_btn = `<button class="inquiry-btn btn-sm editButton text-center replybtn" data-id="${value.id}">Reply</button>`;
 			}else{
@@ -83,14 +83,16 @@ function getSpecificContactUsResponse(response) {
 
 		if(detail != null){
 			$("#contact_id").val(detail.id);
+			$("#contact_email").text(detail.email);
+			$("#contact_phone").text(detail.phone);
 			$("#contact_message").text(detail.message);
 		
-			if(detail.reply !=  null){
-				$("#reply_message").val(detail.reply).prop('disabled', true);
-				$("#contactReply_submit").hide();
-			}else{
+			if(detail.reply ==  null  || detail.reply == ''){
 				$("#reply_message").val('').prop('disabled', false);
 				$("#contactReply_submit").show();
+			}else{
+				$("#reply_message").val(detail.reply).prop('disabled', true);
+				$("#contactReply_submit").hide();
 			}
 		}
     }

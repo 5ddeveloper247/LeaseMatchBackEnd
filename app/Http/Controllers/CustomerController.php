@@ -181,21 +181,22 @@ class CustomerController extends Controller
             return response()->json(['status' => 402, 'message' => "Email is not registered in our system"]);
         }
         else{
-                $mailData = [];
-                $otp = implode('', array_map(function() {
-                    return mt_rand(0, 9);
-                }, range(1, 5)));
-                $user->otp_code = $otp;
-                $user->otp_created_at = date('Y-m-d H:i:s');
-                $user->save();
-                $mailData['otp'] = $otp;
-                $mailData['username'] = $user->first_name;
-                $body = view('emails.forgot_password', $mailData);
-                $userEmailsSend[] = $user->email;
-                // to username, to email, from username, subject, body html
-                
-                sendMail($user->first_name, $userEmailsSend, 'Lease Match', 'Password Reset Request', $body); // send_to_name, send_to_email, email_from_name, subject, body
-                return response()->json(['status' => 200, 'message' => "otp is sent to your registered email"]);
+            $mailData = [];
+            $otp = implode('', array_map(function() {
+                return mt_rand(0, 9);
+            }, range(1, 5)));
+            $user->otp = $otp;
+            $user->otp_created_at = date('Y-m-d H:i:s');
+            $user->save();
+
+            $mailData['otp'] = $otp;
+            $mailData['username'] = $user->first_name;
+            $body = view('emails.forgot_password', $mailData);
+            $userEmailsSend[] = $user->email;
+            // to username, to email, from username, subject, body html
+            
+            sendMail($user->first_name, $userEmailsSend, 'Lease Match', 'Password Reset Request', $body); // send_to_name, send_to_email, email_from_name, subject, body
+            return response()->json(['status' => 200, 'message' => "otp is sent to your registered email"]);
         
         }
 
@@ -210,10 +211,10 @@ class CustomerController extends Controller
         $email = $request->email;
 
         $user = User::where('email', $request->email)->first();
-        if($user->otp_code == null){
+        if($user->otp == null){
             return response()->json(['status' => 402, 'message' => "Invalid request"]);
         }
-        if($otp == $user->otp_code){
+        if($otp == $user->otp){
             return response()->json(['status' => 200, 'message' => "otp validated, kindly enter your new password"]);
         }
         else{
@@ -388,7 +389,7 @@ class CustomerController extends Controller
         if(isset($enquirycheck->id)){
             return response()->json(['status' => 402, 'message' => 'Request already in process!']);
         }
-            
+        
         // create enquiry header entry
         $enquiry = new TenantEnquiryHeader();
         $enquiry->user_id = Auth::user()->id;

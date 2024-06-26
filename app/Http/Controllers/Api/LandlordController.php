@@ -141,6 +141,17 @@ class LandlordController extends Controller
                 }
             }
 
+            $mailData['name'] = $personal->full_name;
+            $mailData['email'] = $personal->email;
+            $mailData['phone_number'] = $personal->phone_number;
+            $mailData['property_type'] = $property->property_type;
+            
+            $body = view('emails.landlord_created', $mailData);
+            $userEmailsSend[] = $personal->email;//'hamza@5dsolutions.ae';//
+            // to username, to email, from username, subject, body html
+            sendMail($personal->first_name, $userEmailsSend, 'LEASE MATCH', 'Landlord Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
+
+
             return response()->json([
                 'success' => true,
                 'message' => 'Added successfully'

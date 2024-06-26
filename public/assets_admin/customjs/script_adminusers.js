@@ -29,7 +29,6 @@ function loadUsersListResponse(response) {
     
     $.each(users_list, function (index, value) {
         
-
         var html = `<tr>
                                 <td class="nowrap">${index + 1}</td>
                                 <td>${value.first_name} ${value.middle_name?value.middle_name:''} ${value.last_name?value.last_name:''}</td>
@@ -73,13 +72,16 @@ $('#add_user_form').submit(function (e) {
 });
 
 function addUserResponse(response) {
+    
+    $('#uiBlocker').hide();
+    
     if (response.status == 200) {
         toastr.success(response.message, '', {
             timeOut: 3000
         });
 
         let form = $('#add_user_form');
-        $('#uiBlocker').hide();
+        
         form.trigger("reset");
         loadUsersList();
         $('#close_add_modal_btn').click();
@@ -121,6 +123,8 @@ $('#close_delete_modal_btn').click(function(){
 });
 
 $('#delete_confirmed_btn').click(function(){
+    
+    $('#uiBlocker').show();
     var del_id = $(this).attr('data-id');
     let url = '/admin/deleteUser';
     let type = 'POST';
@@ -132,12 +136,15 @@ $('#delete_confirmed_btn').click(function(){
 
 
 function deleteUserResponse(response){
+
+    $('#uiBlocker').hide();
+
     if (response.status == 200) {
         
         toastr.success(response.message, '', {
             timeOut: 3000
         });
-        $('#uiBlocker').hide();
+        
         
         loadUsersList();
         $('#close_delete_modal_btn').click();
@@ -160,6 +167,7 @@ function deleteUserResponse(response){
 
 function changestatus(id){
     
+    $('#uiBlocker').show();
     let url = '/admin/changestatus';
     let type = 'POST';
     let data = new FormData();
@@ -171,12 +179,15 @@ function changestatus(id){
 
 
 function changeStatusResponse(response){
+    
+    $('#uiBlocker').hide();
+    
     if (response.status == 200) {
         
         toastr.success(response.message, '', {
             timeOut: 3000
         });
-        $('#uiBlocker').hide();
+        
         
         loadUsersList();
     }
@@ -206,11 +217,14 @@ $(document).on('click','.edit_btn', function(){
 
 
 function getUserdataResponse(response){
+    
+    $('#uiBlocker').hide();
+    
     if (response.status == 200) {
         var user = response.data;
         var menu_controls = user.menu_controls;
        
-        $('#uiBlocker').hide();
+        
         $('#user_id').val(user.id);
         $('#first_name_edit').val(user.first_name);
         $('#middle_name_edit').val(user.middle_name);
@@ -247,7 +261,9 @@ $('#edit_user_form').submit(function(e){
 });
 
 function updateUserResponse(response){
+
     $('#uiBlocker').hide();
+
     if (response.status == 200) {
         
         toastr.success(response.message, '', {

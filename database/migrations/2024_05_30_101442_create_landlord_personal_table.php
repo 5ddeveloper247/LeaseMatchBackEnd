@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('landlord_personal', function (Blueprint $table) {
             $table->id();
             $table->string('full_name', 255);
-            $table->string('email', 255)->unique();
-            $table->string('phone_number', 20);
+            $table->string('email', 255)->nullable();
+            $table->string('phone_number', 20)->nullable();
             $table->string('company_name', 255)->nullable();
             $table->smallInteger('status')->comment('0=>InActive, 1=>Active')->nullable();
             $table->smallInteger('enquiry_status')->comment('1=>Available, 2=>Blocked, 3=>Booked')->default('1')->nullable();

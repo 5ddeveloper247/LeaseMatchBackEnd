@@ -68,7 +68,6 @@ class PaymentController extends Controller
         $payment->date = Carbon::now()->format('Y-m-d');
         $payment->save();
         
-
         if($charge->status == 'succeeded'){
             
             $duration_days = 30;
@@ -94,6 +93,24 @@ class PaymentController extends Controller
             $payment->user_subscription_id = $userSubscription->id;
             $payment->save();
 
+            $mailData['name'] = $user->first_name;
+            $mailData['email'] = $user->email;
+            $mailData['plan_name'] = $plan_detail->title;
+            $mailData['plan_start'] = $start_date;
+            $mailData['plan_end'] = $end_date;
+            
+            $body = view('emails.buy_plan_mail_tenant', $mailData);
+            $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
+            // to username, to email, from username, subject, body html
+            sendMail($user->first_name, $userEmailsSend, 'LEASE MATCH', 'Subscription Purchase', $body);
+
+            if(!$currentPlan){ //admin email send for first time buy
+                $body = view('emails.buy_plan_mail_admin', $mailData);
+                $userEmailsSend[] = env('MAIL_ADMIN');
+                // to username, to email, from username, subject, body html
+                sendMail('Admin', $userEmailsSend, 'LEASE MATCH', 'Subscription Purchase', $body);
+            }
+            
             Session::flash('success', 'Payment Successful');
         }else{
             Session::flash('error', 'Payment Failed');
