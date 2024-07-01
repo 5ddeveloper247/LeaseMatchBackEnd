@@ -89,11 +89,11 @@
                 
                 <br>
                 <ul class="tab_list">
-                    <li class="active"><a href="#All" data-toggle="tab">All Landlords</a></li>
+                    <li class="active"><a href="#Allll" data-toggle="tab">All Landlords</a></li>
                     <li><a href="#AssignAll" data-toggle="tab">Assigned Landlords</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div id="All" class="tab-pane fade in active">
+                    <div id="Allll" class="tab-pane fade in active">
                         <div class="contain-fluid">
                             <div class="top_head mt-5">
                                 <h4>Search Filter</h4>

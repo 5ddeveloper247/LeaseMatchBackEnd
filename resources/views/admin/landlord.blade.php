@@ -19,6 +19,13 @@
         </ul>
         
         <div class="card_row flex_row" >
+            
+            <div class="col">
+                <div class="card_blk">
+                    <div class="icon" id="total_count"></div>
+                    <strong>Total</strong>
+                </div>
+            </div>
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="total_active"></div>
@@ -33,12 +40,7 @@
                     <strong>Inactive</strong>
                 </div>
             </div>
-            <div class="col">
-                <div class="card_blk">
-                    <div class="icon" id="total_count"></div>
-                    <strong>Total</strong>
-                </div>
-            </div>
+            
             {{--<div class="col">
                 <div class="card_blk">
                     
@@ -330,7 +332,7 @@
                                 <div class="col-xs-12">
                                     <h6>Special Instructions or Notes</h6>
                                     <div class="form_blk">
-                                        <input type="text" id="special_note" class="text_box" placeholder="">
+                                        <textarea type="text" id="special_note" class="text_box" placeholder=""></textarea>
                                     </div>
                                 </div>
                                 

@@ -8,6 +8,7 @@
     #users_table{
         font-size:x-small;
     }
+    
 </style>
 
 <section id="listing">
@@ -19,7 +20,12 @@
         <!-- <div class="card_row flex_row" style="justify-content:end"> -->
         <div class="card_row flex_row" >
             
-            
+            <div class="col">
+                <div class="card_blk">
+                    <div class="icon" id="total_users"></div>
+                    <strong>Total</strong>
+                </div>
+            </div>
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="active_users"></div>
@@ -34,20 +40,8 @@
                     <strong>Inactive</strong>
                 </div>
             </div>
-            <div class="col">
-                <div class="card_blk" id="">
-                    <div class="icon"></div>
-                    <strong>
-                        
-                    </strong>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card_blk">
-                    <div class="icon" id="total_users"></div>
-                    <strong>Total</strong>
-                </div>
-            </div>
+            
+            
             <div class="col">
                 <div class="card_blk" id="add_user_btn">
                     <div class="icon">
@@ -76,7 +70,6 @@
                             <th width="40" >Created Date</th>
                             <th width="40" data-center>Status</th>
                             <th width="40" data-center>Action</th>
-                           
                         </tr>
                     </thead>
                     <tbody id="users_table_body">
@@ -207,7 +200,7 @@
                                         <div class="col-xs-6">
                                             <div class="form_blk">
                                                 <h6>Contact Number</h6>
-                                                <input type="number" name="phone_number" id="phone_number" class="text_box" placeholder="eg: +92300 0000 000"maxlength="15">
+                                                <input type="number" name="phone_number" id="phone_number" class="text_box" placeholder="eg: +92300 0000 000" maxlength="18">
                                             </div>
                                         </div>
                                         <div class="col-xs-12">

@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Pricing_plan;
 use App\Models\UserSubscription;
 use App\Models\UserPayments;
+use App\Models\Notifications;
 use Carbon\Carbon;
 use Session;
 
@@ -92,6 +93,16 @@ class PaymentController extends Controller
 
             $payment->user_subscription_id = $userSubscription->id;
             $payment->save();
+
+            $Notification = new Notifications();
+            $Notification->module_code =  'BUY SUBSCRIPTION';
+            $Notification->from_user_id =   Auth::user()->id;
+            $Notification->to_user_id =  '1';// for admin notification
+            $Notification->subject =  "Tenant Buy Plan";
+            $Notification->message =  "The tenant has successfully purchased/update a ".$plan_detail->title." subscription.";
+            $Notification->read_flag =  '0';
+            $Notification->created_by =  Auth::user()->id;
+            $Notification->save();
 
             $mailData['name'] = $user->first_name;
             $mailData['email'] = $user->email;

@@ -30,9 +30,14 @@ function makeInProcessEnquiryListing(enquiries){
 			}else{
 				var enqType = 'Document Upload';
 			}
+
+			var notif_icon = '';
+			if(value.status == '1' || value.status == '2' || value.status == '5'){
+				notif_icon = '<span class="notif-icon"></span>';
+			}
 			
 			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
+						<td class="nowrap">${index + 1} ${notif_icon}</td>
 						<td>${landlord.full_name}</td>
 						<td>${enqType}</td>
 						<td>${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>

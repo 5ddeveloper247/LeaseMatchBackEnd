@@ -143,6 +143,7 @@
                     @if(@$enquiry_detail == null)
                         
                         @if($property_detail->enquiry_status != 3)
+                            @if(@$curr_plan->process_application_flag == 1 || @$curr_plan->necessary_doc_flag == 1)
                             <div class="blk">
                                 <h6 class="sub_heading">Process Application Request</h6>
                                 <form action="javascript:;" id="processApp_form">
@@ -165,6 +166,7 @@
                                     </div>
                                 </form>
                             </div>
+                            @endif
                         @else
                             <div class="blk">
                                     <div class="btn_blk form_btn">

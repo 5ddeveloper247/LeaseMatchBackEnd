@@ -8,12 +8,12 @@
     
     <div class="inside">
         <ul>
-            <li class="{{$page == 'Dashboard' ? 'active' : ''}}">
+            <!-- <li class="{{$page == 'Dashboard' ? 'active' : ''}}">
                 <a href="{{route('customer.dashboard')}}">
                     <img src="{{asset('assets/images/icon-home.svg')}}" alt="">
                     <em>Dashboard</em>
                 </a>
-            </li>
+            </li> -->
             <li class="{{$page == 'Matches' ? 'active' : ''}}">
                 <a href="{{route('customer.myMatches')}}">
                     <img src="{{asset('assets/images/icon-search.svg')}}" alt="">

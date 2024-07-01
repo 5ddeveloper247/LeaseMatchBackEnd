@@ -227,7 +227,7 @@ $(document).ready(function () {
     
     getLandlordPageData();
 
-	$("input, select").prop('disabled', true);
+	$("input, select, textarea").prop('disabled', true);
 });
 
 $(document).on('click', '.backToListing', function (e) {

@@ -103,9 +103,10 @@
                                     <div class="form_blk">
                                         <select id="preferred_property_type" class="text_box " data-container="body">
                                             <option value="">- Select a Preferred Property Type -</option>
-                                            <option value="Appertament">Appertament</option>
-                                            <option value="House">House</option>
+                                            <option value="Appartment">Appartment</option>
                                             <option value="Condo">Condo</option>
+                                            <option value="House">House</option>
+                                            <option value="Studio">Studio</option>
                                         </select>
                                     </div>
                                 </div>
@@ -467,7 +468,7 @@
                                 <div class="col-xs-12">
                                     <h6>General Notes</h6>
                                     <div class="form_blk">
-                                        <input type="text" id="general_note" class="text_box" placeholder="">
+                                        <textarea type="text" id="general_note" class="text_box" placeholder=""></textarea>
                                     </div>
                                 </div>
                                 <div class="col-xs-12">

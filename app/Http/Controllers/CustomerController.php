@@ -18,6 +18,7 @@ use App\Models\Api\UserPersonalInfo;
 use App\Models\TenantEnquiryHeader;
 use App\Models\TenantEnquiryDocument;
 use App\Models\TenantEnquiryRequests;
+use App\Models\Notifications;
 use Illuminate\Support\Facades\Validator;
 
 // landlord models
@@ -29,6 +30,7 @@ use App\Models\Api\LandlordAdditional;
 use App\Models\Api\LandlordPropertyImages;
 
 use App\Models\PropertyMatches;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CustomerController extends Controller
 {
@@ -63,7 +65,7 @@ class CustomerController extends Controller
             if($user->status == 1){
                 $request->session()->put('user', $user);
                 // Authentication passed...
-                return redirect()->intended('/customer/dashboard');
+                return redirect()->intended('/customer/myMatches');//dashboard
             }else{
                 $request->session()->flash('error', 'The user is not active, please contact admin.');
                 return redirect('customer/login');
@@ -107,26 +109,34 @@ class CustomerController extends Controller
 
     public function my_matches(Request $request)
     {
-        $currentDate = Carbon::now()->format('Y-m-d');
+        if(checkUserSubscription() == true){
+            $currentDate = Carbon::now()->format('Y-m-d');
         
-        $data['page'] = 'Matches';
+            $data['page'] = 'Matches';
+            $user_id = Auth::user()->id;
 
-        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
-                                                    ->where('end_date', '>=', $currentDate)
-                                                    ->with('plan')->orderBy('created_at', 'desc')->first();
+            $currentPlan = UserSubscription::where('user_id', $user_id)->where('start_date', '<=', $currentDate)
+                                                        ->where('end_date', '>=', $currentDate)
+                                                        ->with('plan')->orderBy('created_at', 'desc')->first();
 
-        if(isset($currentPlan->id)){
-            $data['properties'] = PropertyMatches::where('user_id', Auth::user()->id)->with(['landlordPersonal',
+            if(isset($currentPlan->id)){
+                $data['properties'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal',
                                                                                             'landlordPersonal.propertyDetail',
                                                                                             'landlordPersonal.rentalDetail',
                                                                                             'landlordPersonal.tenantDetail',
                                                                                             'landlordPersonal.additionalDetail',
-                                                                                            'landlordPersonal.propertyImages'])->get();
+                                                                                            'landlordPersonal.propertyImages',
+                                                                                            'tenantEnquiryHeader'
+                                                                                        ])->get();
+            }else{
+                $data['properties'] = array();
+            }
+            
+            return view('customer/my_matches')->with($data);
+            
         }else{
-            $data['properties'] = array();
+            return redirect()->route('customer.mySubscription');
         }
-        
-        return view('customer/my_matches')->with($data);
     }
 
     public function property_detail(Request $request)
@@ -307,12 +317,12 @@ class CustomerController extends Controller
         $user_id = Auth::id();
         $user = User::find($user_id);
         $request->validate([
-            'first_name' => 'required',
-            'phone_number' => 'max:18'
+            'first_name' => 'required|max:50',
+            'phone_number' => 'numeric|digits_between:7,18'
         ]);
         if($request->password){
              $request->validate([
-            'first_name' => 'required',
+            'first_name' => 'required|max:50',
             'phone_number' => 'max:18',
             'old_password' => 'required',
             'password' => [
@@ -349,11 +359,17 @@ class CustomerController extends Controller
             $user->save();
             return response()->json(['status' => 200, 'message' => 'Profile Updated Successfully']);
         }
-
-        
     }
 
     public function update_personal_data(Request $request){
+        
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:50',
+            'date_of_birth' => 'required|date_format:Y-m-d|before:today',
+            'email' => 'required|email|max:100',
+            'phone_number_personal' => 'required|numeric|digits_between:7,18',
+        ]);
+        
         $user_id = Auth::id();
         $user = UserPersonalInfo::where('user_id',$user_id)->first();
 
@@ -421,6 +437,17 @@ class CustomerController extends Controller
             'enquiry_status' => '2', // blocked
         ]);
 
+
+        $Notification = new Notifications();
+        $Notification->module_code =  'ENQUIRY REQUEST';
+        $Notification->from_user_id =   Auth::user()->id;
+        $Notification->to_user_id =  '1';// for admin notification
+        $Notification->subject =  "Tenant Enquiry Request";
+        $Notification->message =  "Thank you for submitting the application request. The application has been received and is currently under review. Our team will contact you shortly with further details.";
+        $Notification->read_flag =  '0';
+        $Notification->created_by =  Auth::user()->id;
+        $Notification->save();
+
         $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry->id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
 
         $mailData['name'] = $enquiryDetails->user->first_name;
@@ -437,7 +464,7 @@ class CustomerController extends Controller
         $body = view('emails.enquiry_email', $mailData);
         $userEmailsSend[] = $enquiryDetails->user->email;//'hamza@5dsolutions.ae';//
         // to username, to email, from username, subject, body html
-        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Notification', $body);
         
         $mailData['name'] = "Admin";
         $mailData['email_message'] = 'I have submitted my application. Please let me know if any further information or actions are required on my part.';
@@ -445,7 +472,7 @@ class CustomerController extends Controller
         $body = view('emails.enquiry_email', $mailData);
         $userEmailsSend[] = env('MAIL_ADMIN');
         // to username, to email, from username, subject, body html
-        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request Admin', $body);
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Notification Admin', $body);
         
 
         return response()->json(['status' => 200, 'message' => 'Your request is submited successfully, we will respond you soon, Thanks']);
@@ -495,6 +522,16 @@ class CustomerController extends Controller
         $tenantEnquiryRequest->submitted_by = Auth::user()->id;
         $tenantEnquiryRequest->save();
 
+        $Notification = new Notifications();
+        $Notification->module_code =  'ENQUIRY REQUEST';
+        $Notification->from_user_id =   Auth::user()->id;
+        $Notification->to_user_id =  '1';// for admin notification
+        $Notification->subject =  "Tenant Document Upload";
+        $Notification->message =  "The requested documents for the enquiry have been submitted. Please review them and let me know if any further information or actions are required.";
+        $Notification->read_flag =  '0';
+        $Notification->created_by =  Auth::user()->id;
+        $Notification->save();
+        
         $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
 
         $mailData['name'] = 'Admin';
@@ -511,8 +548,18 @@ class CustomerController extends Controller
         $body = view('emails.enquiry_email', $mailData);
         $userEmailsSend[] = env('MAIL_ADMIN');
         // to username, to email, from username, subject, body html
-        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Notification', $body);
 
         return response()->json(['status' => 200, 'message' => 'Document submitted successfully']);
     }
+
+    public function readAllNotifications(Request $request){
+        
+        Notifications::where('to_user_id', Auth::user()->id)->update([
+            'read_flag' => '1',
+        ]);
+
+        return response()->json(['status' => 200, 'message' => 'Read Notifications successfully']);
+    }
+
 }

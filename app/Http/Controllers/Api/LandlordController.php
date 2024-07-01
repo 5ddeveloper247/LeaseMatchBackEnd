@@ -26,7 +26,7 @@ class LandlordController extends Controller
         $validator = Validator::make($request->all(), [
             'full_name' => 'required|string|max:100',
             'email' => 'required|email|max:100',
-            'phone_number' => 'required|numeric|digits_between:1,15',
+            'phone_number' => 'required|numeric|digits_between:7,18',
             'company_name' => 'required|max:100',
 
             'street_address' => 'required|max:255',
@@ -55,7 +55,7 @@ class LandlordController extends Controller
         
             'special_note' => 'required',
             'property_photos' => 'required',
-            'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ]);
        
         // Check if validation fails
@@ -176,7 +176,7 @@ class LandlordController extends Controller
             $validator = Validator::make($request->all(), [
                 'full_name' => 'required|string|max:100',
                 'email' => 'required|email|max:100',
-                'phone_number' => 'required|numeric|digits_between:1,15',
+                'phone_number' => 'required|numeric|digits_between:7,18',
                 'company_name' => 'required|max:100',
             ]);
         }
@@ -223,7 +223,7 @@ class LandlordController extends Controller
             $validator = Validator::make($request->all(), [
                 'special_note' => 'required',
                 'property_photos' => 'required',
-                'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
             ]);
         }
 

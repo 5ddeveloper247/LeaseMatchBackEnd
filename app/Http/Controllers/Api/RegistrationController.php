@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Notifications;
 use App\Models\Api\UserPersonalInfo;
 use App\Models\Api\ResidentialPreference;
 use App\Models\Api\FinancialInfo;
@@ -25,13 +26,11 @@ use App\Models\Api\LegalCompliance;
 use App\Models\Api\UserReferences;
 use App\Models\Api\AdditionalNotes;
 use App\Models\Api\UserDocuments;
+use App\Rules\PreviousDate;
 
 class RegistrationController extends Controller
 {
-    //
-
-
-
+    
     public function storeRegistration(Request $request)
     {
 
@@ -39,9 +38,9 @@ class RegistrationController extends Controller
         $validator = Validator::make($request->all(), [
             //personal Information
             'name' => 'required|max:100',
-            'date_of_birth' => 'required|date_format:Y-m-d',
-            'email' => 'required|email',
-            'phone_number' => 'required|numeric|digits_between:1,15',
+            'date_of_birth' => 'required|date_format:Y-m-d|before:today',
+            'email' => 'required|email|max:100',
+            'phone_number' => 'required|numeric|digits_between:7,18',
 
             // Residential Preference
             'preferred_location' => 'required|max:100',
@@ -263,6 +262,16 @@ class RegistrationController extends Controller
                 }
             }
             
+            $Notification = new Notifications();
+            $Notification->module_code =  'TENANT REGISTRATION';
+            $Notification->from_user_id =  $User->id;
+            $Notification->to_user_id =  '1';// for admin notification
+            $Notification->subject =  "Tenant Registration";
+            $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
+            $Notification->read_flag =  '0';
+            $Notification->created_by =  $User->id;
+            $Notification->save();
+            
             $mailData['name'] = $User->first_name;
             $mailData['email'] = $User->email;
             $mailData['password'] = $password;
@@ -288,15 +297,13 @@ class RegistrationController extends Controller
 
     public function validateForm(Request $request)
     {
-
-        
         if($request->input('step') == '1'){
             $validator = Validator::make($request->all(), [
                 //personal Information
                 'name' => 'required|string|max:100',
-                'date_of_birth' => 'required|date_format:Y-m-d',
+                'date_of_birth' => 'required|date_format:Y-m-d|before:today',
                 'email' => 'required|email',
-                'phone_number' => 'required|numeric|digits_between:1,15',
+                'phone_number' => 'required|numeric|digits_between:7,18',
             ]);
         }
        
@@ -327,7 +334,7 @@ class RegistrationController extends Controller
                 'rental_voucher' => 'required|max:10',
                 'voucher_type' => 'required|max:100',
                 'certification_detail' => 'required|max:255',
-                'certification_expiry' => 'required|date_format:Y-m-d',
+                'certification_expiry' => 'required|date_format:Y-m-d|after:today',
             ]);
         }
 
@@ -373,7 +380,7 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 // Additional Requirements
                 'max_rent_to_pay' => 'required|numeric|digits_between:1,10',
-                'preffered_move_in_date' => 'date_format:Y-m-d',
+                'preffered_move_in_date' => 'date_format:Y-m-d|after_or_equal:today',
                 'lease_length_preference' => 'required|string|max:100',
             ]);
         }
@@ -401,7 +408,7 @@ class RegistrationController extends Controller
                 'general_note' => 'required|string|max:255',
                 'work_with_broker' => 'required|string|max:10',
                 'documents' => 'required',
-                'documents.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'documents.*' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
             ]);
         }
 
@@ -410,6 +417,7 @@ class RegistrationController extends Controller
                 // User Information
                 'user_name' => 'required|string|max:100',
                 'user_email' => 'required|email|unique:users,email',
+                'password_confirmation' => 'required',
                 'password' => [
                     'required',
                     'string',

@@ -140,10 +140,17 @@ $(document).ready(function () {
 
     getpropertydata();
 
-	$("input, select").prop('disabled', true);
+	$("input, select, textarea").prop('disabled', true);
 });
 
 $(document).on('click', '.backToListing', function (e) {
+
+	$("fieldset").css("display", "none");
+	$(".head_lst > li").removeClass("current");
+
+	$(".head_lst > li:nth-child(1)").addClass("current");
+	$("fieldset:first").css("display", "block");
+	
     $("#listing").show();
 	$("#deliveries").hide();
 });

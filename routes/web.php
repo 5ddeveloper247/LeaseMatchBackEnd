@@ -118,6 +118,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/viewEnquiryDocs', [AdminController::class, 'view_enquiry_docs'])->name('admin.viewEnquiryDocs');
         Route::post('/changeEnquiryStatus', [AdminController::class, 'change_enquiry_status'])->name('admin.changeEnquiryStatus');
         
+        Route::post('/readAllNotifications', [AdminController::class, 'readAllNotifications'])->name('admin.readAllNotifications');
+        Route::post('/getDashboardPageData', [AdminController::class, 'get_dashboard_page_data'])->name('admin.getDashboardPageData');
+        
+        
     });
 });
 
@@ -158,7 +162,9 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/viewContactInfo', [CustomerController::class, 'view_contact_info'])->name('customer.viewContactInfo');
             Route::post('/processAppRequest', [CustomerController::class, 'process_app_request'])->name('customer.processAppRequest');
             Route::post('/uploadTenantEnquiryDocuments', [CustomerController::class, 'uploadTenantEnquiryDocuments'])->name('customer.uploadTenantEnquiryDocuments');
-        
+            
+            Route::post('/readAllNotifications', [CustomerController::class, 'readAllNotifications'])->name('customer.readAllNotifications');
+            
         
         
         

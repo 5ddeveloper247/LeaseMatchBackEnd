@@ -18,7 +18,7 @@
     align-items: center;
 }
 .top-header-payment-details{
-    background-color: #0078b9;
+    background-color: #051855;
     padding: 10px 25px;
 }
 @media screen and (max-width: 600px) {
@@ -48,11 +48,340 @@
     align-items: center;    
 }
 
-#nav #pro_btn {
+/* #nav #pro_btn {
     margin-left: 58rem;
-}
+} */
 @media (max-width: 767px) {
     #nav #pro_btn {
         margin-left: 31rem;
     }
+}
+
+.notif-icon{
+    height: 10px;
+    width: 10px;
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top:2px;
+}
+
+
+/*=================== Notification CSS Start =======================*/
+.d-flex {
+    display: flex;
+}
+.flex-wrap{
+    flex-wrap: wrap;
+}
+.justify-content-between {
+    justify-content: space-between;
+}
+.justify-content-end {
+    justify-content: end;
+}
+.justify-content-center {
+    justify-content: center;
+}
+.align-items-center {
+    align-items: center;
+}
+.text-center{
+    text-align: center;
+}
+.bold {
+    font-weight: bold;
+}
+.my-5 {
+    margin: 20px 0px !important;
+}
+.mt-5 {
+    margin-top: 2rem;
+}
+.mb-5 {
+    margin-bottom: 2rem;
+}
+.mb-0{
+    margin-bottom: 0px;
+}
+.m-0 {
+    margin: 0px;
+}
+.mx-5 {
+    margin: 0 2rem !important;
+}
+.m-5{
+    margin: 2rem;
+}
+.mx-4 {
+    margin: 0 1.5rem !important;
+}
+.mx-2 {
+    margin: 0 1rem !important;
+}
+.ms-2 {
+    margin: 0 0 0 1rem !important;
+}
+.px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.px-2 {
+    padding: 0 1rem;
+}
+.px-5 {
+    padding: 0 2rem !important;
+}
+.py-5 {
+    padding: 2rem 0;
+}
+.pt-2 {
+    padding-top: 1rem;
+}
+.p-5 {
+    padding: 2rem;
+}
+.p-0 {
+    padding: 0px;
+}
+.text-white{
+    color:white
+}
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+.btn-group {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+.border {
+    border: 1px solid rgba(0, 0, 0, .125);
+}
+.ml-auto {
+    margin-left: auto !important;
+}
+.mr-auto {
+    margin-right: auto !important;
+}
+.d-none{
+    display: none;
+}
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.see-all-div p {
+    margin: 0px;
+}
+.see-all-div a {
+    padding: 1rem 1.5rem 0 1.5rem;
+    color: #0078B9;
+}
+.custom-name-info {
+    background: #D3EDF5;
+    color: #58BAD7;
+}
+.custom-name-danger {
+    background: #FFDEDE;
+    color: #FF5E5E;
+}
+.custom-name-success {
+    background: #DAF5E6;
+    color: #3AC977;
+}
+.custom-name {
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.coloured-small-text {
+    font-size: 10px;
+    color: #0866FF;
+}
+.notifiactions h2:nth-child(1) {
+    padding: 0 3rem;
+    margin: 0px;
+}
+.drop-down-content {
+    min-width: 30rem !important;
+    position: absolute;
+    left: -20rem !important;
+    padding: 8px 0px;
+}
+.content-scrollbar {
+    max-height: 30rem;
+    overflow-y: auto;
+}
+.content-scrollbar::-webkit-scrollbar {
+    width: 5px;
+}
+.content-scrollbar::-webkit-scrollbar-track {
+    background: #F1F1F1;
+}
+.content-scrollbar::-webkit-scrollbar-thumb {
+    background: #F0F4F4;
+}
+.content-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.drop-down-content hr {
+    margin: 0px;
+}
+.drop-down-content h5 {
+    padding: 1rem 1.5rem 0 1.5rem;
+    margin: 0px;
+}
+.drop-down-content svg {
+    height: 25px;
+    cursor: pointer;
+    padding: 1rem 1.5rem 0 1.5rem;
+    margin: 0px;
+}
+.d-flex-notifications {
+    display: flex;
+    justify-content: space-between;
+}
+.d-flex-notifications h4 {
+    padding: 1rem 1.5rem 0 1.5rem;
+}
+.tab_list>li.active>a {
+    background: #051855 !important;
+    color: #fff !important;
+    border-color: #051855 !important;
+}
+.tab_list>li>a,
+.tab_list>li>button {
+    border: 0.1rem solid #B0B0B0 !important;
+}
+#nav #icon_btn li>a {
+    width: 100% !important;
+    padding: 0.1rem 10px !important;
+}
+#nav #icon_btn li {
+    padding: 0 !important;
+}
+.tab_list-notifications {
+    margin: 10px 10px 0px 10px !important;
+    padding: 0px;
+}
+.Notifications-sub-dropdown-main img {
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+}
+.Notifications-sub-dropdown-main {
+    padding: 10px;
+    cursor: pointer;
+}
+.Notifications-sub-dropdown-main:hover {
+    background-color: rgb(8 2 26 / 5%);
+    border-radius: 5px;
+}
+.Notifications-sub-dropdown-main p {
+    padding-left: 5px;
+    font-size: 12px;
+    margin: 0px;
+    line-height: 1.7rem;
+}
+.Notifications-sub-dropdown img {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+.Notifications-sub-dropdown {
+    margin: 10px;
+    cursor: pointer;
+}
+.Notifications-sub-dropdown:hover {
+    background-color: rgb(8 2 26 / 5%);
+    border-radius: 5px;
+}
+.Notifications-sub-dropdown p {
+    padding-left: 5px;
+    margin: 0px;
+    line-height: 1.7rem;
+}
+/*=================== Notification CSS End =======================*/
+
+
+
+/*==================== Change theme CSS Start ========================*/
+
+aside {
+    background: #051855 !important;
+}
+
+header {
+    background: #051855 !important;
+}
+footer {
+    background: #051855 !important;
+}
+
+footer .copyright p>a {
+    color: #04d7e8 !important;
+}
+
+.social_links li a {
+    background: #04d7e8 !important;
+}
+footer a:hover {
+    color: #04d7e8 !important;
+}
+.site_btn {
+    background: #04d7e8 !important;
+}
+body a:hover {
+    color: #04d7e8 !important;
+}
+
+#deliveries form .head_lst>li.current:after {
+    background: #051855;
+}
+.site_btn.simple.border:not(:hover),.site_btn.simple.border:hover {
+    border-color: #04d7e8;
+}
+.site_btn.simple, .site_btn.simple:hover {
+    color: #fff;
+}
+
+::selection {
+    background: #051855;
+    color: #fff;
+}
+#detail .price_blk .price {
+    color: #051855;
+}
+
+#logon .side::before {
+    background: #051855;
+}
+
+/*===================== Change theme CSS End ========================*/
+
+td:not(:last-child) {
+    padding-top: 16px !important;
+}
+.tbl_blk table>*>tr:nth-child(1)>* {
+    padding-top: 1rem;
 }

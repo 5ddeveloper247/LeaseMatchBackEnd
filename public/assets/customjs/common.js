@@ -6,13 +6,45 @@ $(function() {
     });
 });
 
-$(document).on('keyup', "[type=number], [type=email]", function (e) {
-    if ($(this).attr('maxlength')) {
-        if (this.value.length > this.maxLength) {
-            this.value = this.value.slice(0, this.maxLength);
+// max numbers allowed
+$('input[type="number"],input[type="email"]').on('keydown', function(e) {
+    if($(this).attr("maxlength")){
+        var maxLength = $(this).attr("maxlength");
+    
+        var controlKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete'];
+        if (controlKeys.includes(e.key)) {
+            return;
+        }
+        // Prevent new input if the value length exceeds maxLength
+        if (this.value.length >= maxLength) {
+            e.preventDefault();
         }
     }
 });
+
+$('.view_pass').on('click', function() {
+    var passwordField = $(this).siblings('.form-control');
+    var type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+    passwordField.attr('type', type);
+    $(this).toggleClass('icon-eye-slash').toggleClass('icon-eye');
+});
+
+// $(document).on('keyup', "[type=number], [type=email]", function (e) {
+//     if ($(this).attr('maxlength')) {
+//         var maxLength = $(this).attr("maxlength");
+//         console.log(maxLength);
+    
+//         var controlKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete'];
+//         if (controlKeys.includes(e.key)) {
+//             return;
+//         }
+//         // Prevent new input if the value length exceeds maxLength
+//         if (this.value.length >= maxLength) {
+//             e.preventDefault();
+//         }
+//     }
+// });
+
 
 $(document).ready(function(){
     toastr.options = {
@@ -112,52 +144,33 @@ function formatCurrency(amount) {
 	return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-// $(document).on('click', '#guest_form_submit', function (e) {
-//     console.log('hamza');
-// 	e.preventDefault();
-// 	let type = 'POST';
-// 	let url = '/saveGuestUserDetails';
-// 	let message = '';
-// 	let form = $('#guest_form');
-// 	let data = new FormData(form[0]);
-// 	// if ($(this).text() == 'Submit') {
-// 	//     url = url;
-// 	// }
-	    
-// 	// PASSING DATA TO FUNCTION
-// 	$('[name]').removeClass('is-invalid');
-// 	SendAjaxRequestToServer(type, url, data, '', addGuestUserResponse, '', 'submit_button');
-	
-// });
+$(document).on('click', '.read_all_notif_user', function (e) {
+    e.preventDefault();
+	let type = 'POST';
+	let url = '/customer/readAllNotifications';
+	let message = '';
+	let form = '';
+	let data = new FormData();
+	SendAjaxRequestToServer(type, url, data, '', readAllNotificationsResponse, '', '.read_all_notif_user');
+});
 
-// function addGuestUserResponse(response) {
+$(document).on('click', '.read_all_notif_admin', function (e) {
+	e.preventDefault();
+	let type = 'POST';
+	let url = '/admin/readAllNotifications';
+	let message = '';
+	let form = '';
+	let data = new FormData();
+	SendAjaxRequestToServer(type, url, data, '', readAllNotificationsResponse, '', '.read_all_notif_user');
+});
 
-//     // SHOWING MESSAGE ACCORDING TO RESPONSE
-//     if (response.status == 200 || response.status == '200') {
-      
-//         toastr.success(response.message, '', {
-//             timeOut: 3000
-//         });
-//         var data = response.data;
-        
-//         // success response action 
-
-//     } else {
-        
-//     	error = response.responseJSON.message;
-//         var is_invalid = response.responseJSON.errors;
-        
-//         $.each(is_invalid, function(key) {
-//             // Assuming 'key' corresponds to the form field name
-//             var inputField = $('[name="' + key + '"]');
-//             // Add the 'is-invalid' class to the input field's parent or any desired container
-//             inputField.closest('.form-control').addClass('is-invalid');
-//         });
-//         toastr.error(error, '', {
-//             timeOut: 3000
-//         });
-//     }
-// }
+function readAllNotificationsResponse(response) {
+    if (response.status == 200 || response.status == '200') {
+        toastr.success(response.message, '', {
+            timeOut: 3000
+        });
+    }   
+}
 
 
 $('input').on('keyup', function() {

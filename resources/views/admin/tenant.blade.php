@@ -15,10 +15,16 @@
     <div class="contain-fluid">
         <ul class="crumbs">
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
-            <li>Landlord</li>
+            <li>Tenant</li>
         </ul>
         
         <div class="card_row flex_row" >
+            <div class="col">
+                <div class="card_blk">
+                    <div class="icon" id="total_count"></div>
+                    <strong>Total</strong>
+                </div>
+            </div>
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="total_active"></div>
@@ -33,12 +39,7 @@
                     <strong>Inactive</strong>
                 </div>
             </div>
-            <div class="col">
-                <div class="card_blk">
-                    <div class="icon" id="total_count"></div>
-                    <strong>Total</strong>
-                </div>
-            </div>
+            
             {{--<div class="col">
                 <div class="card_blk">
                     
@@ -118,7 +119,7 @@
                 </div>
                 
                 <div class="blk">
-                    <form action="" method="POST">
+                    <form>
                         <ul class="head_lst">
                             <li><span>Step 1</span></li>
                             <li><span>Step 2</span></li>
@@ -203,9 +204,10 @@
                                     <div class="form_blk">
                                         <select id="preferred_property_type" class="text_box " data-container="body">
                                             <option value="">- Select a Preferred Property Type -</option>
-                                            <option value="Appertament">Appertament</option>
-                                            <option value="House">House</option>
+                                            <option value="Appartment">Appartment</option>
                                             <option value="Condo">Condo</option>
+                                            <option value="House">House</option>
+                                            <option value="Studio">Studio</option>
                                         </select>
                                     </div>
                                 </div>
@@ -567,7 +569,7 @@
                                 <div class="col-xs-12">
                                     <h6>General Notes</h6>
                                     <div class="form_blk">
-                                        <input type="text" id="general_note" class="text_box" placeholder="">
+                                        <textarea type="text" id="general_note" class="text_box" placeholder=""></textarea>
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
@@ -595,8 +597,8 @@
                                 </div>
                             </div>
                             <div class="btn_blk form_btn text-right">
-                                <button type="button" class="site_btn long simple border backToListing">Back to list</button>
                                 <button type="button" class="site_btn long simple border prev_btn">Back</button>
+                                <button type="button" class="site_btn long simple border backToListing">Go to list</button>
                             </div>
                         </fieldset>
                     </form>

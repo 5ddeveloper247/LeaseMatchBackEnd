@@ -37,7 +37,7 @@ class TenantEnquiryHeader extends Model
     {
     	return $this->hasMany(TenantEnquiryDocument::class, 'enquiry_id');
     }
-
+    
     const APPLICATION_REQUESTED = 1;
     const APPLICATION_CONFIRMED = 2;
     const WAITING_FOR_DOC_CONFIRM = 3;

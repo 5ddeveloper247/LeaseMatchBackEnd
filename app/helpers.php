@@ -12,6 +12,8 @@ use App\Models\MenuControl;
 use App\Models\UserSubscription;
 use App\Models\ApiSettings;
 use App\Models\RequiredDocuments;
+use App\Models\Notifications;
+
 
 if (!function_exists('saveMultipleImages')) {
 
@@ -195,9 +197,28 @@ if (!function_exists('getReqDocs')) {
 
     function getReqDocs()
     {
-        $reqDocs = RequiredDocuments::orderBy('created_at', 'desc')->where('status', '1')->get();
+        $reqDocs = RequiredDocuments::orderBy('created_at', 'asc')->where('status', '1')->get();
         
         return $reqDocs;
     }
 }
 
+if (!function_exists('getNotifCount')) {
+
+    function getNotifCount()
+    {
+        $notifCount = Notifications::where('to_user_id', Auth::user()->id)->where('read_flag', '0')->count();
+        
+        return $notifCount;
+    }
+}
+
+if (!function_exists('getAllUnReadNotifs')) {
+
+    function getAllUnReadNotifs()
+    {
+        $notifications = Notifications::where('to_user_id', Auth::user()->id)->where('read_flag', '0')->with(['fromUser','toUser'])->get();
+        
+        return $notifications;
+    }
+}

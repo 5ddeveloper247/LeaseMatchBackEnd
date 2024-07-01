@@ -29,7 +29,7 @@ function makeDocumentsListing(data){
 			html += `<tr>
 						<td class="nowrap">${index + 1}</td>
 						<td>${value.name}</td>
-						<td>${value.description}</td>
+						<td>${value.description != null ? trimText(value.description, 50) : ''}</td>
 						<td data-center>
 							<div class="switch" >
 								<input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
@@ -44,7 +44,6 @@ function makeDocumentsListing(data){
 							</div>
 						</td>
 					</tr>`;
-				
 		});
 	}else{
 		html = `<tr>

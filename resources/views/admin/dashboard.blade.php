@@ -15,220 +15,95 @@
             <div class="block_row flex_row">
                 <div class="col">
                     <div class="inner">
-                        <strong>05</strong>
-                        <p>Live Adverts</p>
+                        <strong id="t_admin_user">0</strong>
+                        <p>Total Admin Users</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>02</strong>
-                        <p>Soon to Expire</p>
+                        <strong id="t_landlord">0</strong>
+                        <p>Total Landlords</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>01</strong>
-                        <p>Incomplete Adverts</p>
+                        <strong id="t_tenant">0</strong>
+                        <p>Total Tenant</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>207</strong>
-                        <p>Advert Views</p>
+                        <strong id="t_active_subs">0</strong>
+                        <p>Total Active Subscriptions</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>10</strong>
-                        <p>Wishlists</p>
+                        <strong id="t_amount_received">$0</strong>
+                        <p>Total Payment Received</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>05</strong>
-                        <p>Live Adverts</p>
+                        <strong id="t_landlord_active">0</strong>
+                        <p>Landlord Active</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>02</strong>
-                        <p>Soon to Expire</p>
+                        <strong id="t_landlord_inactive">0</strong>
+                        <p>Landlord InActive</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>01</strong>
-                        <p>Incomplete Adverts</p>
+                        <strong id="t_landlord_available">0</strong>
+                        <p>Landlord Available</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>207</strong>
-                        <p>Advert Views</p>
+                        <strong id="t_landlord_blocked">0</strong>
+                        <p>Landlord Blocked</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>10</strong>
-                        <p>Wishlists</p>
+                        <strong id="t_landlord_booked">0</strong>
+                        <p>Landlord Booked</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>05</strong>
-                        <p>Live Adverts</p>
+                        <strong id="t_tenant_active">0</strong>
+                        <p>Tenant Active</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>02</strong>
-                        <p>Soon to Expire</p>
+                        <strong id="t_tenant_inactive">0</strong>
+                        <p>Tenant InActive</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>01</strong>
-                        <p>Incomplete Adverts</p>
+                        <strong id="t_request_waiting">0</strong>
+                        <p>Tenant Waiting Request</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>207</strong>
-                        <p>Advert Views</p>
+                        <strong id="t_request_inprocess">0</strong>
+                        <p>Tenant Inprocess Request</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="inner">
-                        <strong>10</strong>
-                        <p>Wishlists</p>
+                        <strong id="t_request_approved">0</strong>
+                        <p>Tenant Approved Request</p>
                     </div>
                 </div>
             </div>
-            
-            
-            
-            <!-- <div class="space"></div>
-            <div id="featured">
-                <h3 class="heading">My LandLoards</h3>
-                <div data-id="slick-listing" class="slick-carousel">
-                    <div class="item">
-                        <div class="item_blk">
-                            <div class="image">
-                                <img src="{{asset('assets/images/logo-icon.png')}}" alt="">
-                                <div class="overlay">
-                                    <ul class="social_links">
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a></li>
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <ul class="menu_list">
-                                    <li><img src="{{asset('assets/images/vector-registered.svg')}}" alt=""> 2017</li>
-                                    <li><img src="{{asset('assets/images/vector-cog.svg')}}" alt=""> Manual </li>
-                                    <li><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""> 6,000 mi</li>
-                                </ul>
-                            </div>
-                            <div class="txt">
-                                <div class="rateYo"></div>
-                                <h5 class="title"><a href="vehicle-details.php">Acura Rsx</a></h5>
-                                <div class="price"><del>£30,568</del><span>£28,698</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="item_blk">
-                            <div class="image">
-                                <img src="{{asset('assets/images/logo-icon.png')}}" alt="">
-                                <div class="overlay">
-                                    <ul class="social_links">
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a></li>
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <ul class="menu_list">
-                                    <li><img src="{{asset('assets/images/vector-registered.svg')}}" alt=""> 2017</li>
-                                    <li><img src="{{asset('assets/images/vector-cog.svg')}}" alt=""> Manual </li>
-                                    <li><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""> 6,000 mi</li>
-                                </ul>
-                            </div>
-                            <div class="txt">
-                                <div class="rateYo"></div>
-                                <h5 class="title"><a href="javascript:;">Lexus GS 450h</a></h5>
-                                <div class="price"><del>£30,568</del><span>£28,698</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="item_blk">
-                            <div class="image">
-                                <img src="{{asset('assets/images/logo-icon.png')}}" alt="">
-                                <div class="overlay">
-                                    <ul class="social_links">
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a></li>
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <ul class="menu_list">
-                                    <li><img src="{{asset('assets/images/vector-registered.svg')}}" alt=""> 2017</li>
-                                    <li><img src="{{asset('assets/images/vector-cog.svg')}}" alt=""> Manual </li>
-                                    <li><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""> 6,000 mi</li>
-                                </ul>
-                            </div>
-                            <div class="txt">
-                                <div class="rateYo"></div>
-                                <h5 class="title"><a href="javascript:;">GTA 5 Lowriders DLC</a></h5>
-                                <div class="price"><del>£30,568</del><span>£28,698</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="item_blk">
-                            <div class="image">
-                                <img src="{{asset('assets/images/logo-icon.png')}}" alt="">
-                                <div class="overlay">
-                                    <ul class="social_links">
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a></li>
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <ul class="menu_list">
-                                    <li><img src="{{asset('assets/images/vector-registered.svg')}}" alt=""> 2017</li>
-                                    <li><img src="{{asset('assets/images/vector-cog.svg')}}" alt=""> Manual </li>
-                                    <li><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""> 6,000 mi</li>
-                                </ul>
-                            </div>
-                            <div class="txt">
-                                <div class="rateYo"></div>
-                                <h5 class="title"><a href="javascript:;">Toyota avalon hybrid</a></h5>
-                                <div class="price"><del>£30,568</del><span>£28,698</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="item_blk">
-                            <div class="image">
-                                <img src="{{asset('assets/images/logo-icon.png')}}" alt="">
-                                <div class="overlay">
-                                    <ul class="social_links">
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-link.svg')}}" alt=""></a></li>
-                                        <li><a href="javascript:;"><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <ul class="menu_list">
-                                    <li><img src="{{asset('assets/images/vector-registered.svg')}}" alt=""> 2017</li>
-                                    <li><img src="{{asset('assets/images/vector-cog.svg')}}" alt=""> Manual </li>
-                                    <li><img src="{{asset('assets/images/vector-dashboard.svg')}}" alt=""> 6,000 mi</li>
-                                </ul>
-                            </div>
-                            <div class="txt">
-                                <div class="rateYo"></div>
-                                <h5 class="title"><a href="javascript:;">Hyundai santa fe sport</a></h5>
-                                <div class="price"><del>£30,568</del><span>£28,698</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            
             
         </div>
     </section>
@@ -238,6 +113,6 @@
 
 @push('script')
     
-    <!-- <script src="{{ asset('assets_admin/customjs/script_adminorders.js') }}"></script> -->
+    <script src="{{ asset('assets_admin/customjs/script_admindashboard.js') }}"></script>
     
 @endpush

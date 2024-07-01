@@ -13,13 +13,15 @@
     <link rel="stylesheet" href="{{ asset('assets/css/select.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/slick.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    
 </head>
 
 <body data-page="logon">
    
 	<main>
 	    <section id="logon">
-            <div class="side" style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.JPG') }}');">
+            <div class="side" style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
                 <div class="content text-center">
                     <div class="logo">
                         <a href="#" style="background-image: url('{{ asset('assets/images/logo-light.png') }}'),  url('{{ asset('assets/images/logo-light.png') }}');"></a>

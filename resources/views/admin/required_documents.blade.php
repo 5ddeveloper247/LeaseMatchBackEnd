@@ -45,7 +45,7 @@
             <div class="col">
                 <div class="card_blk" id="add_document_btn">
                     <div class="icon" >
-                    <img src="http://127.0.0.1:8000/assets/images/icon-plus.svg" alt="">
+                    <img src="{{asset('assets/images/icon-plus.svg')}}" alt="">
                     </div>
                    
                     <strong>Add New</strong>
@@ -65,7 +65,6 @@
         <div class="br"></div>
         <div class="top_head">
             
-           
         </div>
         <div class="blk">
             <div class="tbl_blk">

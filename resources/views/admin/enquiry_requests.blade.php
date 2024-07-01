@@ -287,7 +287,6 @@
                                         <input type="text" id="rental_history" name="" class="text_box" placeholder="">
                                     </div>
                                 </div>
-                                
                             </div>
                             <div class="btn_blk form_btn text-right">
                                 <button type="button" class="site_btn long simple border prev_btn">Back</button>
@@ -299,10 +298,9 @@
                                 <div class="col-xs-12">
                                     <h6>Special Instructions or Notes</h6>
                                     <div class="form_blk">
-                                        <input type="text" id="special_note" name="" class="text_box" placeholder="">
+                                        <textarea type="text" id="special_note" name="" class="text_box" placeholder=""></textarea>
                                     </div>
                                 </div>
-                                
                             </div>
                             <div class="" style="margin-top: 20px;">
                                 <h4 class="subheading">Uploaded Photos</h4>
@@ -354,7 +352,7 @@
         <!-- delete modal end  -->
 
         <!-- modal to request documents popup start  -->
-        <div class="popup sm" id="req_doc_popup">
+        <div class="popup md" id="req_doc_popup">
             <div class="table_dv">
                 <div class="table_cell">
                     <div class="contain">
@@ -373,11 +371,11 @@
                                                 ?>
                                                 @if(count($reqDocs) > 0)
                                                     @foreach($reqDocs as $value)
-                                                        <div class="col-sm-6">
+                                                        <div class="col-sm-12">
                                                             <div class="form_blk">
                                                                 <div class="lbl_btn">
                                                                     <input type="checkbox" name="req_docs[]" id="req_docs_chk_{{$value->id}}" value="{{$value->id}}">
-                                                                    <label for="req_docs_chk_{{$value->id}}">{{$value->name}}</label>
+                                                                    <label for="req_docs_chk_{{$value->id}}" title="{{$value->description}}">{{$value->name}}</label>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -15,6 +15,10 @@ use App\Models\Pricing_plan;
 use App\Models\Menu;
 use App\Models\MenuControl;
 use App\Models\ApiSettings;
+use App\Models\Notifications;
+use App\Models\UserSubscription;
+use App\Models\UserPayments;
+
 // landlord models
 use App\Models\Api\LandlordPersonal;
 use App\Models\Api\LandlordProperty;
@@ -58,6 +62,31 @@ class AdminController extends Controller
     public function __construct()
     {
         
+    }
+
+    public function get_dashboard_page_data(Request $request){
+        
+        $data['total_admins'] = User::where('type', '2')->count();
+        $data['total_landlords'] = LandlordPersonal::count();
+        $data['total_tenants'] = User::where('type', '3')->count();
+        $data['total_active_sub'] = UserSubscription::where('start_date', '<=', Carbon::now())
+                                                    ->where('end_date', '>=', Carbon::now())
+                                                    ->distinct('user_id')->count('user_id');
+        $data['total_payment'] = UserPayments::sum('amount');
+        
+        $data['total_landlord_active'] = LandlordPersonal::where('status', '1')->count();
+        $data['total_landlord_inactive'] = LandlordPersonal::where('status', '0')->count();
+        $data['total_landlord_available'] = LandlordPersonal::where('enquiry_status', '1')->count();
+        $data['total_landlord_blocked'] = LandlordPersonal::where('enquiry_status', '2')->count();
+        $data['total_landlord_booked'] = LandlordPersonal::where('enquiry_status', '3')->count();
+
+        $data['total_tenant_active'] = User::where('type', '3')->where('status', '1')->count();
+        $data['total_tenant_inactive'] = User::where('type', '3')->where('status', '0')->count();
+        $data['total_request_waiting'] = TenantEnquiryHeader::whereIn('status', ['9'])->count();
+        $data['total_request_inprocess'] = TenantEnquiryHeader::whereIn('status', ['1','2','3','4','5','7'])->count();
+        $data['total_request_approved'] = TenantEnquiryHeader::whereIn('status', ['6'])->count();
+
+        return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
     }
 
     public function noaccess(Request $request)
@@ -257,7 +286,7 @@ class AdminController extends Controller
             'middle_name' => 'max:50',
             'last_name' => 'max:50',
             'email' => 'required|email|max:50|unique:users',
-            'phone_number' => 'max:15',
+            'phone_number' => 'required|numeric|digits_between:7,18',
             'menu_control' => 'required',
         ],[
             'menu_control.required' => 'Choose atleast one menu control.'
@@ -286,6 +315,16 @@ class AdminController extends Controller
                 }
             }
 
+            $Notification = new Notifications();
+            $Notification->module_code =  'SUB-ADMIN REGISTER';
+            $Notification->from_user_id =  Auth::user()->id;
+            $Notification->to_user_id =  $user->id;
+            $Notification->subject =  "Welcome to LEASE MATCH!";
+            $Notification->message =  "We're excited to have you on board.";
+            $Notification->read_flag =  '0';
+            $Notification->created_by =  Auth::user()->id;
+            $Notification->save();
+            
             $mailData['name'] = $user->first_name." ".$user->last_name;
             $mailData['email'] = $user->email;
             $mailData['password'] = $password;
@@ -327,6 +366,16 @@ class AdminController extends Controller
             $user->status = 1;
             $user->updated_by = Auth::user()->id;
             $user->save();
+
+            $Notification = new Notifications();
+            $Notification->module_code =  'SUB-ADMIN ACTIVATION';
+            $Notification->from_user_id =  Auth::user()->id;
+            $Notification->to_user_id =  $user->id;
+            $Notification->subject =  "Activate Sub-Admin";
+            $Notification->message =  "Your account will now active, you can login your account";
+            $Notification->read_flag =  '0';
+            $Notification->created_by =  Auth::user()->id;
+            $Notification->save();
 
             $mailData['name'] = $user->first_name." ".$user->last_name;
             $mailData['email'] = $user->email;
@@ -502,6 +551,16 @@ class AdminController extends Controller
 
             if($user->status == 1){ // if user is active then send mail
 
+                $Notification = new Notifications();
+                $Notification->module_code =  'TENANT ACTIVATION';
+                $Notification->from_user_id =  Auth::user()->id;
+                $Notification->to_user_id =  $user->id;
+                $Notification->subject =  "Activate Tenant";
+                $Notification->message =  "Your account will now active, you can login your account.";
+                $Notification->read_flag =  '0';
+                $Notification->created_by =  $user->id;
+                $Notification->save();
+                
                 $mailData['name'] = $user->first_name." ".$user->last_name;
                 $mailData['email'] = $user->email;
                 $mailData['phone_number'] = $user->phone_number;
@@ -683,16 +742,17 @@ class AdminController extends Controller
     }
 
     public function update_profile(Request $request){
+
         $user_id = Auth::id();
         $user = User::find($user_id);
         $request->validate([
-            'first_name' => 'required',
-            'phone_number' => 'max:18'
+            'first_name' => 'required|max:50',
+            'phone_number' => 'required|numeric|digits_between:7,18',
         ]);
         if($request->password){
             $request->validate([
-                'first_name' => 'required',
-                'phone_number' => 'max:18',
+                'first_name' => 'required|max:50',
+                'phone_number' => 'required|numeric|digits_between:7,18',
                 'old_password' => 'required',
                 'password' => [
                     'required',
@@ -833,18 +893,28 @@ class AdminController extends Controller
     {
         $user_id = $request->id;
 
-        $user_detail = User::where('id', $user_id)->where('type', 3)->with(['personalInfo','residentialInfo','activePlan.plan'])->first();
+        $user_detail = User::where('id', $user_id)->where('type', 3)->with(['personalInfo','residentialInfo','householdInfo','activePlan.plan'])->first();
         // dd($user_detail);
         $propertyAssignMatchLimit = isset($user_detail->activePlan->plan->number_of_matches) ? $user_detail->activePlan->plan->number_of_matches : 0;
         $preferredPropertyType = $user_detail->residentialInfo->preferred_property_type;
+        $prefferedHouseholdSize = $user_detail->householdInfo->household_size;
+        $prefferedBedroomNeeded = $user_detail->residentialInfo->min_bedrooms_needed;
+        $prefferedBathroomNeeded = $user_detail->residentialInfo->min_bathrooms_needed;
         
         $data['user_detail'] = $user_detail;
         $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal','landlordPersonal.propertyDetail','landlordPersonal.rentalDetail'])->get();
         
-        $data['landlord_listing'] = LandlordPersonal::with(['propertyDetail','rentalDetail'])
+        $data['landlord_listing'] = LandlordPersonal::where('enquiry_status', '1')
+                                                ->with(['propertyDetail','rentalDetail'])
                                                 ->whereHas('propertyDetail', function ($query) use ($preferredPropertyType) {
                                                     $query->where('property_type', $preferredPropertyType);
-                                                })->limit($propertyAssignMatchLimit)->get();
+                                                })
+                                                ->whereHas('rentalDetail', function ($query) use ($prefferedBedroomNeeded,$prefferedBathroomNeeded,$prefferedHouseholdSize) {
+                                                    $query->where('size_square_feet','>=', $prefferedHouseholdSize);
+                                                    $query->where('number_of_bedrooms','>=', $prefferedBedroomNeeded);
+                                                    $query->where('number_of_bathrooms','>=', $prefferedBathroomNeeded);
+                                                })
+                                                ->limit($propertyAssignMatchLimit)->get();
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
@@ -886,7 +956,7 @@ class AdminController extends Controller
         }
 
         // make query for get listing
-        $query = LandlordPersonal::with(['propertyDetail', 'rentalDetail']);
+        $query = LandlordPersonal::where('enquiry_status', '1')->with(['propertyDetail', 'rentalDetail']);
 
         if (!is_null($landlord_username)) {
             $query->where('full_name', 'like', '%' . $landlord_username . '%');
@@ -982,6 +1052,16 @@ class AdminController extends Controller
 
             $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
 
+            $Notification = new Notifications();
+            $Notification->module_code =  'ENQUIRY REQUEST';
+            $Notification->from_user_id =   Auth::user()->id;
+            $Notification->to_user_id =  $enquiryDetails->user->id;
+            $Notification->subject =  "Enquiry Process Application Confirmed";
+            $Notification->message =  "Your application request is confirmed by admin. Our team will contact you shortly with further details.";
+            $Notification->read_flag =  '0';
+            $Notification->created_by =  Auth::user()->id;
+            $Notification->save();
+
             $mailData['name'] = $enquiryDetails->user->first_name;
             $mailData['username'] = $enquiryDetails->user->first_name;
             $mailData['user_email'] = $enquiryDetails->user->email;
@@ -996,7 +1076,7 @@ class AdminController extends Controller
             $body = view('emails.enquiry_email', $mailData);
             $userEmailsSend[] = $enquiryDetails->user->email;//'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
-            sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+            sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Notification', $body);
             
             return response()->json(['status' => 200, 'message' => 'Application confirmed successfully!']);
         }else{
@@ -1052,6 +1132,16 @@ class AdminController extends Controller
 
         $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
 
+        $Notification = new Notifications();
+        $Notification->module_code =  'ENQUIRY REQUEST';
+        $Notification->from_user_id =   Auth::user()->id;
+        $Notification->to_user_id =  $enquiryDetails->user->id;
+        $Notification->subject =  "Enquiry Process Application Request Document";
+        $Notification->message =  "Your application request is in process kindly upload requested documents for further process.";
+        $Notification->read_flag =  '0';
+        $Notification->created_by =  Auth::user()->id;
+        $Notification->save();
+
         $mailData['name'] = $enquiryDetails->user->first_name;
         $mailData['username'] = $enquiryDetails->user->first_name;
         $mailData['user_email'] = $enquiryDetails->user->email;
@@ -1066,7 +1156,7 @@ class AdminController extends Controller
         $body = view('emails.enquiry_email', $mailData);
         $userEmailsSend[] = $enquiryDetails->user->email;//'hamza@5dsolutions.ae';//
         // to username, to email, from username, subject, body html
-        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Notification', $body);
 
         return response()->json(['status' => 200, 'message' => 'Application confirmed successfully!']);
     }
@@ -1118,6 +1208,26 @@ class AdminController extends Controller
 
         $enquiryDetails = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user', 'landlord','landlord.propertyDetail'])->first();
 
+        $Notification = new Notifications();
+        $Notification->module_code =  'ENQUIRY REQUEST';
+        $Notification->from_user_id =   Auth::user()->id;
+        $Notification->to_user_id =  $enquiryDetails->user->id;
+        if($status == '6'){ // Approved
+            $Notification->subject = "Enquiry Process Application Approved";
+            $Notification->message = "Your application request is approved by admin.";
+        }
+        if($status == '7'){ // Returned
+            $Notification->subject = 'Enquiry Process Application Returned';
+            $Notification->message = 'Your application request is returned by admin. Kindly reupload document and submit.';
+        }
+        if($status == '8'){ // Cancelled
+            $Notification->subject = 'Enquiry Process Application Cancelled';
+            $Notification->message = 'Your application request is cancelled by admin. if you have any query contact admin.';
+        }
+        $Notification->read_flag =  '0';
+        $Notification->created_by =  Auth::user()->id;
+        $Notification->save();
+
         $mailData['name'] = $enquiryDetails->user->first_name;
         $mailData['username'] = $enquiryDetails->user->first_name;
         $mailData['user_email'] = $enquiryDetails->user->email;
@@ -1143,8 +1253,19 @@ class AdminController extends Controller
         $body = view('emails.enquiry_email', $mailData);
         $userEmailsSend[] = 'hamza@5dsolutions.ae';//$enquiryDetails->user->email;//
         // to username, to email, from username, subject, body html
-        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Request', $body);
+        sendMail($enquiryDetails->user->first_name, $userEmailsSend, 'LEASE MATCH', 'Enquiry Notification', $body);
 
         return response()->json(['status' => 200, 'message' => 'Application status updated successfully!']);
     }
+
+    public function readAllNotifications(Request $request){
+        
+        Notifications::where('to_user_id', Auth::user()->id)->update([
+            'read_flag' => '1',
+        ]);
+
+        return response()->json(['status' => 200, 'message' => 'Read Notifications successfully']);
+    }
+
+    
 }

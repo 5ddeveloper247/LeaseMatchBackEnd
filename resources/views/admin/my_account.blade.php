@@ -112,24 +112,30 @@
                                                 <div class="form-group">
                                                     <label>First Name</label>
                                                     <input type="text" class="form-control" placeholder="First Name"
-                                                        value="" id="first_name" name="first_name">
+                                                        value="" id="first_name" name="first_name" maxlength="50">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pl-1">
                                                 <div class="form-group">
                                                     <label>Phone Number</label>
                                                     <input type="number" class="form-control" placeholder="Phone Number"
-                                                        value="" id="phone_number" name="phone_number">
+                                                        value="" id="phone_number" name="phone_number" maxlength="18">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="form-group">
+                                                <div class="form-group pass_blk">
                                                     <label>Old Password</label>
-                                                    <input type="password" class="form-control"
+                                                    <!-- <input type="password" class="form-control text_box"
                                                         placeholder="Old Password" value="" id="old_password"
-                                                        name="old_password">
+                                                        name="old_password" maxlength="20"> -->
+                                                    
+                                                    <div class="form_blk pass_blk">
+                                                        <input type="password" name="old_password" id="old_password" 
+                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <i class="icon-eye view_pass" id="eye"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -137,17 +143,29 @@
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
                                                     <label>New Password</label>
-                                                    <input type="password" class="form-control"
+                                                    <!-- <input type="password" class="form-control"
                                                         placeholder="New Password" value="" id="password"
-                                                        name="password">
+                                                        name="password" maxlength="20"> -->
+
+                                                    <div class="form_blk pass_blk">
+                                                        <input type="password" name="password" id="password" 
+                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <i class="icon-eye view_pass" id="eye"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 px-1">
                                                 <div class="form-group">
                                                     <label>Confirm New Password</label>
-                                                    <input type="password" class="form-control"
+                                                    <!-- <input type="password" class="form-control"
                                                         placeholder="Confirm New Password" value=""
-                                                        id="password_confirmation" name="password_confirmation">
+                                                        id="password_confirmation" name="password_confirmation" maxlength="20"> -->
+                                                    
+                                                    <div class="form_blk pass_blk">
+                                                        <input type="password" name="password_confirmation" id="password_confirmation" 
+                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <i class="icon-eye view_pass" id="eye"></i>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -170,11 +188,12 @@
                             </div>
                             <div class="card-body">
                                 <div class="author">
-                                    <a href="#">
+                                    <a href="javascript:;">
                                         <img class="avatar border-gray"
                                             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
                                             alt="...">
-
+                                    </a>
+                                    <a href="javascript:;">
                                         <h5 class="title" id="user_name_container"></h5>
                                     </a>
 

@@ -122,6 +122,21 @@ function updateprofileResponse(response){
 //         timeOut: 3000
 //     });
 // }
+
+$('[name="name"], [name="first_name"]').on('keydown', function(e) {
+    var key = e.keyCode || e.which;
+    var char = String.fromCharCode(key);
+    var controlKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+
+    // Allow control keys and non-numeric characters
+    if (controlKeys.includes(e.key) || !char.match(/[0-9]/)) {
+        return true;
+    } else {
+        e.preventDefault();
+        return false;
+    }
+});
+
 $(document).ready(function(){
     getprofiledata();
    
