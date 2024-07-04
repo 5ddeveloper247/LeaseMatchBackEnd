@@ -36,15 +36,15 @@ function makeInProcessEnquiryListing(enquiries){
 				notif_icon = '<span class="notif-icon"></span>';
 			}
 			
-			html += `<tr>
-						<td class="nowrap">${index + 1} ${notif_icon}</td>
-						<td>${landlord.full_name}</td>
-						<td>${enqType}</td>
-						<td>${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>
-						<td class="nowrap text-center" >${landlord.property_detail != null ? landlord.property_detail.property_type : ''}</td>
-						<td class="nowrap text-center" >${landlord.property_detail != null ? landlord.property_detail.appartment_number : ''}</td>
-						<td class="nowrap text-center" >${value.date != null ? formatDate(value.date) : ''}</td>
-						<td class="nowrap text-center" >${value.status_text}</td>
+			html += `<tr class="identify">
+						<td class="nowrap grid-p-searchby">${index + 1} ${notif_icon}</td>
+						<td class="grid-p-searchby">${trimText(landlord.full_name, 20)}</td>
+						<td class="grid-p-searchby">${enqType}</td>
+						<td class="grid-p-searchby">${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>
+						<td class="nowrap grid-p-searchby text-center" >${landlord.property_detail != null ? landlord.property_detail.property_type : ''}</td>
+						<td class="nowrap grid-p-searchby text-center" >${landlord.property_detail != null ? landlord.property_detail.appartment_number : ''}</td>
+						<td class="nowrap grid-p-searchby text-center" >${value.date != null ? formatDate(value.date) : ''}</td>
+						<td class="nowrap grid-p-searchby text-center" >${value.status_text}</td>
 						
 						<td class="nowrap" data-center>
 							<div class="act_btn">
@@ -73,15 +73,15 @@ function makeWaitingEnquiryListing(waiting_enquiries){
 			}else{
 				var enqType = 'Document Upload';
 			}
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${landlord.full_name}</td>
-						<td>${enqType}</td>
-						<td>${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>
-						<td class="nowrap text-center" >${landlord.property_detail != null ? landlord.property_detail.property_type : ''}</td>
-						<td class="nowrap text-center" >${landlord.property_detail != null ? landlord.property_detail.appartment_number : ''}</td>
-						<td class="nowrap text-center" >${value.date != null ? formatDate(value.date) : ''}</td>
-						<td class="nowrap text-center" >${value.status_text}</td>
+			html += `<tr class="identify1">
+						<td class="nowrap grid-p-searchby1">${index + 1}</td>
+						<td class="grid-p-searchby1">${trimText(landlord.full_name, 20)}</td>
+						<td class="grid-p-searchby1">${enqType}</td>
+						<td class="grid-p-searchby1">${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${landlord.property_detail != null ? landlord.property_detail.property_type : ''}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${landlord.property_detail != null ? landlord.property_detail.appartment_number : ''}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${value.date != null ? formatDate(value.date) : ''}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${value.status_text}</td>
 						
 						<td class="nowrap" data-center>
 							<div class="act_btn">
@@ -97,6 +97,39 @@ function makeWaitingEnquiryListing(waiting_enquiries){
 	}
 	$("#waitinglisting_tbody").html(html);
 }
+
+$(document).on('click', '#search_filter_submit', function (e) {
+    
+	e.preventDefault();
+	let type = 'POST';
+	let url = '/admin/searchEnquiryListing';
+	let message = '';
+	let form = $("#filter_form");
+	let data = new FormData(form[0]);
+	
+	// PASSING DATA TO FUNCTION
+	SendAjaxRequestToServer(type, url, data, '', searchEnquiryListingResponse, '', '#search_filter_submit');
+});
+function searchEnquiryListingResponse(response){
+	// SHOWING MESSAGE ACCORDING TO RESPONSE
+	
+    if (response.status == 200 || response.status == '200') {
+		var data = response.data;
+		var enquiries_list = data.enquiries;
+		
+		makeInProcessEnquiryListing(enquiries_list);
+    }else{
+		toastr.error(response.message, '', {
+            timeOut: 3000
+        });
+	}
+}
+$(document).on('click', '#reset_filter_btn', function (e) {
+
+	let form = $('#filter_form');
+    form.trigger("reset");
+	getEnquiriesPageData();
+});
 
 function viewEnquiryDetail(enquiry_id) {
 	
@@ -436,26 +469,7 @@ $(document).ready(function () {
 
     getEnquiriesPageData();
     
-    $("[name]").prop('disabled', true);
-});
-
-$('#searchInListing').on("keyup", function (e)  {     
-    var tr = $('.identify');
-    
-    if ($(this).val().length >= 1) {//character limit in search box.
-        var noElem = true;
-        var val = $.trim(this.value).toLowerCase();
-        el = tr.filter(function() {
-            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
-        });
-        if (el.length >= 1) {
-            noElem = false;
-        }
-        tr.not(el).hide().addClass("d-none").removeClass("d-flex");
-		el.fadeIn().removeClass("d-none");
-	} else {
-		tr.fadeIn().removeClass("d-none");
-    }
+    $("#deliveries [name]").prop('disabled', true);
 });
 
 $(window).on("load", function() {
@@ -475,4 +489,42 @@ $(window).on("load", function() {
 		$(".damage_btn .site_btn").removeClass("active");
 		$(this).addClass("active");
 	});
-})
+});
+
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
+});
+
+$('#searchInListing1').on("keyup", function (e)  {     
+    var tr = $('.identify1');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby1').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
+});

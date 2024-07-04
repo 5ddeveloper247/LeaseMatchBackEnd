@@ -20,6 +20,13 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li>Contact Us</li>
         </ul>
+        <div class="top_head mt-5">
+            <h4>Contact Us</h4>
+            <div class="form_blk">
+                <input type="text" id="searchInListing" class="text_box" placeholder="Search here" maxlength="50">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
+        </div>
         
         <div class="blk listing_section">
             <div class="tbl_blk">

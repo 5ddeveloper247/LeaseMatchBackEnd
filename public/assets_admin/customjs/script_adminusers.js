@@ -29,26 +29,26 @@ function loadUsersListResponse(response) {
     
     $.each(users_list, function (index, value) {
         
-        var html = `<tr>
-                                <td class="nowrap">${index + 1}</td>
-                                <td>${value.first_name} ${value.middle_name?value.middle_name:''} ${value.last_name?value.last_name:''}</td>
-                                <td>${value.email}</td>
-                                <td class="nowrap" >${value.phone_number?value.phone_number:''}</td>
-                                <td class="nowrap">${formatDate(value.created_at)}</td>
-                                <td data-center>
-                                    <div class="switch" >
-                                        <input type="checkbox" onclick="changestatus(${value.id})" name="status" id="status" ${value.status == '1' ? 'checked' : ''}>
-                                        <em></em>
-                                    </div>
-                                </td>
-                               
-                                <td class="nowrap" data-center>
-                                    <div class="act_btn">
-                                        <button type="button" class="edit pop_btn edit_btn"title="Edit"  data-popup="edit-data-popup" data-id = "${value.id}"></button>
-                                        <button type="button" class="del pop_btn delete_btn" title="Delete" data-id = "${value.id}" data-popup="delete-data-popup"></button>
-                                    </div>
-                                </td>
-                            </tr>`;
+        var html = `<tr class="identify">
+                        <td class="nowrap grid-p-searchby">${index + 1}</td>
+                        <td class="grid-p-searchby">${trimText(value.first_name, 20)}</td>
+                        <td class="grid-p-searchby">${value.email}</td>
+                        <td class="nowrap grid-p-searchby" >${value.phone_number?value.phone_number:''}</td>
+                        <td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
+                        <td data-center>
+                            <div class="switch" >
+                                <input type="checkbox" onclick="changestatus(${value.id})" name="status" id="status" ${value.status == '1' ? 'checked' : ''}>
+                                <em></em>
+                            </div>
+                        </td>
+                        
+                        <td class="nowrap" data-center>
+                            <div class="act_btn">
+                                <button type="button" class="edit pop_btn edit_btn"title="Edit"  data-popup="edit-data-popup" data-id = "${value.id}"></button>
+                                <button type="button" class="del pop_btn delete_btn" title="Delete" data-id = "${value.id}" data-popup="delete-data-popup"></button>
+                            </div>
+                        </td>
+                    </tr>`;
             usersTableBody.append(html);
     });
 
@@ -59,14 +59,15 @@ function loadUsersListResponse(response) {
 
 }
 
-$('#add_user_form').submit(function (e) {
+$(document).on('click', '#saveuser_btn', function (e) {
     e.preventDefault();
 
+    $('#uiBlocker').show();
     let form = document.getElementById('add_user_form');
     let data = new FormData(form);
     let type = 'POST';
     let url = '/admin/addUser';
-    SendAjaxRequestToServer(type, url, data, '', addUserResponse, '', '.saveuser_btn');
+    SendAjaxRequestToServer(type, url, data, '', addUserResponse, '', '#saveuser_btn');
 
 
 });
@@ -113,7 +114,7 @@ function addUserResponse(response) {
 
 $(document).on('click', '.delete_btn', function(){
     var del_id = $(this).attr('data-id');
-    console.log(del_id);
+    
     $('#delete_confirmed_btn').attr('data-id', del_id);
 });
 
@@ -188,7 +189,6 @@ function changeStatusResponse(response){
             timeOut: 3000
         });
         
-        
         loadUsersList();
     }
 
@@ -203,16 +203,15 @@ function changeStatusResponse(response){
     });
 }   
 
-$(document).on('click','.edit_btn', function(){
+
+$(document).on('click', '.edit_btn', function (e) {
     var id = $(this).attr('data-id');
 
     let url = '/admin/getuserdata';
     let type = 'POST';
     let data = new FormData();
     data.append('id', id);
-    SendAjaxRequestToServer(type, url, data, '', getUserdataResponse, '', '');
-
-    
+    SendAjaxRequestToServer(type, url, data, '', getUserdataResponse, '', 'submitbutton');
 });
 
 
@@ -250,14 +249,15 @@ function getUserdataResponse(response){
 }
 
 
-$('#edit_user_form').submit(function(e){
+$(document).on('click', '#edituser_btn', function (e) {
     e.preventDefault();
+    $('#uiBlocker').show();
 
     let form = document.getElementById('edit_user_form');
     let data = new FormData(form);
     let type = 'POST';
     let url = '/admin/updateUser';
-    SendAjaxRequestToServer(type, url, data, '', updateUserResponse, '', '.edituser_btn');
+    SendAjaxRequestToServer(type, url, data, '', updateUserResponse, '', 'submitButton');
 });
 
 function updateUserResponse(response){
@@ -270,19 +270,13 @@ function updateUserResponse(response){
             timeOut: 3000
         });
         
-        
         loadUsersList();
         $('#close_update_modal_default_btn').click();
     }
 
     if (response.status == 402) {
-        // $('#close_update_modal_default_btn').click();
-
         error = response.message;
-
     } else {
-        // $('#close_update_modal_default_btn').click();
-
         error = response.responseJSON.message;
     }
     toastr.error(error, '', {
@@ -290,7 +284,7 @@ function updateUserResponse(response){
     });
 }
 
-$('[name="first_name"], [name="middle_name"], [name="last_name"]').on('keydown', function(e) {
+$('[name="first_name"], [name="middle_name"], [name="last_name"],[name="first_name_edit"], [name="middle_name_edit"], [name="last_name_edit"]').on('keydown', function(e) {
     var key = e.keyCode || e.which;
     var char = String.fromCharCode(key);
     var controlKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
@@ -304,34 +298,29 @@ $('[name="first_name"], [name="middle_name"], [name="last_name"]').on('keydown',
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $(document).ready(function () {
 
     loadUsersList();
     
+});
+
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
 });
 
 

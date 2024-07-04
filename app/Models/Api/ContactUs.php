@@ -14,6 +14,6 @@ class ContactUs extends Model
 
     public function replied_by()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'replied_by');
     }
 }

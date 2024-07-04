@@ -83,12 +83,15 @@
 }
 </style>
 <section>
-    <ul class="tab_list">
-        <!-- <li class="active"><a href="#user_data_tab" data-toggle="tab">User Data</a></li> -->
-    </ul>
-    <div class="tab-content" style="margin-top:35px">
+
+    
+    <div class="tab-content" style="">
         <div id="user_data_tab" class="tab-pane fade in active">
-            <div class="profile">
+            <div class="profile" style="padding-top: unset;">
+                <ul class="crumbs">
+                    <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
+                    <li>My Account</li>
+                </ul>
                 <div class="row">
                     <div class="col-md-8">
                         <div class="edit-profile">
@@ -183,14 +186,14 @@
                     <div class="col-md-4">
                         <div class="card card-user">
                             <div class="card-image">
-                                <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&amp;fm=jpg&amp;h=300&amp;q=75&amp;w=400"
+                                <img src="{{asset('assets/images/users/user-background-placeholder.png')}}"
                                     alt="...">
                             </div>
                             <div class="card-body">
                                 <div class="author">
                                     <a href="javascript:;">
                                         <img class="avatar border-gray"
-                                            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+                                            src="{{asset('assets/images/users/user-placeholder.png')}}"
                                             alt="...">
                                     </a>
                                     <a href="javascript:;">

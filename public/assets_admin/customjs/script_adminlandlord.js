@@ -29,13 +29,13 @@ function makeLandlordListing(landlord_list){
 
 	if(landlord_list.length > 0){
 		$.each(landlord_list, function (index, value) {
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${value.full_name}</td>
-						<td>${value.email}</td>
-						<td class="nowrap" >${value.property_detail.property_type}</td>
-						<td class="nowrap" >${value.property_detail.appartment_number}</td>
-						<td class="nowrap">${formatDate(value.created_at)}</td>
+			html += `<tr class="identify">
+						<td class="nowrap grid-p-searchby">${index + 1}</td>
+						<td class="grid-p-searchby">${trimText(value.full_name, 20)}</td>
+						<td class="grid-p-searchby">${value.email}</td>
+						<td class="nowrap grid-p-searchby" >${value.property_detail.property_type}</td>
+						<td class="nowrap grid-p-searchby" >${value.property_detail.appartment_number}</td>
+						<td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
 						<td data-center>
 							<div class="switch" >
 								<input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
@@ -127,6 +127,40 @@ function deleteLandlordResponse(response){
     }
 }
 
+$(document).on('click', '#search_filter_submit', function (e) {
+    
+	e.preventDefault();
+	let type = 'POST';
+	let url = '/admin/searchLandlordListing';
+	let message = '';
+	let form = $("#filter_form");
+	let data = new FormData(form[0]);
+	
+	// PASSING DATA TO FUNCTION
+	SendAjaxRequestToServer(type, url, data, '', searchLandlordListingResponse, '', '#search_filter_submit');
+});
+function searchLandlordListingResponse(response){
+	// SHOWING MESSAGE ACCORDING TO RESPONSE
+	
+    if (response.status == 200 || response.status == '200') {
+		var data = response.data;
+		var landlord_listing = data.landlord_list;
+
+		makeLandlordListing(landlord_listing);
+
+    }else{
+		toastr.error(response.message, '', {
+            timeOut: 3000
+        });
+	}
+}
+$(document).on('click', '#reset_filter_btn', function (e) {
+
+	let form = $('#filter_form');
+    form.trigger("reset");
+	getLandlordPageData();
+});
+
 $(document).on('click', '.view_landlord', function (e) {
     var landlord_id = $(this).attr('data-id');
 	e.preventDefault();
@@ -206,33 +240,40 @@ function getSpecificLandlordResponse(response) {
 											<img src="${value.path}" alt="">
 										</div>
 									</li>`;
-						
 				});
 			}
-
 			$("#propertyImages_html").html(images_html);
 		}
 
 		$("#listing").hide();
 		$("#deliveries").show();
-
-    }
+	}
 }
-
-
-
-
 
 $(document).ready(function () {
     
     getLandlordPageData();
 
-	$("input, select, textarea").prop('disabled', true);
+	$("#deliveries input, #deliveries select, #deliveries textarea").prop('disabled', true);
 });
 
 $(document).on('click', '.backToListing', function (e) {
     $("#listing").show();
 	$("#deliveries").hide();
+});
+
+$('[name="search_fullname"]').on('keydown', function(e) {
+    var key = e.keyCode || e.which;
+    var char = String.fromCharCode(key);
+    var controlKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+
+    // Allow control keys and non-numeric characters
+    if (controlKeys.includes(e.key) || !char.match(/[0-9]/)) {
+        return true;
+    } else {
+        e.preventDefault();
+        return false;
+    }
 });
 
 $(window).on("load", function() {
@@ -252,4 +293,23 @@ $(window).on("load", function() {
 		$(".damage_btn .site_btn").removeClass("active");
 		$(this).addClass("active");
 	});
-})
+});
+
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
+});

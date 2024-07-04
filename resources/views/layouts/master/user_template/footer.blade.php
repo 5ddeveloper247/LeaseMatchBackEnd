@@ -6,18 +6,18 @@
                 <a href="#" style="background-image: url('{{asset('assets/images/logo-light.png')}}');"></a>
             </div>
             <ul class="social_links">
-                <li><a href="#" target="_blank"><img src="{{asset('assets/images/social-facebook.svg')}}"></a></li>
-                <li><a href="#" target="_blank"><img src="{{asset('assets/images/social-twitter.svg')}}"></a></li>
-                <li><a href="#" target="_blank"><img src="{{asset('assets/images/social-instagram.svg')}}"></a></li>
-                <li><a href="#" target="_blank"><img src="{{asset('assets/images/social-youtube.svg')}}"></a></li>
+                <li><a href="https://www.facebook.com/" target="_blank"><img src="{{asset('assets/images/social-facebook.svg')}}"></a></li>
+                <li><a href="https://twitter.com/" target="_blank"><img src="{{asset('assets/images/social-twitter-new.svg')}}"></a></li>
+                <li><a href="https://instagram.com/" target="_blank"><img src="{{asset('assets/images/social-instagram.svg')}}"></a></li>
+                <li><a href="https://youtube.com/" target="_blank"><img src="{{asset('assets/images/social-youtube.svg')}}"></a></li>
             </ul>
         </div>
         <div class="copyright relative">
             <div class="inner">
-                <ul class="smLst flex">
+                <!-- <ul class="smLst flex">
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms & Conditions</a></li>
-                </ul>
+                </ul> -->
                 <p>Copyright © 2022 <a href="#">Lease Match</a> All rights reserved.</p>
             </div>
         </div>

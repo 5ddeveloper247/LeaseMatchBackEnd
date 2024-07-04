@@ -377,6 +377,23 @@ body a:hover {
     background: #051855;
 }
 
+.site_btn:hover {
+    background: #051855 !important;
+    color: #fff !important;
+}
+
+
+.filter-toggle{
+    cursor:pointer;
+}
+
+.filter-toggle i{
+    color:#0078b9;
+}
+
+.top_head .form_blk .text_box {
+    height: 3.5rem;
+}
 /*===================== Change theme CSS End ========================*/
 
 td:not(:last-child) {
@@ -385,3 +402,42 @@ td:not(:last-child) {
 .tbl_blk table>*>tr:nth-child(1)>* {
     padding-top: 1rem;
 }
+
+
+/* HEADER FIX TABLE STYLE START */
+table { 
+    border-collapse: collapse; 
+    width: 100%; 
+}
+th, td { 
+    background: #fff; 
+    padding: 8px 16px; 
+}
+
+.tableFixHead {
+overflow: auto;
+max-height: 500px;
+}
+
+.tableFixHead thead th {
+position: sticky;
+top: 0;
+z-index: 10;
+}
+
+.tableFixHead::-webkit-scrollbar {
+width: 5px; /* Adjust the width as needed */
+}
+
+.tableFixHead::-webkit-scrollbar-track {
+background: #f1f1f1; 
+}
+
+.tableFixHead::-webkit-scrollbar-thumb {
+background: #c1c1c1; 
+}
+
+.tableFixHead::-webkit-scrollbar-thumb:hover {
+background: #c1c1c1; 
+}
+/* HEADER FIX TABLE STYLE END */

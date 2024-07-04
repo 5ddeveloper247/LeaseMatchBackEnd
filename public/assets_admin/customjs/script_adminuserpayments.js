@@ -23,12 +23,12 @@ function makeUserPaymentListing(payments_list){
 
 	if(payments_list.length > 0){
 		$.each(payments_list, function (index, value) {
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${value.first_name}</td>
-						<td>${value.email}</td>
-						<td class="nowrap" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
-						<td class="nowrap text-center" >${value.user_payments_count}</td>
+			html += `<tr class="identify1">
+						<td class="nowrap grid-p-searchby1">${index + 1}</td>
+						<td class="grid-p-searchby1">${trimText(value.first_name, 20)}</td>
+						<td class="grid-p-searchby1">${value.email}</td>
+						<td class="nowrap grid-p-searchby1" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${value.user_payments_count}</td>
 						<td class="nowrap" data-center>
 							<div class="act_btn">
 								<button type="button" class="eye view_payment_detail" title="View All Payments" data-id="${value.id}"></button>
@@ -85,7 +85,7 @@ function viewDetailResponse(response) {
 
 			html += `<tr class="identify">
 						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${detail.first_name}</td>
+						<td class="grid-p-searchby">${trimText(detail.first_name, 20)}</td>
 						<td class="grid-p-searchby">${value.plan != null ? value.plan.title : ''}</td>
 						<td class="nowrap grid-p-searchby" >${value.transaction_id}</td>
                         <td class="nowrap grid-p-searchby" >${value.amount != null ? formatCurrency(value.amount) : '0.00'}</td>
@@ -120,7 +120,6 @@ $(document).ready(function () {
 
     getPaymentsPageData();
     
-    // $("[name]").prop('disabled', true);
 });
 
 $('#searchInListing').on("keyup", function (e)  {     
@@ -135,10 +134,29 @@ $('#searchInListing').on("keyup", function (e)  {
         if (el.length >= 1) {
             noElem = false;
         }
-        tr.not(el).hide().addClass("d-none").removeClass("d-flex");
-		el.fadeIn().removeClass("d-none");
+        tr.not(el).hide();
+		el.fadeIn();
 	} else {
-		tr.fadeIn().removeClass("d-none");
+		tr.fadeIn();
+    }
+});
+
+$('#searchInListing1').on("keyup", function (e)  {     
+    var tr = $('.identify1');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby1').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
     }
 });
 

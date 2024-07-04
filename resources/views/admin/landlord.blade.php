@@ -52,21 +52,107 @@
                 </div>
             </div>--}}
         </div>
-        <div class="br"></div>
-        <div class="top_head">
-            
-           
+        <div class="top_head mt-5">
+            <h4 class="filter-toggle">
+                <i class="fa fa-arrow-circle-right"></i>&nbsp;
+                Advance Search Filter 
+            </h4>
         </div>
+        <div class="_inner filter-box" style="display:none;">
+            <!-- <button type="button" class="x_btn" ></button> -->
+            <h4></h4>
+            <form id="filter_form">
+                <div class="form_row row">
+                    <div class="col-sm-3">
+                        <h6>Full Name**</h6>
+                        <div class="form_blk">
+                            <input type="text" name="search_fullname" id="search_fullname" class="form-control text_box" placeholder="Full Name" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Company Name**</h6>
+                        <div class="form_blk">
+                            <input type="text" name="search_companyName" id="search_companyName" class="form-control text_box" placeholder="Company Name" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Bedrooms**</h6>
+                        <div class="form_blk">
+                            <input type="number" name="search_numBedrooms" id="search_numBedrooms" class="form-control text_box" placeholder="No. of bedrooms" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Property Type**</h6>
+                        <div class="form_blk">
+                            <select id="property_type" name="search_propType" class="text_box " data-container="body">
+                                <option value="">- Select a Preferred Property Type -</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Condo">Condo</option>
+                                <option value="House">House</option>
+                                <option value="Studio">Studio</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Type of rental**</h6>
+                        <div class="form_blk">
+                            <select id="search_rentalType" name="search_rentalType" class="text_box " data-container="body">
+                                <option value="">Please choose an option</option>
+                                <option value="Furnished">Furnished</option>
+                                <option value="Unfurnished">Unfurnished</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Renewal Options**</h6>
+                        <div class="form_blk">
+                            <select id="search_renewalOption" name="search_renewalOption" class="text_box " data-container="body">
+                                <option value="">Please choose an option</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Half Yearly">Half Yearly</option>
+                                <option value="Yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Status**</h6>
+                        <div class="form_blk">
+                            <select id="search_status" name="search_status" class="text_box " data-container="body">
+                                <option value="">- Select status -</option>
+                                <option value="1">Active</option>
+                                <option value="0">In-Active</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="btn_blk form_btn text-right">
+                            <button type="button" class="site_btn" id="reset_filter_btn">Reset</button>
+                            <button type="button" class="site_btn" id="search_filter_submit">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="top_head mt-5">
+            <h4></h4>
+            <div class="form_blk">
+                <input type="text" id="searchInListing" class="text_box" placeholder="Search here" maxlength="50">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
+        </div>
+        
         <div class="blk">
-            <div class="tbl_blk">
+            <div class="tbl_blk tableFixHead">
                 <table id="users_table" class="table table-responsive">
                     <thead>
                         <tr>
                             <th width="10">#</th>
-                            <th>Username</th>
+                            <th>Full Name</th>
                             <th>Email</th>
                             <th width="40">Property Type</th>
-                            <th width="40">Appartment Number</th>
+                            <th width="40">Apartment Number</th>
                             <th width="40" >Created Date</th>
                             <th width="40" data-center>Status</th>
                             <th width="40" data-center>Action</th>
@@ -350,6 +436,7 @@
                                 </div>
                             </div>
                             <div class="btn_blk form_btn text-right">
+                            <button type="button" class="site_btn long simple border backToListing">Go to list</button>
                                 <button type="button" class="site_btn long simple border prev_btn">Back</button>
                             </div>
                         </fieldset>

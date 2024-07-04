@@ -86,6 +86,15 @@ class AdminController extends Controller
         $data['total_request_inprocess'] = TenantEnquiryHeader::whereIn('status', ['1','2','3','4','5','7'])->count();
         $data['total_request_approved'] = TenantEnquiryHeader::whereIn('status', ['6'])->count();
 
+        $data['total_assigned_properties'] = PropertyMatches::whereIn('landlord_id', function ($query) {
+                                                $query->select('id')
+                                                    ->from('landlord_personal');
+                                            })->count();
+        $data['total_unassigned_properties'] = LandlordPersonal::whereNotIn('id', function ($query) {
+                                                $query->select('landlord_id')
+                                                    ->from('property_matches');
+                                            })->count();;
+        
         return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
     }
 
@@ -414,7 +423,7 @@ class AdminController extends Controller
             'middle_name_edit' => 'max:50',
             'last_name_edit' => 'max:50',
             // 'email' => 'required|email|max:50|unique:users',
-            'phone_number_edit' => 'max:15',
+            'phone_number_edit' => 'required|numeric|digits_between:7,18',
             'menu_control' => 'required',
         ],[
             'menu_control.required' => 'Choose atleast one menu control.'
@@ -449,6 +458,67 @@ class AdminController extends Controller
         $data['total'] = LandlordPersonal::count();
         $data['total_inactive'] = LandlordPersonal::where('status', '0')->count();
         $data['total_active'] = LandlordPersonal::where('status', '1')->count();
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function search_landlord_listing(Request $request)
+    {
+        $fullname = $request->search_fullname;
+        $company_name = $request->search_companyName;
+        $prop_type = $request->search_propType;
+        $num_bedrooms = $request->search_numBedrooms;
+        $rental_type = $request->search_rentalType;
+        $renewal_option = $request->search_renewalOption;
+        $status = $request->search_status;
+
+        // check atleast one filter check
+        if(is_null($fullname) && is_null($company_name) && is_null($prop_type) && is_null($num_bedrooms) && 
+            is_null($rental_type) && is_null($renewal_option) && is_null($status)){
+            return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
+        }
+
+        // // make query for get listing
+        $query = LandlordPersonal::where('enquiry_status', '1')->with(['propertyDetail', 'rentalDetail']);
+
+        if (!is_null($fullname)) {
+            $query->where('full_name', 'like', '%' . $fullname . '%');
+        }
+
+        if (!is_null($company_name)) {
+            $query->where('company_name', 'like', '%' . $company_name . '%');
+        }
+
+        if (!is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        if (!is_null($num_bedrooms)) {
+            $query->whereHas('rentalDetail', function ($subQuery) use ($num_bedrooms) {
+                $subQuery->where('number_of_bedrooms', $num_bedrooms);
+            });
+        }
+
+        if (!is_null($prop_type)) {
+            $query->whereHas('propertyDetail', function ($subQuery) use ($prop_type) {
+                $subQuery->where('property_type', $prop_type);
+            });
+        }
+
+        if (!is_null($rental_type)) {
+            $query->whereHas('rentalDetail', function ($subQuery) use ($rental_type) {
+                $subQuery->where('rental_type', $rental_type);
+            });
+        }
+
+        if (!is_null($renewal_option)) {
+            $query->whereHas('rentalDetail', function ($subQuery) use ($renewal_option) {
+                $subQuery->where('renwal_option', $renewal_option);
+            });
+        }
+
+        // Execute the query and get the results
+        $data['landlord_list'] = $query->get();
+
         return response()->json(['status' => 200, 'data' => $data]);
     }
 
@@ -532,6 +602,59 @@ class AdminController extends Controller
         $data['total'] = User::where('type', 3)->count();
         $data['total_inactive'] = User::where('type', 3)->where('status', '0')->count();
         $data['total_active'] = User::where('type', 3)->where('status', '1')->count();
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function search_tenant_listing(Request $request)
+    {
+        $username = $request->search_username;
+        $phone_number = $request->search_phonenumber;
+        $num_bedrooms = $request->search_minBedrooms;
+        $prop_type = $request->search_propType;
+        $borough_location = $request->search_boroughLocation;
+        $status = $request->search_status;
+        
+        // check atleast one filter check
+        if(is_null($username) && is_null($phone_number) && is_null($num_bedrooms) && is_null($prop_type) && is_null($borough_location) && is_null($status)){
+            return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
+        }
+
+        // // make query for get listing
+        $query = User::where('type', 3)->with(['personalInfo','residentialInfo']);
+
+        if (!is_null($username)) {
+            $query->where('first_name', 'like', '%' . $username . '%');
+        }
+
+        if (!is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        if (!is_null($phone_number)) {
+            $query->whereHas('personalInfo', function ($subQuery) use ($phone_number) {
+                $subQuery->where('phone_number', $phone_number);
+            });
+        }
+
+        if (!is_null($prop_type)) {
+            $query->whereHas('residentialInfo', function ($subQuery) use ($prop_type) {
+                $subQuery->where('preferred_property_type', $prop_type);
+            });
+        }
+        if (!is_null($num_bedrooms)) {
+            $query->whereHas('residentialInfo', function ($subQuery) use ($num_bedrooms) {
+                $subQuery->where('min_bedrooms_needed', $num_bedrooms);
+            });
+        }
+        if (!is_null($borough_location)) {
+            $query->whereHas('residentialInfo', function ($subQuery) use ($borough_location) {
+                $subQuery->where('preferred_location', $borough_location);
+            });
+        }
+        
+        // Execute the query and get the results
+        $data['tenant_list'] = $query->get();
+
         return response()->json(['status' => 200, 'data' => $data]);
     }
 
@@ -673,7 +796,13 @@ class AdminController extends Controller
 
     public function get_subscriptions_data(Request $request)
     {
-        $data['subscriptions_user_list'] = User::where('type', 3)->withCount(['userSubscriptions'])->with(['personalInfo'])->get();
+        $currentDate = Carbon::now()->format('Y-m-d');
+        $data['subscriptions_user_list'] = User::where('type', 3)->withCount(['userSubscriptions'])
+                                            ->with(['personalInfo','activePlan.plan', 'activePlan' => function($query) use ($currentDate) {
+                                                $query->where('start_date', '<=', $currentDate)
+                                                    ->where('end_date', '>=', $currentDate);
+                                            }])
+                                            ->get();
         
         return response()->json(['status' => 200, 'data' => $data]);
     }
@@ -1010,6 +1139,46 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
     }
     
+    public function search_enquiry_listing(Request $request){
+
+        $app_request = $request->search_appRequest;
+        $prop_type = $request->search_propType;
+        $date = $request->search_date;
+        $status = $request->search_status;
+
+        // check atleast one filter check
+        if(is_null($app_request) && is_null($prop_type) && is_null($date) && is_null($status)){
+            return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
+        }
+
+        $query = TenantEnquiryHeader::where('status', '!=', TenantEnquiryHeader::WAITING)->with(['enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail']);
+
+         if (!is_null($app_request)) {
+            $query->whereHas('enquiryRequests', function ($subQuery) use ($app_request) {
+                $subQuery->where('type', $app_request);
+            });
+        }
+
+        if (!is_null($date)) {
+            $query->where('date', $date);
+        }
+
+        if (!is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        if (!is_null($prop_type)) {
+            $query->whereHas('landlord.propertyDetail', function ($subQuery) use ($prop_type) {
+                $subQuery->where('property_type', $prop_type);
+            });
+        }
+
+        // Execute the query and get the results
+        $data['enquiries'] = $query->get();
+
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
     public function get_specific_enquiry(Request $request)
     {
         $enquiry_id = $request->id;

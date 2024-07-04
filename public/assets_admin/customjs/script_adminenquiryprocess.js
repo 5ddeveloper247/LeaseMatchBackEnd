@@ -120,24 +120,3 @@ $(document).ready(function () {
     
     // $("[name]").prop('disabled', true);
 });
-
-// $('#searchInListing').on("keyup", function (e)  {     
-//     var tr = $('.identify');
-    
-//     if ($(this).val().length >= 1) {//character limit in search box.
-//         var noElem = true;
-//         var val = $.trim(this.value).toLowerCase();
-//         el = tr.filter(function() {
-//             return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
-//         });
-//         if (el.length >= 1) {
-//             noElem = false;
-//         }
-//         tr.not(el).hide().addClass("d-none").removeClass("d-flex");
-// 		el.fadeIn().removeClass("d-none");
-// 	} else {
-// 		tr.fadeIn().removeClass("d-none");
-//     }
-// });
-
-

@@ -51,13 +51,93 @@
                 </div>
             </div>--}}
         </div>
-        <div class="br"></div>
-        <div class="top_head">
-            
-           
+        <div class="top_head mt-5">
+            <h4 class="filter-toggle">
+                <i class="fa fa-arrow-circle-right"></i>&nbsp;
+                Advance Search Filter 
+            </h4>
         </div>
+        <div class="_inner filter-box" style="display:none;">
+            <form id="filter_form">
+                <div class="form_row row">
+                    <div class="col-sm-3">
+                        <h6>Username**</h6>
+                        <div class="form_blk">
+                            <input type="text" name="search_username" id="search_username" class="form-control text_box" placeholder="Username" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Phone Number**</h6>
+                        <div class="form_blk">
+                            <input type="number" name="search_phonenumber" id="search_phonenumber" class="form-control text_box" placeholder="Phone Number" maxlength="18">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Minimum Bedrooms Needed**</h6>
+                        <div class="form_blk">
+                            <select id="property_type" name="search_minBedrooms" class="text_box " data-container="body">
+                                <option value="">- Select a Minimum Bedrooms Needed -</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Preferred Property Type**</h6>
+                        <div class="form_blk">
+                            <select id="property_type" name="search_propType" class="text_box " data-container="body">
+                                <option value="">- Select a Preferred Property Type -</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Condo">Condo</option>
+                                <option value="House">House</option>
+                                <option value="Studio">Studio</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Borough/Location**</h6>
+                        <div class="form_blk">
+                            <select id="search_boroughLocation" name="search_boroughLocation" class="text_box " data-container="body">
+                                <option value="">- Select a Preferred Borough/Location -</option>
+                                <option value="Bronx">Bronx</option>
+                                <option value="Staten Island">Staten Island</option>
+                                <option value="Manhattan">Manhattan</option>
+                                <option value="Queens">Queens</option>
+                                <option value="Brooklyn">Brooklyn</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6>Status**</h6>
+                        <div class="form_blk">
+                            <select id="search_status" name="search_status" class="text_box " data-container="body">
+                                <option value="">- Select status -</option>
+                                <option value="1">Active</option>
+                                <option value="0">In-Active</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="btn_blk form_btn text-right">
+                            <button type="button" class="site_btn" id="reset_filter_btn">Reset</button>
+                            <button type="button" class="site_btn" id="search_filter_submit">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="top_head mt-5">
+            <h4></h4>
+            <div class="form_blk">
+                <input type="text" id="searchInListing" class="text_box" placeholder="Search here" maxlength="50">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
+        </div>
+        
         <div class="blk">
-            <div class="tbl_blk">
+            <div class="tbl_blk tableFixHead">
                 <table id="users_table" class="table table-responsive">
                     <thead>
                         <tr>
@@ -110,7 +190,7 @@
     <div class="contain-fluid">
         <ul class="crumbs">
             <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-            <li>Landlord</li>
+            <li>Tenant</li>
         </ul>
         <div class="tab-content">
             <div id="Appointment" class="tab-pane fade in active">
@@ -204,7 +284,7 @@
                                     <div class="form_blk">
                                         <select id="preferred_property_type" class="text_box " data-container="body">
                                             <option value="">- Select a Preferred Property Type -</option>
-                                            <option value="Appartment">Appartment</option>
+                                            <option value="Apartment">Apartment</option>
                                             <option value="Condo">Condo</option>
                                             <option value="House">House</option>
                                             <option value="Studio">Studio</option>
@@ -264,7 +344,7 @@
                                         <select id="employment_status" class="text_box " data-container="body">
                                             <option value="">- Select an Employment Status -</option>
                                             <option value="Employed">Employed</option>
-                                            <option value="Unemployed">Unemployed</option>
+                                            <option value="Self Employed">Self Employed</option>
                                             <option value="Retired">Retired</option>
                                             <option value="Student">Student</option>
                                         </select>

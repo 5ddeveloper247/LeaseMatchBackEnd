@@ -62,9 +62,12 @@
                 </div>
             </div>--}}
         </div>
-        <div class="br"></div>
-        <div class="top_head">
-            
+        <div class="top_head mt-5">
+            <h4>Required Documents</h4>
+            <div class="form_blk">
+                <input type="text" id="searchInListing" class="text_box" placeholder="Search here" maxlength="50">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
         </div>
         <div class="blk">
             <div class="tbl_blk">

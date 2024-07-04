@@ -30,21 +30,20 @@ function makeContactUsListing(contactus_list){
 				var status = `<span class="badge rounded-pill bg-success">Replied</span>`;
 				var reply_btn = `<button class="inquiry-btn btn-sm editButton text-center replybtn" data-id="${value.id}">View</button>`;
 			}
-			html += `<tr class="col-12">
-						<td class="col-1">${index + 1}</td>
-						<td class="col-4">${ value.email }</td>
-						<td>${ trimText(value.message, 50) }</td>
-						<td class="text-center">
+			html += `<tr class="col-12 identify">
+						<td class="col-1 grid-p-searchby">${index + 1}</td>
+						<td class="col-4 grid-p-searchby">${ value.email }</td>
+						<td class="grid-p-searchby">${ trimText(value.message, 50) }</td>
+						<td class="text-center grid-p-searchby">
 							${status}
 						</td>
-						<td class="text-center">
-							<span>${value.replied_by!=null ? value.replied_by.first_name : '---'}</span>
+						<td class="text-center grid-p-searchby">
+							<span>${value.replied_by!=null ? trimText(value.replied_by.first_name, 10) : '---'}</span>
 						</td>
-						<td class="text-center">
+						<td class="text-center grid-p-searchby">
 							${reply_btn}
 						</td>
 					</tr>`;
-				
 		});
 	}else{
 		html = `<tr>
@@ -157,4 +156,23 @@ function backToList(){
 $(document).ready(function () {
 
     getContactUsPageData();
+});
+
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
 });

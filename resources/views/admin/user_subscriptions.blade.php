@@ -16,6 +16,13 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li onclick="backToList();" style="cursor:pointer;">User Subscriptions</li>
         </ul>
+        <div class="top_head mt-5">
+            <h4>User Subscriptions</h4>
+            <div class="form_blk">
+                <input type="text" id="searchInListing1" class="text_box" placeholder="Search here" maxlength="50">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
+        </div>
         
         <div class="blk listing_section">
             <div class="tbl_blk">
@@ -25,10 +32,10 @@
                             <th width="10">#</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Active Subscription</th>
                             <th width="40">Phone Number</th>
                             <th width="40" >Total Subscriptions</th>
                             <th width="40" data-center>Action</th>
-                           
                         </tr>
                     </thead>
                     <tbody id="subscription_table_body">
@@ -43,7 +50,7 @@
             <div class="payment-detail">
                 <div class="top-bar-user top-header-payment-details">
                     <div class="detail-image-top">
-                        <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
+                        <img src="{{asset('assets/images/users/user-placeholder.png')}}" alt="">
                         <div class="px-2" style="padding-left: 2rem;">
                             <h5 class="m-0 text-white" id="user_name"></h5>
                             <p class="d-flex align-items-center text-white">

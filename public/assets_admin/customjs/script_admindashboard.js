@@ -32,6 +32,9 @@ function getDashboardPageDataResponse(response){
         $("#t_request_waiting").html(data.total_request_waiting);
         $("#t_request_inprocess").html(data.total_request_inprocess);
         $("#t_request_approved").html(data.total_request_approved);
+
+        $("#t_assigned_properties").html(data.total_assigned_properties);
+        $("#t_unassigned_properties").html(data.total_unassigned_properties);
     }
 }
 

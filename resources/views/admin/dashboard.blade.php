@@ -103,6 +103,18 @@
                         <p>Tenant Approved Request</p>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="inner">
+                        <strong id="t_assigned_properties">0</strong>
+                        <p>Total Assigned Properties</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="inner">
+                        <strong id="t_unassigned_properties">0</strong>
+                        <p>Total Unassigned Properties</p>
+                    </div>
+                </div>
             </div>
             
         </div>

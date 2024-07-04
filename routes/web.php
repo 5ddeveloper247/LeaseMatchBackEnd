@@ -121,6 +121,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/readAllNotifications', [AdminController::class, 'readAllNotifications'])->name('admin.readAllNotifications');
         Route::post('/getDashboardPageData', [AdminController::class, 'get_dashboard_page_data'])->name('admin.getDashboardPageData');
         
+        Route::post('/searchLandlordListing', [AdminController::class, 'search_landlord_listing'])->name('admin.searchLandlordListing');
+        Route::post('/searchTenantListing', [AdminController::class, 'search_tenant_listing'])->name('admin.searchTenantListing');
+        Route::post('/searchEnquiryListing', [AdminController::class, 'search_enquiry_listing'])->name('admin.searchEnquiryListing');
+        
+        
         
     });
 });

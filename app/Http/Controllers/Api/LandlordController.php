@@ -35,7 +35,7 @@ class LandlordController extends Controller
             'property_type' => 'required|max:100',
             'number_of_units' => 'required|numeric|digits_between:1,10',
             'year_built' => 'required|numeric|digits_between:1,10',
-            'major_renovation' => 'required|numeric|digits_between:1,10',
+            'major_renovation' => 'numeric|digits_between:1,10',
         
             'size_square_feet' => 'required|numeric|digits_between:1,10',
             'number_of_bedrooms' => 'required|numeric|digits_between:1,10',
@@ -189,7 +189,7 @@ class LandlordController extends Controller
                 'property_type' => 'required|max:100',
                 'number_of_units' => 'required|numeric|digits_between:1,10',
                 'year_built' => 'required|numeric|digits_between:1,10',
-                'major_renovation' => 'required|numeric|digits_between:1,10',
+                'major_renovation' => 'numeric|digits_between:1,10',
             ]);
         }
         if($request->input('step') == '3'){

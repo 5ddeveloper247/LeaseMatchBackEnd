@@ -26,10 +26,10 @@ function makeDocumentsListing(data){
 
 	if(data.length > 0){
 		$.each(data, function (index, value) {
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${value.name}</td>
-						<td>${value.description != null ? trimText(value.description, 50) : ''}</td>
+			html += `<tr class="identify">
+						<td class="nowrap grid-p-searchby">${index + 1}</td>
+						<td class="grid-p-searchby">${value.name}</td>
+						<td class="grid-p-searchby">${value.description != null ? trimText(value.description, 50) : ''}</td>
 						<td data-center>
 							<div class="switch" >
 								<input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
@@ -249,5 +249,22 @@ $(document).ready(function () {
     getRequiredDocumentsPageData();
 });
 
-
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
+});
 

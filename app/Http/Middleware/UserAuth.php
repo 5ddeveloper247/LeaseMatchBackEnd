@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserAuth
 {
@@ -17,14 +18,18 @@ class UserAuth
     public function handle(Request $request, Closure $next)
     { 
         if(!$request->session()->has('user')){
-    		
-        	$request->session()->flash('error', 'Access Denied');
-    		  return redirect('customer/logout');
-    	
-        }else if(session('user')->type != '3'){ // 3=> user
-    		
+
+           	$request->session()->flash('error', 'Access Denied');
+            return redirect('customer/logout');
+    	}
+        else if(Auth::user()->status == '0'){
+            
+            $request->session()->flash('error', 'Access Denied');
     		return redirect('customer/logout');
-    	
+        }
+        else if(Auth::user()->type != '3'){ // 3=> user
+    		
+            return redirect('customer/logout');
     	}
     	
     	return $next($request);

@@ -23,8 +23,76 @@
             </ul>
             <div class="tab-content">
                 <div id="tab1" class="tab-pane fade in active">
-                    <div class="top_head">
-                        <h4>In Process Enquiries</h4>
+                    <div class="top_head mt-5">
+                        <h4 class="filter-toggle">
+                            <i class="fa fa-arrow-circle-right"></i>&nbsp;
+                            Advance Search Filter 
+                        </h4>
+                    </div>
+                    <div class="_inner filter-box" style="display:none;">
+                        <!-- <button type="button" class="x_btn" ></button> -->
+                        <h4></h4>
+                        <form id="filter_form">
+                            <div class="form_row row">
+                                <div class="col-sm-3">
+                                    <h6>Enquiry Type**</h6>
+                                    <div class="form_blk">
+                                        <select id="search_appRequest" name="search_appRequest" class="text_box " data-container="body">
+                                            <option value="">- Select Request Type -</option>
+                                            <option value="1">Application Request</option>
+                                            <option value="2">Document Upload</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h6>Property Type**</h6>
+                                    <div class="form_blk">
+                                        <select id="property_type" name="search_propType" class="text_box " data-container="body">
+                                            <option value="">- Select Property Type -</option>
+                                            <option value="Apartment">Apartment</option>
+                                            <option value="Condo">Condo</option>
+                                            <option value="House">House</option>
+                                            <option value="Studio">Studio</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h6>Enquiry Date**</h6>
+                                    <div class="form_blk">
+                                        <input type="date" name="search_date" id="search_date" class="form-control text_box">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h6>Status**</h6>
+                                    <div class="form_blk">
+                                        <select id="search_status" name="search_status" class="text_box " data-container="body">
+                                            <option value="">- Select status -</option>
+                                            <option value="1">Application requested</option>
+                                            <option value="2">Application confirmed</option>
+                                            <option value="4">Waiting for doc upload</option>
+                                            <option value="5">Document Uploaded</option>
+                                            <option value="6">Approved</option>
+                                            <option value="7">Returned</option>
+                                            <option value="8">Cancelled</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="btn_blk form_btn text-right">
+                                        <button type="button" class="site_btn" id="reset_filter_btn">Reset</button>
+                                        <button type="button" class="site_btn" id="search_filter_submit">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="top_head mt-5">
+                        <h4></h4>
+                        <div class="form_blk">
+                            <input type="text" id="searchInListing" class="text_box" placeholder="Search here" maxlength="50">
+                            <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+                        </div>
                     </div>
                     <div class="blk">
                         <div class="tbl_blk">
@@ -36,7 +104,7 @@
                                         <th>Enquiry Type</th>
                                         <th>Message</th>
                                         <th class="text-center">Property Type</th>
-                                        <th class="text-center">Appartment Number</th>
+                                        <th class="text-center">Apartment Number</th>
                                         <th class="text-center">Enquiry Date</th>
                                         <th class="text-center">Status</th>
                                         <th width="40"data-center>Action</th>
@@ -50,6 +118,10 @@
                 <div id="tab2" class="tab-pane fade">
                     <div class="top_head">
                         <h4>Waiting Enquiries</h4>
+                        <div class="form_blk">
+                            <input type="text" id="searchInListing1" class="text_box" placeholder="Search here" maxlength="50">
+                            <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+                        </div>
                     </div>
                     <div class="blk">
                         <div class="tbl_blk">
@@ -61,7 +133,7 @@
                                         <th>Enquiry Type</th>
                                         <th>Message</th>
                                         <th class="text-center">Type</th>
-                                        <th class="text-center">Appartment Number</th>
+                                        <th class="text-center">Apartment Number</th>
                                         <th class="text-center">Enquiry Date</th>
                                         <th class="text-center">Status</th>
                                         <th width="40"data-center>Action</th>

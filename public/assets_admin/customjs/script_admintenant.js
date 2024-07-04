@@ -29,13 +29,13 @@ function makeTenantListing(tenant_list){
 
 	if(tenant_list.length > 0){
 		$.each(tenant_list, function (index, value) {
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${value.first_name}</td>
-						<td>${value.email}</td>
-						<td class="nowrap" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
-						<td class="nowrap" >${value.personal_info != null ? formatDate(value.personal_info.date_of_birth) : ''}</td>
-						<td class="nowrap">${formatDate(value.created_at)}</td>
+			html += `<tr class="identify">
+						<td class="nowrap grid-p-searchby">${index + 1}</td>
+						<td class="grid-p-searchby">${trimText(value.first_name, 20)}</td>
+						<td class="grid-p-searchby">${value.email}</td>
+						<td class="nowrap grid-p-searchby" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
+						<td class="nowrap grid-p-searchby" >${value.personal_info != null ? formatDate(value.personal_info.date_of_birth) : ''}</td>
+						<td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
 						<td data-center>
 							<div class="switch" >
 								<input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
@@ -50,7 +50,6 @@ function makeTenantListing(tenant_list){
 							</div>
 						</td>
 					</tr>`;
-				
 		});
 	}else{
 		html = `<tr>
@@ -131,6 +130,39 @@ function deleteTenantResponse(response){
 		getTenantPageData();
     }
 }
+
+$(document).on('click', '#search_filter_submit', function (e) {
+    
+	e.preventDefault();
+	let type = 'POST';
+	let url = '/admin/searchTenantListing';
+	let message = '';
+	let form = $("#filter_form");
+	let data = new FormData(form[0]);
+	
+	// PASSING DATA TO FUNCTION
+	SendAjaxRequestToServer(type, url, data, '', searchTenantListingResponse, '', '#search_filter_submit');
+});
+function searchTenantListingResponse(response){
+	// SHOWING MESSAGE ACCORDING TO RESPONSE
+	
+    if (response.status == 200 || response.status == '200') {
+		var data = response.data;
+		var tenant_list = data.tenant_list;
+		
+		makeTenantListing(tenant_list);
+    }else{
+		toastr.error(response.message, '', {
+            timeOut: 3000
+        });
+	}
+}
+$(document).on('click', '#reset_filter_btn', function (e) {
+
+	let form = $('#filter_form');
+    form.trigger("reset");
+	getTenantPageData();
+});
 
 $(document).on('click', '.view_tenant', function (e) {
     var tenant_id = $(this).attr('data-id');
@@ -285,7 +317,7 @@ $(document).ready(function () {
 
     getTenantPageData();
 
-	$("input, select, textarea").prop('disabled', true);
+	$("#deliveries input, #deliveries select, #deliveries textarea").prop('disabled', true);
 });
 
 $(document).on('click', '.backToListing', function (e) {
@@ -318,3 +350,22 @@ $(window).on("load", function() {
 		$(this).addClass("active");
 	});
 })
+
+$('#searchInListing').on("keyup", function (e)  {     
+    var tr = $('.identify');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
+});

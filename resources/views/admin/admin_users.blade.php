@@ -8,14 +8,13 @@
     #users_table{
         font-size:x-small;
     }
-    
 </style>
 
 <section id="listing">
     <div class="contain-fluid">
         <ul class="crumbs">
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
-            <li>Admin Users</li>
+            <li>Sub-Admins</li>
         </ul>
         <!-- <div class="card_row flex_row" style="justify-content:end"> -->
         <div class="card_row flex_row" >
@@ -53,13 +52,17 @@
                 </div>
             </div>
         </div>
-        <div class="br"></div>
-        <div class="top_head">
-            
-           
+        <div class="top_head mt-5">
+            <h4>Sub-Admins</h4>
+            <div class="form_blk">
+                <input type="text" name="" id="searchInListing" class="text_box" placeholder="Search here">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
         </div>
+                            
+                            
         <div class="blk">
-            <div class="tbl_blk">
+            <div class="tbl_blk tableFixHead">
                 <table id="users_table" class="table table-responsive">
                     <thead>
                         <tr>
@@ -92,7 +95,7 @@
                     <button type="button" class="x_btn" id="close_update_modal_default_btn"></button>
                     <div id="Inspection" class="tab-pane fade active in">
                        
-                        <form  method="POST" id="edit_user_form">
+                        <form id="edit_user_form">
                             <input type="hidden" name="user_id" id="user_id">
                             @csrf
                             <fieldset>
@@ -150,7 +153,7 @@
                                    
                                 <div class="btn_blk form_btn text-center">
                                   
-                                    <button type="submit" class="site_btn long saveuser_btn" id="edituser_btn">Update</button>
+                                    <button type="button" class="site_btn long saveuser_btn" id="edituser_btn">Update</button>
                                     <button type="button" class="site_btn long"  style="background-color:red !important;"id="closeupdatedmodalbtn">Close</button>
                                 </div>
                             </fieldset>
@@ -173,7 +176,7 @@
                     <button type="button" class="x_btn" id="close_add_modal_btn"></button>
                     <div id="Inspection" class="tab-pane fade active in">
                        
-                        <form  method="POST" id="add_user_form">
+                        <form id="add_user_form">
                             
                             <fieldset>
                                 <div class="blk">
@@ -230,8 +233,7 @@
                                     </div>
                                    
                                 <div class="btn_blk form_btn text-center">
-                                  
-                                    <button type="submit" class="site_btn long saveuser_btn" id="saveuser_btn">Save</button>
+                                    <button type="button" class="site_btn long saveuser_btn" id="saveuser_btn">Save</button>
                                     <button type="button" class="site_btn long"  style="background-color:red !important;"id="closeaddmodalbtn">Close</button>
                                 </div>
                             </fieldset>
@@ -256,10 +258,8 @@
                     <h3 class="text-center">Are You Sure to Delete?</h3>
                     <!-- <p>Are You Sure to Delete?</p> -->
                     <div class="text-center row">
-                    <button type="button" class="btn bg-danger rounded-pill" id="close_delete_modal_btn" >No</button>
-                    <button type="button" class="btn bg-primary rounded-pill" id="delete_confirmed_btn" data-id="">Yes</button>
-                    
-                    <!-- <button type="button" class="btn btn-danger ">Delete</button> -->
+                        <button type="button" class="btn bg-danger rounded-pill" id="close_delete_modal_btn" >No</button>
+                        <button type="button" class="btn bg-primary rounded-pill" id="delete_confirmed_btn" data-id="">Yes</button>
                     </div>
                 </div>
             </div>

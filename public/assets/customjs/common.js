@@ -29,23 +29,6 @@ $('.view_pass').on('click', function() {
     $(this).toggleClass('icon-eye-slash').toggleClass('icon-eye');
 });
 
-// $(document).on('keyup', "[type=number], [type=email]", function (e) {
-//     if ($(this).attr('maxlength')) {
-//         var maxLength = $(this).attr("maxlength");
-//         console.log(maxLength);
-    
-//         var controlKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete'];
-//         if (controlKeys.includes(e.key)) {
-//             return;
-//         }
-//         // Prevent new input if the value length exceeds maxLength
-//         if (this.value.length >= maxLength) {
-//             e.preventDefault();
-//         }
-//     }
-// });
-
-
 $(document).ready(function(){
     toastr.options = {
         timeOut : 0,
@@ -178,4 +161,12 @@ $('input').on('keyup', function() {
 });
 $('textarea').on('keyup', function() {
     $(this).removeClass('is-invalid');
+});
+
+$(document).on('click', '.filter-toggle', function (e) {
+	
+	$(this).find('i').toggleClass('fa-arrow-circle-right');
+	$(this).find('i').toggleClass('fa-arrow-circle-down');
+	
+	$(this).closest('.top_head').next('.filter-box').slideToggle('slow');
 });

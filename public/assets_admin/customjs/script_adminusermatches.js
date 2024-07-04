@@ -24,13 +24,13 @@ function makeUserMatchesListing(user_list){
 	if(user_list.length > 0){
 		$.each(user_list, function (index, value) {
 			var allowed_prop = value.active_plan != null ? value.active_plan.plan.number_of_matches : '0';
-			html += `<tr>
-						<td class="nowrap">${index + 1}</td>
-						<td>${value.first_name}</td>
-						<td>${value.email}</td>
-						<td class="nowrap" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
-						<td class="nowrap text-center" >${allowed_prop}</td>
-						<td class="nowrap text-center" >${value.user_matches_count}</td>
+			html += `<tr class="identify1">
+						<td class="nowrap grid-p-searchby1">${index + 1}</td>
+						<td class="grid-p-searchby1">${trimText(value.first_name, 20)}</td>
+						<td class="grid-p-searchby1">${value.email}</td>
+						<td class="nowrap grid-p-searchby1" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${allowed_prop}</td>
+						<td class="nowrap grid-p-searchby1 text-center" >${value.user_matches_count}</td>
 						<td class="nowrap" data-center>
 							<div class="act_btn">
 								<button type="button" class="eye view_matches_detail" title="View All Matches" data-id="${value.id}"></button>
@@ -95,7 +95,7 @@ function makeUserPropertyListing(landlord_listing){
 
 			html += `<tr class="identify">
 						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${value.full_name}</td>
+						<td class="grid-p-searchby">${trimText(value.full_name, 20)}</td>
 						<td class="grid-p-searchby">${value.property_detail != null ? value.property_detail.property_type : ''}</td>
 						<td class="nowrap grid-p-searchby">${value.property_detail != null ? value.property_detail.appartment_number : ''}</td>
                         <td class="nowrap grid-p-searchby">${value.rental_detail != null ? value.rental_detail.size_square_feet : ''}</td>
@@ -128,7 +128,7 @@ function makeAssignedPropertyListing(assigned_match_listing){
 			
 			html += `<tr class="identify">
 						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${landlord_personal.full_name}</td>
+						<td class="grid-p-searchby">${trimText(landlord_personal.full_name, 20)}</td>
 						<td class="grid-p-searchby">${landlord_personal.property_detail != null ? landlord_personal.property_detail.property_type : ''}</td>
 						<td class="nowrap grid-p-searchby">${landlord_personal.property_detail != null ? landlord_personal.property_detail.appartment_number : ''}</td>
                         <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail != null ? landlord_personal.rental_detail.size_square_feet : ''}</td>
@@ -326,11 +326,29 @@ $('#searchInListing').on("keyup", function (e)  {
         if (el.length >= 1) {
             noElem = false;
         }
-        tr.not(el).hide().addClass("d-none").removeClass("d-flex");
-		el.fadeIn().removeClass("d-none");
+        tr.not(el).hide();
+		el.fadeIn();
 	} else {
-		tr.fadeIn().removeClass("d-none");
+		tr.fadeIn();
     }
 });
 
+$('#searchInListing1').on("keyup", function (e)  {     
+    var tr = $('.identify1');
+    
+    if ($(this).val().length >= 1) {//character limit in search box.
+        var noElem = true;
+        var val = $.trim(this.value).toLowerCase();
+        el = tr.filter(function() {
+            return $(this).find('.grid-p-searchby1').text().toLowerCase().match(val);
+        });
+        if (el.length >= 1) {
+            noElem = false;
+        }
+        tr.not(el).hide();
+		el.fadeIn();
+	} else {
+		tr.fadeIn();
+    }
+});
 

@@ -17,6 +17,13 @@
             <li onclick="backToList();" style="cursor:pointer;">User Payments</li>
         </ul>
         
+        <div class="top_head mt-5">
+            <h4>User Payments</h4>
+            <div class="form_blk">
+                <input type="text" id="searchInListing1" class="text_box" placeholder="Search here" maxlength="50">
+                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            </div>
+        </div>
         <div class="blk paymentList_section">
             <div class="tbl_blk">
                 <table id="users_table" class="table table-responsive">
@@ -42,7 +49,7 @@
             <div class="payment-detail">
                 <div class="top-bar-user top-header-payment-details">
                     <div class="detail-image-top">
-                        <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
+                        <img src="{{asset('assets/images/users/user-placeholder.png')}}" alt="">
                         <div class="px-2" style="padding-left: 2rem;">
                             <h5 class="m-0 text-white" id="user_name"></h5>
                             <p class="d-flex align-items-center text-white">

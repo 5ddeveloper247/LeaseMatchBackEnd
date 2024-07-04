@@ -57,9 +57,9 @@ class RegistrationController extends Controller
 
             // Rental Assistance
             'rental_voucher' => 'required|max:10',
-            'voucher_type' => 'required|max:100',
-            'certification_detail' => 'required|max:255',
-            'certification_expiry' => 'required|date_format:Y-m-d',
+            'voucher_type' => 'required_if:rental_voucher,Yes|max:100',
+            'certification_detail' => 'required_if:rental_voucher,Yes|max:255',
+            // 'certification_expiry' => 'required|date_format:Y-m-d',
 
             // Current/Previous Living Situation
             'current_address' => 'required|max:255',
@@ -74,14 +74,15 @@ class RegistrationController extends Controller
             
             // Pet Information
             'has_pets' => 'required|max:10',
-            'pet_type' => 'required|max:100',
-            'number_of_pets' => 'required|numeric|digits_between:1,10',
-            'pet_size' => 'required|max:100',
+            'pet_type' => 'required_if:has_pets,Yes|max:100',
+            'number_of_pets' => 'required_if:has_pets,Yes',//|digits_between:1,10
+            'pet_size' => 'required_if:has_pets,Yes|max:100',
 
             // Accommodation Requirements
+            // Accommodation Requirements
             'disability' => 'required|max:10',
-            'disability_type' => 'required|max:100',
-            'special_accomodation' => 'required|max:255',
+            'disability_type' => 'required_if:disability,Yes|max:100',
+            'special_accomodation' => 'required_if:disability,Yes|max:255',
 
             // Additional Requirements
             'max_rent_to_pay' => 'required|numeric|digits_between:1,10',
@@ -329,13 +330,23 @@ class RegistrationController extends Controller
         }
 
         if($request->input('step') == '4'){
-            $validator = Validator::make($request->all(), [
-                // Rental Assistance
-                'rental_voucher' => 'required|max:10',
-                'voucher_type' => 'required|max:100',
-                'certification_detail' => 'required|max:255',
-                'certification_expiry' => 'required|date_format:Y-m-d|after:today',
-            ]);
+            if($request->rental_voucher == 'Yes'){
+                $validator = Validator::make($request->all(), [
+                    // Rental Assistance
+                    'rental_voucher' => 'required|max:10',
+                    'voucher_type' => 'required|max:100',
+                    'certification_detail' => 'required|max:255',
+                    'certification_expiry' => 'required|date_format:Y-m-d|after:today',
+                ]);
+            }else{
+                $validator = Validator::make($request->all(), [
+                    // Rental Assistance
+                    'rental_voucher' => 'required|max:10',
+                    'voucher_type' => 'max:100',
+                    'certification_detail' => 'max:255',
+                    // 'certification_expiry' => 'after:today',
+                ]);
+            }
         }
 
         if($request->input('step') == '5'){
@@ -361,9 +372,9 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 // Pet Information
                 'has_pets' => 'required|max:10',
-                'pet_type' => 'required|max:100',
-                'number_of_pets' => 'required|numeric|digits_between:1,10',
-                'pet_size' => 'required|max:100',
+                'pet_type' => 'required_if:has_pets,Yes|max:100',
+                'number_of_pets' => 'required_if:has_pets,Yes',//|digits_between:1,10
+                'pet_size' => 'required_if:has_pets,Yes|max:100',
             ]);
         }
         
@@ -371,8 +382,8 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 // Accommodation Requirements
                 'disability' => 'required|max:10',
-                'disability_type' => 'required|max:100',
-                'special_accomodation' => 'required|max:255',
+                'disability_type' => 'required_if:disability,Yes|max:100',
+                'special_accomodation' => 'required_if:disability,Yes|max:255',
             ]);
         }
         

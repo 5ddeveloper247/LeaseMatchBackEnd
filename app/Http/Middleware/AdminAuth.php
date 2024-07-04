@@ -20,17 +20,20 @@ class AdminAuth
     public function handle(Request $request, Closure $next)
     {
         $currentRouteName = $request->route()->getName();
-        
+        // dd(Auth::user()->email);
     	if(!$request->session()->has('user')){
     		 
     		$request->session()->flash('error', 'Access Denied');
     		return redirect('admin');
     		 
-    	}
+    	}else if(Auth::user()->status == '0'){
+            $request->session()->flash('error', 'Access Denied');
+    		return redirect('admin');
+        }
     	else if(Auth::user()->type == '1' || Auth::user()->type == '2'){ // 1=>superadmin, 2=>subadmin
-    		 
-            return $next($request);
-        }else{
+    		return $next($request);
+        }
+        else{
             $request->session()->flash('error', 'Access Denied');
     		return redirect('admin/login');
         }

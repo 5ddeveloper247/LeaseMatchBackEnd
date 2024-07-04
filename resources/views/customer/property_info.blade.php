@@ -103,7 +103,7 @@
                                     <div class="form_blk">
                                         <select id="preferred_property_type" class="text_box " data-container="body">
                                             <option value="">- Select a Preferred Property Type -</option>
-                                            <option value="Appartment">Appartment</option>
+                                            <option value="Apartment">Apartment</option>
                                             <option value="Condo">Condo</option>
                                             <option value="House">House</option>
                                             <option value="Studio">Studio</option>
@@ -163,7 +163,7 @@
                                         <select id="employment_status" class="text_box " data-container="body">
                                             <option value="">- Select an Employment Status -</option>
                                             <option value="Employed">Employed</option>
-                                            <option value="Unemployed">Unemployed</option>
+                                            <option value="Self Employed">Self Employed</option>
                                             <option value="Retired">Retired</option>
                                             <option value="Student">Student</option>
                                         </select>
