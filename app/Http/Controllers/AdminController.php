@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use App\Models\User;
 use App\Models\Pricing_plan;
 use App\Models\Menu;
@@ -66,35 +67,52 @@ class AdminController extends Controller
 
     public function get_dashboard_page_data(Request $request){
         
-        $data['total_admins'] = User::where('type', '2')->count();
-        $data['total_landlords'] = LandlordPersonal::count();
-        $data['total_tenants'] = User::where('type', '3')->count();
-        $data['total_active_sub'] = UserSubscription::where('start_date', '<=', Carbon::now())
-                                                    ->where('end_date', '>=', Carbon::now())
-                                                    ->distinct('user_id')->count('user_id');
-        $data['total_payment'] = UserPayments::sum('amount');
+        // $data['total_admins'] = User::where('type', '2')->count();
+        // $data['total_landlords'] = LandlordPersonal::count();
+        // $data['total_tenants'] = User::where('type', '3')->count();
+        // $data['total_active_sub'] = UserSubscription::where('start_date', '<=', Carbon::now())
+        //                                             ->where('end_date', '>=', Carbon::now())
+        //                                             ->distinct('user_id')->count('user_id');
+        // $data['total_payment'] = UserPayments::sum('amount');
         
-        $data['total_landlord_active'] = LandlordPersonal::where('status', '1')->count();
-        $data['total_landlord_inactive'] = LandlordPersonal::where('status', '0')->count();
-        $data['total_landlord_available'] = LandlordPersonal::where('enquiry_status', '1')->count();
-        $data['total_landlord_blocked'] = LandlordPersonal::where('enquiry_status', '2')->count();
-        $data['total_landlord_booked'] = LandlordPersonal::where('enquiry_status', '3')->count();
+        // $data['total_landlord_active'] = LandlordPersonal::where('status', '1')->count();
+        // $data['total_landlord_inactive'] = LandlordPersonal::where('status', '0')->count();
+        // $data['total_landlord_available'] = LandlordPersonal::where('enquiry_status', '1')->count();
+        // $data['total_landlord_blocked'] = LandlordPersonal::where('enquiry_status', '2')->count();
+        // $data['total_landlord_booked'] = LandlordPersonal::where('enquiry_status', '3')->count();
 
-        $data['total_tenant_active'] = User::where('type', '3')->where('status', '1')->count();
-        $data['total_tenant_inactive'] = User::where('type', '3')->where('status', '0')->count();
-        $data['total_request_waiting'] = TenantEnquiryHeader::whereIn('status', ['9'])->count();
-        $data['total_request_inprocess'] = TenantEnquiryHeader::whereIn('status', ['1','2','3','4','5','7'])->count();
-        $data['total_request_approved'] = TenantEnquiryHeader::whereIn('status', ['6'])->count();
+        // $data['total_tenant_active'] = User::where('type', '3')->where('status', '1')->count();
+        // $data['total_tenant_inactive'] = User::where('type', '3')->where('status', '0')->count();
+        // $data['total_request_waiting'] = TenantEnquiryHeader::whereIn('status', ['9'])->count();
+        // $data['total_request_inprocess'] = TenantEnquiryHeader::whereIn('status', ['1','2','3','4','5','7'])->count();
+        // $data['total_request_approved'] = TenantEnquiryHeader::whereIn('status', ['6'])->count();
 
-        $data['total_assigned_properties'] = PropertyMatches::whereIn('landlord_id', function ($query) {
-                                                $query->select('id')
-                                                    ->from('landlord_personal');
-                                            })->count();
-        $data['total_unassigned_properties'] = LandlordPersonal::whereNotIn('id', function ($query) {
-                                                $query->select('landlord_id')
-                                                    ->from('property_matches');
-                                            })->count();;
+        // $data['total_assigned_properties'] = LandlordPersonal::whereIn('id', function ($query) {
+        //                                         $query->select('landlord_id')
+        //                                             ->from('property_matches');
+        //                                     })->count();
+
+        // $data['total_unassigned_properties'] = LandlordPersonal::whereNotIn('id', function ($query) {
+        //                                         $query->select('landlord_id')
+        //                                             ->from('property_matches');
+        //                                     })->count();
         
+        $endDate = Carbon::today();
+        $startDate = $endDate->copy()->subDays(14);
+
+        $period = CarbonPeriod::create($startDate, $endDate);
+        
+        $last30Days = [];
+        $chart_payments = [];
+        foreach ($period as $date) {
+            $last30Days[] = $date->format('d M');
+            $chart_payments[] = UserPayments::where('date', $date->format('Y-m-d'))->sum('amount');
+            $chart_properties[] = LandlordPersonal::whereDate('created_at', $date->format('Y-m-d'))->count();
+        }
+        $data['chart_days'] = (object) $last30Days;
+        $data['chart_payments'] = (object) $chart_payments;
+        $data['chart_properties'] = (object) $chart_properties;
+
         return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
     }
 
@@ -144,6 +162,36 @@ class AdminController extends Controller
     public function dashboard(Request $request)
     {
         $data['page'] = 'Dashboard';
+
+        $data['total_admins'] = User::where('type', '2')->count();
+        $data['total_landlords'] = LandlordPersonal::count();
+        $data['total_tenants'] = User::where('type', '3')->count();
+        $data['total_active_sub'] = UserSubscription::where('start_date', '<=', Carbon::now())
+                                                    ->where('end_date', '>=', Carbon::now())
+                                                    ->distinct('user_id')->count('user_id');
+        $data['total_payment'] = UserPayments::sum('amount');
+        
+        $data['total_landlord_active'] = LandlordPersonal::where('status', '1')->count();
+        $data['total_landlord_inactive'] = LandlordPersonal::where('status', '0')->count();
+        $data['total_landlord_available'] = LandlordPersonal::where('enquiry_status', '1')->count();
+        $data['total_landlord_blocked'] = LandlordPersonal::where('enquiry_status', '2')->count();
+        $data['total_landlord_booked'] = LandlordPersonal::where('enquiry_status', '3')->count();
+
+        $data['total_tenant_active'] = User::where('type', '3')->where('status', '1')->count();
+        $data['total_tenant_inactive'] = User::where('type', '3')->where('status', '0')->count();
+        $data['total_request_waiting'] = TenantEnquiryHeader::whereIn('status', ['9'])->count();
+        $data['total_request_inprocess'] = TenantEnquiryHeader::whereIn('status', ['1','2','3','4','5','7'])->count();
+        $data['total_request_approved'] = TenantEnquiryHeader::whereIn('status', ['6'])->count();
+
+        $data['total_assigned_properties'] = LandlordPersonal::whereIn('id', function ($query) {
+                                                $query->select('landlord_id')
+                                                    ->from('property_matches');
+                                            })->count();
+                                            
+        $data['total_unassigned_properties'] = LandlordPersonal::whereNotIn('id', function ($query) {
+                                                $query->select('landlord_id')
+                                                    ->from('property_matches');
+                                            })->count();
         
         return view('admin/dashboard')->with($data);
     }

@@ -38,6 +38,7 @@
 <script src="{{ asset('assets/js/datepicker.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
+<script src="{{ asset('assets/plugins/echarts/echarts.min.js') }}"></script>
 
 <script src="{{ asset('assets/customjs/common.js') }}"></script>
 
