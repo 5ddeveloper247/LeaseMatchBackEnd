@@ -1,7 +1,7 @@
  <!-- footer -->
- <footer>
+ <footer style="padding-top:0px;">
     <div class="contain-fluid">
-        <div class="top_blk">
+        <!-- <div class="top_blk">
             <div class="logo">
                 <a href="index.php" style="background-image: url('{{asset('assets/images/logo-light.png')}}');"></a>
             </div>
@@ -11,14 +11,17 @@
                 <li><a href="https://www.instagram.com/" target="_blank"><img src="{{asset('assets/images/social-instagram.svg')}}"></a></li>
                 <li><a href="https://www.youtube.com/" target="_blank"><img src="{{asset('assets/images/social-youtube.svg')}}"></a></li>
             </ul>
-        </div>
-        <div class="copyright relative">
+        </div> -->
+        <div class="copyright relative" style="margin-top:0px;">
             <div class="inner">
-                <!-- <ul class="smLst flex">
+            <div class="logo" style="margin-bottom: 0px;">
+                <a href="{{route('admin.dashboard')}}" style="background-image: url('{{asset('assets/images/logo-light.png')}}');"></a>
+            </div>    
+            <!-- <ul class="smLst flex">
                     <li><a href="privacy-policy.php">Privacy Policy</a></li>
                     <li><a href="terms-and-conditions.php">Terms & Conditions</a></li>
                 </ul> -->
-                <p>Copyright © 2022 <a href="index.php">Lease Match</a> All rights reserved.</p>
+                <p style="margin-top:15px;">Copyright © 2022 <a href="index.php">Lease Match</a> All rights reserved.</p>
             </div>
         </div>
     </div>

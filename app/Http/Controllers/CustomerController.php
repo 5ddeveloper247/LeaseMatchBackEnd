@@ -120,14 +120,18 @@ class CustomerController extends Controller
                                                         ->with('plan')->orderBy('created_at', 'desc')->first();
 
             if(isset($currentPlan->id)){
-                $data['properties'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal',
-                                                                                            'landlordPersonal.propertyDetail',
-                                                                                            'landlordPersonal.rentalDetail',
-                                                                                            'landlordPersonal.tenantDetail',
-                                                                                            'landlordPersonal.additionalDetail',
-                                                                                            'landlordPersonal.propertyImages',
-                                                                                            'tenantEnquiryHeader'
-                                                                                        ])->get();
+                $data['properties'] = PropertyMatches::where('user_id', $user_id)
+                                                        ->whereHas('landlordPersonal', function ($query){
+                                                            $query->where('status', '1');
+                                                        })
+                                                        ->with(['landlordPersonal',
+                                                                'landlordPersonal.propertyDetail',
+                                                                'landlordPersonal.rentalDetail',
+                                                                'landlordPersonal.tenantDetail',
+                                                                'landlordPersonal.additionalDetail',
+                                                                'landlordPersonal.propertyImages',
+                                                                'tenantEnquiryHeader'
+                                                            ])->get();
             }else{
                 $data['properties'] = array();
             }
@@ -148,10 +152,11 @@ class CustomerController extends Controller
                                 ->where('end_date', '>=', $currentDate)
                                 ->with('plan')->orderBy('created_at', 'desc')->first();
 
-        $data['property_detail'] = LandlordPersonal::where('id', $request->landlord_id)->
-                                        with(['propertyDetail','rentalDetail','tenantDetail',
-                                        'additionalDetail','propertyImages'])
-                                ->first();
+        $data['property_detail'] = LandlordPersonal::where('id', $request->landlord_id)
+                                                    ->where('status', '1')
+                                                    ->with(['propertyDetail','rentalDetail','tenantDetail',
+                                                        'additionalDetail','propertyImages'])
+                                                    ->first();
         
         $data['curr_plan'] = isset($currentPlan->plan) ? $currentPlan->plan : '';
         

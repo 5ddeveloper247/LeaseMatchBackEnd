@@ -38,7 +38,8 @@ function makeInProcessEnquiryListing(enquiries){
 			
 			html += `<tr class="identify">
 						<td class="nowrap grid-p-searchby">${index + 1} ${notif_icon}</td>
-						<td class="grid-p-searchby">${trimText(landlord.full_name, 20)}</td>
+						<td class="grid-p-searchby">${trimText(value.user.first_name, 15)}</td>
+						<td class="grid-p-searchby">${trimText(landlord.full_name, 15)}</td>
 						<td class="grid-p-searchby">${enqType}</td>
 						<td class="grid-p-searchby">${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>
 						<td class="nowrap grid-p-searchby text-center" >${landlord.property_detail != null ? landlord.property_detail.property_type : ''}</td>
@@ -75,7 +76,8 @@ function makeWaitingEnquiryListing(waiting_enquiries){
 			}
 			html += `<tr class="identify1">
 						<td class="nowrap grid-p-searchby1">${index + 1}</td>
-						<td class="grid-p-searchby1">${trimText(landlord.full_name, 20)}</td>
+						<td class="grid-p-searchby">${trimText(value.user.first_name, 15)}</td>
+						<td class="grid-p-searchby1">${trimText(landlord.full_name, 15)}</td>
 						<td class="grid-p-searchby1">${enqType}</td>
 						<td class="grid-p-searchby1">${value.enquiry_requests != null ? trimText(value.enquiry_requests[0].message, 30) : ''}</td>
 						<td class="nowrap grid-p-searchby1 text-center" >${landlord.property_detail != null ? landlord.property_detail.property_type : ''}</td>
@@ -152,10 +154,20 @@ function getSpecificEnquiryResponse(response) {
       
         var data = response.data;
         var enquiry_detail = data.enquiry_detail;
-
+		
+		
 		if(enquiry_detail != null){
 
 			var status = enquiry_detail.status;
+			var user_detail = data.enquiry_detail.user;
+			
+			if(user_detail != null){
+				$("#tenant_name").text(user_detail.first_name);
+				$("#tenant_email").text(user_detail.email);
+				$("#tenant_phone").text(user_detail.personal_info.phone_number);
+				$("#tenant_propType").text(user_detail.residential_info.preferred_property_type);
+			}
+			
 			if(status == '1' ){		// application requested
 				$("#action_button").html(`<button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
 											<button type="button" class="site_btn md long" onclick="confirmEnquiry();">Confirm Request</button>`);
@@ -243,7 +255,7 @@ function getSpecificEnquiryResponse(response) {
 		}
 
 		$(".listing_section").hide();
-		$(".detail_section").show();
+		$(".detail_section").show('slow');
 
     }
 }
@@ -360,35 +372,42 @@ function viewEnquiryDocsResponse(response){
 
 		var data = response.data;
 		var enquiry_docs = data.enquiry_docs;
-		var html = '';
+		var html = html1 = '';
 
 		if(enquiry_docs.length > 0){
 			$.each(enquiry_docs, function (index, value) {
 				html += `<div class="col-sm-12">
 							<div class="form_blk">
 								<div class="lbl_btn">
-									<a href="${value.path}" title="Download" download>
+									<a href="${value.path}" target="_blank" title="View">
 										<img src="${base_url}/assets/images/icon-file.svg" style="height: 25px;width: 25px;">
 									</a>
 									<label for="req_docs_chk_">${value.required_document.name}</label>
 								</div>
 							</div>
 						</div>`;
+
+				html1 += `<div class="col-sm-12">
+							<div class="form_blk">
+								<div class="lbl_btn">
+									<input type="checkbox" id="check_return_doc_${value.id}" name="check_return_doc_${value.id}" value="${value.id}">
+									<label for="req_docs_chk_">${value.required_document.name}</label>
+								</div>
+							</div>
+						</div>`;
 			});
-		}else{
+		}else{ 
 			html += `<div class="col-sm-12">
 						<p class="text-center">No record found!</p>
 					</div>`;
 		}
 
 		$("#uploaded_docs_section").html(html);
+		$("#uploaded_docs_section1").html(html1);
 		
 		$("html").addClass("flow");
-		$("#view_docs_popup").fadeIn();	
-        
-		// toastr.success(response.message, '', {
-        //     timeOut: 3000
-        // });
+		$("#view_docs_popup").fadeIn();
+
 	}else {
 		error = response.responseJSON.message;
 		toastr.error(error, '', {
@@ -401,10 +420,13 @@ $(document).on('click', '.changeStatusEnquiry', function (e) {
 	var status = $(this).attr('data-status');
 
 	if(status == '6'){		// approve status
+		$("#return_doc_mark_section").hide();
 		$("#status_confirm_msg").html(`Are you sure you want to approved this application request...!!!`);
 	}else if(status == '7'){	// return status
+		$("#return_doc_mark_section").show();
 		$("#status_confirm_msg").html(`Are you sure you want to return this application request...!!!`);
 	}else if(status == '8'){
+		$("#return_doc_mark_section").hide();
 		$("#status_confirm_msg").html(`Are you sure you want to cancel this application request...!!!`);
 	}
 	$("#changeStatusEnquiryConfirm").attr('data-status', status);
@@ -422,6 +444,21 @@ $(document).on('click', '#changeStatusEnquiryConfirm', function (e) {
 	
     var enquiry_id = $('#enquiry_id').val();
 	var status = $(this).attr('data-status');
+	var docIds = [];
+
+	if(status == '7'){
+		$('input[type="checkbox"]').each(function() {
+			if($(this).is(":checked")){
+				docIds.push($(this).val());
+			}
+		});
+
+		if(docIds.length <= 0){
+			toastr.error('Choose atleast one document to return...', '', {
+				timeOut: 3000
+			});return;
+		}
+	}
 
 	e.preventDefault();
 	let type = 'POST';
@@ -431,6 +468,7 @@ $(document).on('click', '#changeStatusEnquiryConfirm', function (e) {
 	let data = new FormData();
 	data.append('enquiry_id', enquiry_id);
 	data.append('status', status);
+	data.append('docIds', docIds);
 	
 	// PASSING DATA TO FUNCTION
 	SendAjaxRequestToServer(type, url, data, '', changeEnquiryStatusResponse, '', '.view_enquiry_detail');

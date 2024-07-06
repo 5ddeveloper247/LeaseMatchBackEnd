@@ -47,7 +47,7 @@
                                 <div class="col-sm-3">
                                     <h6>Property Type**</h6>
                                     <div class="form_blk">
-                                        <select id="property_type" name="search_propType" class="text_box " data-container="body">
+                                        <select id="search_propType" name="search_propType" class="text_box " data-container="body">
                                             <option value="">- Select Property Type -</option>
                                             <option value="Apartment">Apartment</option>
                                             <option value="Condo">Condo</option>
@@ -100,7 +100,8 @@
                                 <thead>
                                     <tr>
                                         <th width="10">#</th>
-                                        <th>Name</th>
+                                        <th>Tenant Name</th>
+                                        <th>Landlord Name</th>
                                         <th>Enquiry Type</th>
                                         <th>Message</th>
                                         <th class="text-center">Property Type</th>
@@ -129,7 +130,8 @@
                                 <thead>
                                     <tr>
                                         <th width="10">#</th>
-                                        <th>Name</th>
+                                        <th>Tenant Name</th>
+                                        <th>Landlord Name</th>
                                         <th>Enquiry Type</th>
                                         <th>Message</th>
                                         <th class="text-center">Type</th>
@@ -154,6 +156,32 @@
                     <h4>Enquiry Landlord Information</h4>
                     <div id="action_button">
                         
+                    </div>
+                </div>
+
+                <div class="top-bar-user top-header-payment-details">
+                    <div class="detail-image-top">
+                        <img src="{{asset('assets/images/users/user-placeholder.png')}}" alt="">
+                        <div class="px-2" style="padding-left: 2rem;">
+                            <p class="d-flex align-items-center text-white">
+                                <i class="fa fa-user" title="Username"></i>
+                                <span class="px-2" id="tenant_name"></span>
+                            </p>
+                            <p class="d-flex align-items-center text-white">
+                                <i class="fa fa-envelope" title="Tenant Email"></i>
+                                <span class="px-2" id="tenant_email"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="d-flex align-items-center text-white">
+                            <i class="fa fa-phone" title="Property Type"></i>
+                            <span class="px-2" id="tenant_phone"></span>
+                        </p>
+                        <p class="d-flex align-items-center text-white">
+                            <i class="fa fa-building"title="Property Type"></i>
+                            <span class="px-2" id="tenant_propType"></span>
+                        </p>
                     </div>
                 </div>
                 
@@ -485,6 +513,7 @@
                                         <div class="blk">
                                             <h5 class="color">Uploaded Documents</h5>
                                             <div class="form_row row" id="uploaded_docs_section"></div>
+                                        </div>
                                         <div class="btn_blk form_btn text-center">
                                             <button type="button" class="site_btn small sm changeStatusEnquiry" data-status="8" style="background: #ff0505;">Cancel</button>
                                             <button type="button" class="site_btn small sm changeStatusEnquiry" data-status="7" style="background: #0078b9;">Return</button>
@@ -509,6 +538,10 @@
                         <div class="_inner">
                             <div class="form_row row">
                                 
+                                <div class="blk" id="return_doc_mark_section" style="display:none;">
+                                    <h5 class="color">Mark document to return...</h5>
+                                    <div class="form_row row" id="uploaded_docs_section1"></div>
+                                </div>
                                 <div class="col-sm-12 col-12" style="text-align: center;">
                                     <h5 id="status_confirm_msg">Are you sure you want to confirm this application request...!!!</h5>
                                 </div>

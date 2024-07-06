@@ -84,7 +84,7 @@
                     <div class="col-sm-3">
                         <h6>Property Type**</h6>
                         <div class="form_blk">
-                            <select id="property_type" name="search_propType" class="text_box " data-container="body">
+                            <select id="search_propType" name="search_propType" class="text_box " data-container="body">
                                 <option value="">- Select a Preferred Property Type -</option>
                                 <option value="Apartment">Apartment</option>
                                 <option value="Condo">Condo</option>

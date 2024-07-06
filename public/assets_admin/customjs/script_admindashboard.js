@@ -43,8 +43,8 @@ function getDashboardPageDataResponse(response){
 
 function loadChart(x_value, y_value){
     
-    var x_value_days = Object.values(x_value);
-    var y_value_payment = Object.values(y_value);
+    var x_value_days = Object.values(x_value);//['1','2','3','4','5','6'];//
+    var y_value_payment = Object.values(y_value);//['1','11','111','11','1','11'];//
 
     // Initialize the echarts instance based on the prepared dom
     var myChart = echarts.init(document.getElementById('payments_chart'));

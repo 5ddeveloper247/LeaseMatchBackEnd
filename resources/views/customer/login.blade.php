@@ -16,7 +16,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     
 </head>
-
+<style>
+    @media (max-width: 500px) {
+        .side, .content {
+            height:16vh !important;
+            background-color: #051855 !important;
+        }
+    }
+</style>
 <body data-page="logon">
    
 	<main>

@@ -1081,7 +1081,8 @@ class AdminController extends Controller
         $data['user_detail'] = $user_detail;
         $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal','landlordPersonal.propertyDetail','landlordPersonal.rentalDetail'])->get();
         
-        $data['landlord_listing'] = LandlordPersonal::where('enquiry_status', '1')
+        $data['landlord_listing'] = LandlordPersonal::where('status', '1')
+                                                ->where('enquiry_status', '1')
                                                 ->with(['propertyDetail','rentalDetail'])
                                                 ->whereHas('propertyDetail', function ($query) use ($preferredPropertyType) {
                                                     $query->where('property_type', $preferredPropertyType);
@@ -1131,9 +1132,9 @@ class AdminController extends Controller
         if(is_null($landlord_username) && is_null($landlord_email) && is_null($property_type) && is_null($rental_type)){
             return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
         }
-
+        
         // make query for get listing
-        $query = LandlordPersonal::where('enquiry_status', '1')->with(['propertyDetail', 'rentalDetail']);
+        $query = LandlordPersonal::where('status', '1')->where('enquiry_status', '1')->with(['propertyDetail', 'rentalDetail']);
 
         if (!is_null($landlord_username)) {
             $query->where('full_name', 'like', '%' . $landlord_username . '%');
@@ -1154,7 +1155,7 @@ class AdminController extends Controller
                 $subQuery->where('rental_type', $rental_type);
             });
         }
-
+        
         // Execute the query and get the results
         $data['landlord_listing'] = $query->get();
 
@@ -1181,8 +1182,8 @@ class AdminController extends Controller
     
     public function get_enquiries_data(Request $request){
 
-        $data['enquiries'] = TenantEnquiryHeader::where('status', '!=', TenantEnquiryHeader::WAITING)->with(['enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail'])->get();
-        $data['waiting_enquiries'] = TenantEnquiryHeader::where('status', '=', TenantEnquiryHeader::WAITING)->with(['enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail'])->get();
+        $data['enquiries'] = TenantEnquiryHeader::where('status', '!=', TenantEnquiryHeader::WAITING)->with(['user','enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail'])->get();
+        $data['waiting_enquiries'] = TenantEnquiryHeader::where('status', '=', TenantEnquiryHeader::WAITING)->with(['user','enquiryRequests','landlord','landlord.propertyDetail','landlord.rentalDetail'])->get();
         
         return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
     }
@@ -1230,7 +1231,10 @@ class AdminController extends Controller
     public function get_specific_enquiry(Request $request)
     {
         $enquiry_id = $request->id;
-        $data['enquiry_detail'] = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests','landlord',
+        $data['enquiry_detail'] = TenantEnquiryHeader::where('id', $enquiry_id)->with(['user','user.personalInfo',
+                                                                                'user.residentialInfo',
+                                                                                'enquiryRequests',
+                                                                                'landlord',
                                                                                 'landlord.propertyDetail',
                                                                                 'landlord.rentalDetail',
                                                                                 'landlord.tenantDetail',
@@ -1392,6 +1396,7 @@ class AdminController extends Controller
         
         $enquiry_id = $request->enquiry_id;
         $status = $request->status;
+        $docIds = explode(',', $request->docIds);
 
         $enquiryDetail = TenantEnquiryHeader::where('id', $enquiry_id)->with(['enquiryRequests'])->first();
 
@@ -1416,10 +1421,24 @@ class AdminController extends Controller
             LandlordPersonal::where('id', $enquiryDetail->landlord_id)->update([
                 'enquiry_status' => '3', // Booked
             ]);
+            TenantEnquiryDocument::where('enquiry_id', $enquiry_id)->update([
+                'status' => '1', // Approved
+            ]);
+        }
+        if($status == '7'){ // Returned
+            TenantEnquiryDocument::where('enquiry_id', $enquiry_id)->whereIn('id', $docIds)->update([
+                'status' => '2', // Returned
+            ]);
+            TenantEnquiryDocument::where('enquiry_id', $enquiry_id)->whereNotIn('id', $docIds)->update([
+                'status' => '1', // Returned
+            ]);
         }
         if($status == '8'){ // Cancel
             LandlordPersonal::where('id', $enquiryDetail->landlord_id)->update([
                 'enquiry_status' => '1', // Available
+            ]);
+            TenantEnquiryDocument::where('enquiry_id', $enquiry_id)->update([
+                'status' => '3', // Cancelled
             ]);
         }
 

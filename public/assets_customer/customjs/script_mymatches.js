@@ -142,6 +142,8 @@ function uploadTenantEnquiryDocumentsResponse(response){
             timeOut: 3000
         });
 
+        location.reload();
+
         $("#tenant_enquiry_document_form")[0].reset();
     }else{
         if (response.status == 402) {

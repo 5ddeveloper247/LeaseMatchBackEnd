@@ -23,9 +23,9 @@ use Carbon\Carbon;
                 <div class="drop_cnt drop-down-content">
                     <div class="d-flex-notifications">
                         <h4 class="p-5 padding-md">Notifications</h4>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z" />
-                        </svg>
+                        </svg> -->
                     </div>
                     <hr>
                     <div class="Notifications-dropdown">

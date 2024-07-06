@@ -18,15 +18,13 @@
             <li>My Matches</li>
         </ul>
         <div class="main_row flex_row">
-            @if(!empty($properties))
+            @if(@count($properties) > 0)
                 @foreach($properties as $value)
                     
                     <?php 
                         $property = $value->landlordPersonal;
                         $enquiry_status = isset($value->tenantEnquiryHeader->status) ? $value->tenantEnquiryHeader->status : '';
                         $image = isset($property->propertyImages[0]->path) ? $property->propertyImages[0]->path : asset('assets/images/property_default.jpg'); 
-
-                        
                     ?>
                     
                     <div class="col">

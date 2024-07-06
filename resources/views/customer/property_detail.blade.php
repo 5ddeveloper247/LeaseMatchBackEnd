@@ -186,14 +186,24 @@
                                     <input type="hidden" id="enquiry_id" name="enquiry_id" value="{{@$enquiry_detail->id}}">
                                     <div class="form_row row">
                                     @foreach(@$upload_documents as $req_doc)
-                                    <input type="hidden" name="req_doc_ids[]" value={{$req_doc->id}}>
-                                        <div class="col-xs-12">
-                                            <h6>Upload {{$req_doc->required_document->name}}<sup>*</sup></h6>
-                                            <div class="form_blk">
-                                                <input type="file" name="upload_document[]" data-name="{{$req_doc->required_document->name}}">
+                                        @if($req_doc->status == 1)
+                                            <!-- <input type="hidden" name="req_doc_ids[]" value={{$req_doc->id}}> -->
+                                            <div class="col-xs-12">
+                                                <h6 style="color:green;"><i class="fa fa-check"></i>Upload {{$req_doc->required_document->name}}</h6>
+                                                <!-- <div class="form_blk">
+                                                    <input type="file" name="upload_document[]" data-name="{{$req_doc->required_document->name}}">
+                                                </div> -->
                                             </div>
-                                        </div>
-                                        @endforeach
+                                        @else
+                                            <input type="hidden" name="req_doc_ids[]" value={{$req_doc->id}}>
+                                            <div class="col-xs-12">
+                                                <h6>Upload {{$req_doc->required_document->name}}<sup>*</sup></h6>
+                                                <div class="form_blk">
+                                                    <input type="file" name="upload_document[]" data-name="{{$req_doc->required_document->name}}">
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                     </div>
                                     
                                     

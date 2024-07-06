@@ -15,7 +15,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 </head>
-
+<style>
+    @media (max-width: 500px) {
+        .side, .content {
+            height:16vh !important;
+            background-color: #051855 !important;
+        }
+    }
+</style>
 <body data-page="logon">
    
 	<main>
@@ -78,9 +85,9 @@
                                     <div class="btn_blk form_btn">
                                         <button type="submit" class="site_btn block">Login</button>
                                     </div>
-                                    <div class="forgot text-center">
+                                    <!-- <div class="forgot text-center">
                                         <a href="forgot-password.php" id="pass">Forgot Password?</a>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
                         </div>
