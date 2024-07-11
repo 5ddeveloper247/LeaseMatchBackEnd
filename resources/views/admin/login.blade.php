@@ -29,12 +29,12 @@
                     <p>A platform with efficient integration of many features and so much more</p>
                 </div>
             </div>
-            <div class="contain">
+            <div class="contain mx-5 px-5 mx-lg-0 px-lg-0">
                 <div class="flex_row">
                     <div class="col">
                         <div class="in_col">
 						
-                            <form action="{{route('admin.loginSubmit')}}" method="POST">
+                            <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}" method="POST">
 								@csrf
                                 <div class="log_blk">
                                     <div class="txt text-center">

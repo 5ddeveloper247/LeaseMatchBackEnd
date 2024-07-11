@@ -9,6 +9,10 @@
     #users_table{
         font-size:x-small;
     }
+
+    .btn_blk {
+        margin-top: 3.4rem !important;
+    }
 </style>
 
 <section id="listing">

@@ -1,7 +1,7 @@
  <!-- footer -->
  <footer>
     <div class="contain-fluid">
-        <div class="top_blk">
+        <!-- <div class="top_blk">
             <div class="logo">
                 <a href="#" style="background-image: url('{{asset('assets/images/logo-light.png')}}');"></a>
             </div>
@@ -11,8 +11,8 @@
                 <li><a href="https://instagram.com/" target="_blank"><img src="{{asset('assets/images/social-instagram.svg')}}"></a></li>
                 <li><a href="https://youtube.com/" target="_blank"><img src="{{asset('assets/images/social-youtube.svg')}}"></a></li>
             </ul>
-        </div>
-        <div class="copyright relative">
+        </div> -->
+        <div class="copyright relative d-flex align-items-center justify-content-center">
             <div class="inner">
                 <!-- <ul class="smLst flex">
                     <li><a href="#">Privacy Policy</a></li>

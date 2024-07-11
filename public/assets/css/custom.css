@@ -225,6 +225,7 @@ hr {
 .drop-down-content {
     min-width: 30rem !important;
     position: absolute;
+    top: 6rem !important;
     left: -20rem !important;
     padding: 8px 0px;
 }
@@ -373,8 +374,15 @@ body a:hover {
     color: #051855;
 }
 
+@media (max-width: 990px) {
+    #logon .side {
+        background: #051855  !important; 
+        padding-bottom: 1em;
+    }
+}
+
 #logon .side::before {
-    background: #051855;
+    background: #051855 !important;
 }
 
 .site_btn:hover {
@@ -441,3 +449,16 @@ background: #c1c1c1;
 background: #c1c1c1; 
 }
 /* HEADER FIX TABLE STYLE END */
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

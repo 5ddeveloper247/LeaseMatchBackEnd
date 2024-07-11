@@ -17,6 +17,7 @@
 
 .card-user .card-image img {
     height: 110px !important;
+    object-fit: cover;
 }
 
 .card-user .card-body {
@@ -93,7 +94,7 @@
                     <li>My Account</li>
                 </ul>
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-sm-8">
                         <div class="edit-profile">
                             <div class="card">
                                 <div class="card-header">
@@ -183,7 +184,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-sm-4">
                         <div class="card card-user">
                             <div class="card-image">
                                 <img src="{{asset('assets/images/users/user-background-placeholder.png')}}"
