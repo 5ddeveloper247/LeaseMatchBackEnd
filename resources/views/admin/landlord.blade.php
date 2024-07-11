@@ -9,6 +9,10 @@
     #users_table{
         font-size:x-small;
     }
+
+    input {
+        width: 100% !important;
+    }
 </style>
 
 <section id="listing">

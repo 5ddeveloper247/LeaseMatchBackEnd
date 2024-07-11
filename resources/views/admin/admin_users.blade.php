@@ -169,10 +169,10 @@
 
 <!-- modal to add user start  -->
 <div class="popup lg" id="add-user-popup">
-    <div class="table_dv">
+    <div class="table_dv" style="overflow-y: hidden;">
         <div class="table_cell">
             <div class="contain">
-                <div class="_inner editor_blk">
+                <div class="_inner editor_blk" style="overflow-y: auto; scrollbar-width: none; height: 90vh">
                     <button type="button" class="x_btn" id="close_add_modal_btn"></button>
                     <div id="Inspection" class="tab-pane fade active in">
                        

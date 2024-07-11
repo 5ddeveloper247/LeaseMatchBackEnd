@@ -11,8 +11,8 @@
                 <li><a href="https://www.instagram.com/" target="_blank"><img src="{{asset('assets/images/social-instagram.svg')}}"></a></li>
                 <li><a href="https://www.youtube.com/" target="_blank"><img src="{{asset('assets/images/social-youtube.svg')}}"></a></li>
             </ul>
-        </div> -->
-        <div class="copyright relative" style="margin-top:0px;">
+        </div> --> -->
+        <div class="copyright relative d-flex align-items-center justify-content-center" style="margin-top:0px;">
             <div class="inner">
             <div class="logo" style="margin-bottom: 0px;">
                 <a href="{{route('admin.dashboard')}}" style="background-image: url('{{asset('assets/images/logo-light.png')}}');"></a>
