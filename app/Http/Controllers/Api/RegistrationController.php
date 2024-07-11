@@ -65,7 +65,7 @@ class RegistrationController extends Controller
             'current_address' => 'required|max:255',
             'moving_reason' => 'required|max:255',
             'prev_landlord_contact' => 'required|max:100',
-            'lease_violation' => 'required|max:255',
+            'lease_violation' => 'max:255',
 
             // Household Info
             'household_size' => 'required|max:100',
@@ -355,7 +355,7 @@ class RegistrationController extends Controller
                 'current_address' => 'required|max:255',
                 'moving_reason' => 'required|max:255',
                 'prev_landlord_contact' => 'required|max:100',
-                'lease_violation' => 'required|max:255',
+                'lease_violation' => 'max:255',
             ]);
         }
 

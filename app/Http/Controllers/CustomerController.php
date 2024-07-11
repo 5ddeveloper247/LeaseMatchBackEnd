@@ -499,12 +499,12 @@ class CustomerController extends Controller
             $record = TenantEnquiryDocument::find($id);
             $path = '/uploads/tenant_enquiry_documents/'.$id;
             if($record->path != null){
-                deleteImage(str_replace(url('/'), '', $record->path));
+                deleteImage(str_replace(url('/public'), '', $record->path));
             }
             $uploadedFile = $request->file('upload_document')[$i];
             $savedFile = saveSingleImage($uploadedFile, $path);            
             $record->doc_name = $uploadedFile->getClientOriginalName();
-            $record->path = url('/') . $savedFile;
+            $record->path = url('/public') . $savedFile;
             $record->save();
         }
 
