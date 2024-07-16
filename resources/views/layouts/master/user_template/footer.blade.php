@@ -12,7 +12,7 @@
                 <li><a href="https://www.youtube.com/" target="_blank"><img src="{{asset('assets/images/social-youtube.svg')}}"></a></li>
             </ul>
         </div> -->
-        <div class="copyright relative d-flex align-items-center justify-content-center">
+        <div class="copyright relative align-items-center justify-content-center">
             <div class="inner">
             <div class="logo" style="margin-bottom: 0px;">
                 <a href="{{route('customer.dashboard')}}" style="background-image: url('{{asset('assets/images/logo-light.png')}}');"></a>

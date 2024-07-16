@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <title>Login — Your Next Auto</title>
+    <title>Login - Lease Match</title>
+    <link rel="icon" href="{{asset('assets/images/favicon.png')}}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
