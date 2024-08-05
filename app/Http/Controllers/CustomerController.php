@@ -392,7 +392,6 @@ class CustomerController extends Controller
         }
         $user->save();
         return response()->json(['status' => 200, 'message' => 'Profile Updated Successfully']);
-
     }
 
     public function process_app_request(Request $request){

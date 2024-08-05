@@ -174,8 +174,6 @@ function changestatus(id){
     let data = new FormData();
     data.append('id', id);
     SendAjaxRequestToServer(type, url, data, '', changeStatusResponse, '', '');
-
-
 }
 
 
