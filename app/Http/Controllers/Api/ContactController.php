@@ -16,19 +16,24 @@ use App\Models\Api\ContactUs;
 
 class ContactController extends Controller
 {
-    
+
     public function storeContactUs(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            //Contact Us
+            // Contact Us
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'regex:/^[\w\.-]+@[\w\.-]+\.[a-z]{2,}$/i' // Regex to ensure @ and valid domain extensions
+            ],
             'subject' => 'required|max:255',
             'phone_number' => 'required|numeric|digits_between:7,18',
             'message' => 'required',
         ]);
-        
+
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
@@ -46,7 +51,7 @@ class ContactController extends Controller
             $ContactUs->message = $request->input('message');
             $ContactUs->date = date('Y-m-d');
             $ContactUs->save();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Your message send, we will respond you soon, Thanks.'
@@ -61,6 +66,4 @@ class ContactController extends Controller
             ], 500);
         }
     }
-
-    
 }

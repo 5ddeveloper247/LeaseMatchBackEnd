@@ -18,20 +18,25 @@
 </head>
 <style>
     @media (max-width: 500px) {
-        .side, .content {
-            height:16vh !important;
+
+        .side,
+        .content {
+            height: 16vh !important;
             background-color: #051855 !important;
         }
     }
 </style>
+
 <body data-page="logon">
-   
-	<main>
-	    <section id="logon">
-            <div class="side" style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
+
+    <main>
+        <section id="logon">
+            <div class="side"
+                style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
                 <div class="content text-center">
                     <div class="logo">
-                        <a href="index.php" style="background-image: url('{{ asset('assets/images/logo-light.png') }}'),  url('{{ asset('assets/images/logo-light.png') }}');"></a>
+                        <a href="index.php"
+                            style="background-image: url('{{ asset('assets/images/logo-light.png') }}'),  url('{{ asset('assets/images/logo-light.png') }}');"></a>
                     </div>
                     <h1>Please Login to continue</h1>
                     <p>A platform with efficient integration of many features and so much more</p>
@@ -41,36 +46,40 @@
                 <div class="flex_row">
                     <div class="col">
                         <div class="in_col">
-						
-                            <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}" method="POST">
-								@csrf
+
+                            <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}"
+                                method="POST">
+                                @csrf
                                 <div class="log_blk">
                                     <div class="txt text-center">
                                         <h2>Sign In</h2>
                                         <!-- <p>Don’t have an account? <a href="register.php">Register</a></p> -->
                                     </div>
-									@if(session('error'))
-										<div class="alert alert-danger">
-											{{session('error')}}
-										</div>
-									@elseif($errors->any())
-										<div class="alert alert-danger">
-											@foreach ($errors->all() as $error)
-												<p class="mb-0">{{ $error }}</p>
-											@endforeach
-										</div>
-									@endif
+                                    @if(session('error'))
+                                    <div class="alert alert-danger">
+                                        {{session('error')}}
+                                    </div>
+                                    @elseif($errors->any())
+                                    <div class="alert alert-danger">
+                                        @foreach ($errors->all() as $error)
+                                        <p class="mb-0">{{ $error }}</p>
+                                        @endforeach
+                                    </div>
+                                    @endif
                                     <div class="form_row row">
                                         <div class="col-xs-12">
                                             <h6>Email Address<sup>*</sup></h6>
                                             <div class="form_blk">
-                                                <input type="email" name="email" id="email" class="text_box" placeholder="eg: sample@gmail.com">
+                                                <input type="email" name="email" id="email" class="text_box"
+                                                    placeholder="eg: sample@gmail.com">
                                             </div>
                                         </div>
                                         <div class="col-xs-12">
                                             <h6>Password<sup>*</sup></h6>
                                             <div class="form_blk pass_blk">
-                                                <input type="password" name="password" id="password" class="text_box password-input" placeholder="eg: PassLogin%7" autocomplete="new-password">
+                                                <input type="password" name="password" id="password"
+                                                    class="text_box password-input" placeholder="eg: PassLogin%7"
+                                                    autocomplete="new-password">
                                                 <i class="icon-eye toggle-password" id="eye"></i>
                                             </div>
                                         </div>
@@ -83,8 +92,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="btn_blk form_btn">
-                                        <button type="submit" class="site_btn block">Login</button>
+                                    <div class="row ">
+                                        <div class="btn_blk form_btn">
+                                            <button type="submit" class="site_btn block">Login</button>
+                                        </div>
+                                        <p class=" text-center mt-5">OR</p>
+                                        <div class="btn_blk form_btn">
+                                            <a href="http://lmf.gregorygadson.io/" class="site_btn block">Go To
+                                                Website</a>
+                                        </div>
                                     </div>
                                     <!-- <div class="forgot text-center">
                                         <a href="forgot-password.php" id="pass">Forgot Password?</a>

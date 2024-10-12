@@ -30,7 +30,7 @@ use App\Rules\PreviousDate;
 
 class RegistrationController extends Controller
 {
-    
+
     public function storeRegistration(Request $request)
     {
 
@@ -51,7 +51,7 @@ class RegistrationController extends Controller
             // Financial Information
             'annual_income' => 'required|max:100',
             'employment_status' => 'required|max:100',
-            'employer_name' => 'required|max:100',
+            'employer_name' => 'nullable|max:100',
             'income_type' => 'required|max:100',
             'rental_budget' => 'required|numeric|digits_between:1,10',
 
@@ -63,15 +63,15 @@ class RegistrationController extends Controller
 
             // Current/Previous Living Situation
             'current_address' => 'required|max:255',
-            'moving_reason' => 'required|max:255',
-            'prev_landlord_contact' => 'required|max:100',
-            'lease_violation' => 'max:255',
+            'moving_reason' => 'nullable|max:255',
+            'prev_landlord_contact' => 'nullable|max:100',
+            'lease_violation' => 'nullable|max:255',
 
             // Household Info
             'household_size' => 'required|max:100',
             'number_of_adults' => 'required|numeric|digits_between:1,10',
             'number_of_child' => 'required|numeric|digits_between:1,10',
-            
+
             // Pet Information
             'has_pets' => 'required|max:10',
             'pet_type' => 'required_if:has_pets,Yes|max:100',
@@ -94,12 +94,12 @@ class RegistrationController extends Controller
             'legal_right' => 'required|max:100',
 
             // References
-            'reference_name' => 'string|max:100',
-            'reference_relationship' => 'string|max:100',
-            'contact_information' => 'string|max:255',
+            'reference_name' => 'nullable|string|max:100',
+            'reference_relationship' => 'nullable|string|max:100',
+            'contact_information' => 'nullable|string|max:255',
 
             // Additional Notes
-            'general_note' => 'required|max:255',
+            'general_note' => 'nullable|max:255',
             'work_with_broker' => 'required|max:10',
 
             // 'documents' => 'required',
@@ -115,7 +115,7 @@ class RegistrationController extends Controller
         ], [
             'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         ]);
-        
+
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
@@ -153,7 +153,7 @@ class RegistrationController extends Controller
             $UserResidential->min_bedrooms_needed = $request->input('min_bedrooms_needed');
             $UserResidential->min_bathrooms_needed = $request->input('min_bathrooms_needed');
             $UserResidential->save();
-            
+
             // Financial Information
             $UserFinancialInfo = new FinancialInfo();
             $UserFinancialInfo->user_id = $User->id;
@@ -206,7 +206,7 @@ class RegistrationController extends Controller
             $UserAccomodation->disability_type = $request->input('disability_type');
             $UserAccomodation->special_accomodation = $request->input('special_accomodation');
             $UserAccomodation->save();
-            
+
             // Additional Requirements
             $UserAdditionalInfo = new AdditionalInfo();
             $UserAdditionalInfo->user_id = $User->id;
@@ -245,14 +245,14 @@ class RegistrationController extends Controller
                 if (!File::isDirectory(public_path($path))) {
                     File::makeDirectory(public_path($path), 0777, true);
                 }
-                
+
                 $uploadedFiles = $request->file($req_file);
 
                 foreach ($uploadedFiles as $file) {
                     $file_extension = $file->getClientOriginalExtension();
                     $date_append = Str::random(32);
                     $file->move(public_path($path), $date_append . '.' . $file_extension);
-    
+
                     $savedFilePaths = '/public' . $path . '/' . $date_append . '.' . $file_extension;
 
                     $UserDocuments = new UserDocuments();
@@ -262,7 +262,7 @@ class RegistrationController extends Controller
                     $UserDocuments->save();
                 }
             }
-            
+
             $Notification = new Notifications();
             $Notification->module_code =  'TENANT REGISTRATION';
             $Notification->from_user_id =  $User->id;
@@ -272,7 +272,7 @@ class RegistrationController extends Controller
             $Notification->read_flag =  '0';
             $Notification->created_by =  $User->id;
             $Notification->save();
-            
+
             $mailData['name'] = $User->first_name;
             $mailData['email'] = $User->email;
             $mailData['password'] = $password;
@@ -307,7 +307,7 @@ class RegistrationController extends Controller
                 'phone_number' => 'required|numeric|digits_between:7,18',
             ]);
         }
-       
+
         if($request->input('step') == '2'){
             $validator = Validator::make($request->all(), [
                 // Residential Preference
@@ -323,7 +323,7 @@ class RegistrationController extends Controller
                 // Financial Information
                 'annual_income' => 'required|string|max:100',
                 'employment_status' => 'required|string|max:100',
-                'employer_name' => 'required|string|max:100',
+                'employer_name' => 'nullable|string|max:100',
                 'income_type' => 'required|string|max:100',
                 'rental_budget' => 'required|numeric|digits_between:1,10',
             ]);
@@ -353,9 +353,9 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 // Current/Previous Living Situation
                 'current_address' => 'required|max:255',
-                'moving_reason' => 'required|max:255',
-                'prev_landlord_contact' => 'required|max:100',
-                'lease_violation' => 'max:255',
+                'moving_reason' => 'nullable|max:255',
+                'prev_landlord_contact' => 'nullable|max:100',
+                'lease_violation' => 'nullable|max:255',
             ]);
         }
 
@@ -367,7 +367,7 @@ class RegistrationController extends Controller
                 'number_of_child' => 'required|numeric|digits_between:1,10',
             ]);
         }
-        
+
         if($request->input('step') == '7'){
             $validator = Validator::make($request->all(), [
                 // Pet Information
@@ -377,7 +377,7 @@ class RegistrationController extends Controller
                 'pet_size' => 'required_if:has_pets,Yes|max:100',
             ]);
         }
-        
+
         if($request->input('step') == '8'){
             $validator = Validator::make($request->all(), [
                 // Accommodation Requirements
@@ -386,7 +386,7 @@ class RegistrationController extends Controller
                 'special_accomodation' => 'required_if:disability,Yes|max:255',
             ]);
         }
-        
+
         if($request->input('step') == '9'){
             $validator = Validator::make($request->all(), [
                 // Additional Requirements
@@ -407,19 +407,19 @@ class RegistrationController extends Controller
         if($request->input('step') == '11'){
             $validator = Validator::make($request->all(), [
                 // References
-                'reference_name' => 'string|max:100',
-                'reference_relationship' => 'string|max:100',
-                'contact_information' => 'string|max:255',
+                'reference_name' => 'nullable|string|max:100',
+                'reference_relationship' => 'nullable|string|max:100',
+                'contact_information' => 'nullable|string|max:255',
             ]);
         }
 
         if($request->input('step') == '12'){
             $validator = Validator::make($request->all(), [
                 // Additional Notes
-                'general_note' => 'required|string|max:255',
+                'general_note' => 'nullable|string|max:255',
                 'work_with_broker' => 'required|string|max:10',
                 'documents' => 'required',
-                'documents.*' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
+                'documents.*' => 'image|mimes:jpeg,png,jpg,gif|max:10024',
             ]);
         }
 
@@ -438,7 +438,7 @@ class RegistrationController extends Controller
                 ],
             ], [
                 'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-            ]); 
+            ]);
         }
 
         // Check if validation fails
@@ -450,7 +450,7 @@ class RegistrationController extends Controller
         }
 
         try {
-   
+
             return response()->json([
                 'success' => true,
                 'message' => 'validated successfully'

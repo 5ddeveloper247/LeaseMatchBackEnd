@@ -21,7 +21,7 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li>Tenant</li>
         </ul>
-        
+
         <div class="card_row flex_row" >
             <div class="col">
                 <div class="card_blk">
@@ -43,22 +43,22 @@
                     <strong>Inactive</strong>
                 </div>
             </div>
-            
+
             {{--<div class="col">
                 <div class="card_blk">
-                    
+
                 </div>
             </div>
             <div class="col">
                <div class="card_blk" id="">
-                    
+
                 </div>
             </div>--}}
         </div>
         <div class="top_head mt-5">
             <h4 class="filter-toggle">
                 <i class="fa fa-arrow-circle-right"></i>&nbsp;
-                Advance Search Filter 
+                Advance Search Filter
             </h4>
         </div>
         <div class="_inner filter-box" style="display:none;">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <h6>Minimum Bedrooms Needed**</h6>
+                        <h6>Minimum Bedrooms**</h6>
                         <div class="form_blk">
                             <select id="property_type" name="search_minBedrooms" class="text_box " data-container="body">
                                 <option value="">- Select a Minimum Bedrooms Needed -</option>
@@ -139,7 +139,7 @@
                 <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
             </div>
         </div>
-        
+
         <div class="blk">
             <div class="tbl_blk tableFixHead">
                 <table id="users_table" class="table table-responsive">
@@ -153,7 +153,7 @@
                             <th width="40" >Created Date</th>
                             <th width="40" data-center>Status</th>
                             <th width="40" data-center>Action</th>
-                           
+
                         </tr>
                     </thead>
                     <tbody id="tenantListing_html">
@@ -201,7 +201,7 @@
                 <div class="top_head">
                     <h4>Tenant Information</h4>
                 </div>
-                
+
                 <div class="blk">
                     <form>
                         <ul class="head_lst">
@@ -377,7 +377,7 @@
                                         <input type="text" id="rental_budget" class="text_box" placeholder="">
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="btn_blk form_btn text-right">
                                 <button type="button" class="site_btn long simple border prev_btn">Back</button>
@@ -613,7 +613,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="top_head" style="margin-top:15px;">
                                 <h4><b>References</b></h4>
@@ -637,9 +637,9 @@
                                         <input type="text" id="contact_information" class="text_box" placeholder="">
                                     </div>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="btn_blk form_btn text-right">
                                 <button type="button" class="site_btn long simple border prev_btn">Back</button>
                                 <button type="button" class="site_btn long next_btn">Next</button>
@@ -666,7 +666,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="" style="margin-top: 20px;">
                                 <h4 class="subheading">Uploaded Documents</h4>
@@ -674,7 +674,7 @@
                                     <div class="col-xs-12">
                                         <div class="upload_lst_blk text_box">
                                             <ul class="img_list flex" id="tenantDocuments_html">
-                                                
+
                                             </ul>
                                         </div>
                                     </div>
@@ -695,7 +695,7 @@
 @endsection
 
 @push('script')
-    
+
 <script src="{{ asset('assets_admin/customjs/script_admintenant.js') }}"></script>
-    
+
 @endpush
