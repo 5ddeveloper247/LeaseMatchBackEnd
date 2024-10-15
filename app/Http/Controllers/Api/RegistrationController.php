@@ -30,7 +30,7 @@ use App\Rules\PreviousDate;
 
 class RegistrationController extends Controller
 {
-    
+
     public function storeRegistration(Request $request)
     {
 
@@ -71,11 +71,11 @@ class RegistrationController extends Controller
             'household_size' => 'required|max:100',
             'number_of_adults' => 'required|numeric|digits_between:1,10',
             'number_of_child' => 'required|numeric|digits_between:1,10',
-            
+
             // Pet Information
             'has_pets' => 'required|max:10',
             'pet_type' => 'required_if:has_pets,Yes|max:100',
-            'number_of_pets' => 'required_if:has_pets,Yes',//|digits_between:1,10
+            'number_of_pets' => 'required_if:has_pets,Yes', //|digits_between:1,10
             'pet_size' => 'required_if:has_pets,Yes|max:100',
 
             // Accommodation Requirements
@@ -115,7 +115,7 @@ class RegistrationController extends Controller
         ], [
             'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         ]);
-        
+
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
@@ -153,7 +153,7 @@ class RegistrationController extends Controller
             $UserResidential->min_bedrooms_needed = $request->input('min_bedrooms_needed');
             $UserResidential->min_bathrooms_needed = $request->input('min_bathrooms_needed');
             $UserResidential->save();
-            
+
             // Financial Information
             $UserFinancialInfo = new FinancialInfo();
             $UserFinancialInfo->user_id = $User->id;
@@ -206,7 +206,7 @@ class RegistrationController extends Controller
             $UserAccomodation->disability_type = $request->input('disability_type');
             $UserAccomodation->special_accomodation = $request->input('special_accomodation');
             $UserAccomodation->save();
-            
+
             // Additional Requirements
             $UserAdditionalInfo = new AdditionalInfo();
             $UserAdditionalInfo->user_id = $User->id;
@@ -245,14 +245,14 @@ class RegistrationController extends Controller
                 if (!File::isDirectory(public_path($path))) {
                     File::makeDirectory(public_path($path), 0777, true);
                 }
-                
+
                 $uploadedFiles = $request->file($req_file);
 
                 foreach ($uploadedFiles as $file) {
                     $file_extension = $file->getClientOriginalExtension();
                     $date_append = Str::random(32);
                     $file->move(public_path($path), $date_append . '.' . $file_extension);
-    
+
                     $savedFilePaths = '/public' . $path . '/' . $date_append . '.' . $file_extension;
 
                     $UserDocuments = new UserDocuments();
@@ -262,22 +262,22 @@ class RegistrationController extends Controller
                     $UserDocuments->save();
                 }
             }
-            
+
             $Notification = new Notifications();
             $Notification->module_code =  'TENANT REGISTRATION';
             $Notification->from_user_id =  $User->id;
-            $Notification->to_user_id =  '1';// for admin notification
+            $Notification->to_user_id =  '1'; // for admin notification
             $Notification->subject =  "Tenant Registration";
             $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
             $Notification->read_flag =  '0';
             $Notification->created_by =  $User->id;
             $Notification->save();
-            
+
             $mailData['name'] = $User->first_name;
             $mailData['email'] = $User->email;
             $mailData['password'] = $password;
             $body = view('emails.tenant_created', $mailData);
-            $userEmailsSend[] = $User->email;//'hamza@5dsolutions.ae';//
+            $userEmailsSend[] = $User->email; //'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
             sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
 
@@ -288,7 +288,6 @@ class RegistrationController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             Log::error('Error storing user info: ' . $e->getMessage());
-
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
@@ -296,19 +295,20 @@ class RegistrationController extends Controller
         }
     }
 
+
     public function validateForm(Request $request)
     {
-        if($request->input('step') == '1'){
+        if ($request->input('step') == '1') {
             $validator = Validator::make($request->all(), [
                 //personal Information
                 'name' => 'required|string|max:100',
                 'date_of_birth' => 'required|date_format:Y-m-d|before:today',
-                'email' => 'required|email',
+                'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'phone_number' => 'required|numeric|digits_between:7,18',
             ]);
         }
-       
-        if($request->input('step') == '2'){
+
+        if ($request->input('step') == '2') {
             $validator = Validator::make($request->all(), [
                 // Residential Preference
                 'preferred_location' => 'required|string|max:100',
@@ -318,7 +318,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '3'){
+        if ($request->input('step') == '3') {
             $validator = Validator::make($request->all(), [
                 // Financial Information
                 'annual_income' => 'required|string|max:100',
@@ -329,8 +329,8 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '4'){
-            if($request->rental_voucher == 'Yes'){
+        if ($request->input('step') == '4') {
+            if ($request->rental_voucher == 'Yes') {
                 $validator = Validator::make($request->all(), [
                     // Rental Assistance
                     'rental_voucher' => 'required|max:10',
@@ -338,7 +338,7 @@ class RegistrationController extends Controller
                     'certification_detail' => 'required|max:255',
                     'certification_expiry' => 'required|date_format:Y-m-d|after:today',
                 ]);
-            }else{
+            } else {
                 $validator = Validator::make($request->all(), [
                     // Rental Assistance
                     'rental_voucher' => 'required|max:10',
@@ -349,7 +349,7 @@ class RegistrationController extends Controller
             }
         }
 
-        if($request->input('step') == '5'){
+        if ($request->input('step') == '5') {
             $validator = Validator::make($request->all(), [
                 // Current/Previous Living Situation
                 'current_address' => 'required|max:255',
@@ -359,7 +359,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '6'){
+        if ($request->input('step') == '6') {
             $validator = Validator::make($request->all(), [
                 // Household Info
                 'household_size' => 'required|max:100',
@@ -367,18 +367,18 @@ class RegistrationController extends Controller
                 'number_of_child' => 'required|numeric|digits_between:1,10',
             ]);
         }
-        
-        if($request->input('step') == '7'){
+
+        if ($request->input('step') == '7') {
             $validator = Validator::make($request->all(), [
                 // Pet Information
                 'has_pets' => 'required|max:10',
                 'pet_type' => 'required_if:has_pets,Yes|max:100',
-                'number_of_pets' => 'required_if:has_pets,Yes',//|digits_between:1,10
+                'number_of_pets' => 'required_if:has_pets,Yes', //|digits_between:1,10
                 'pet_size' => 'required_if:has_pets,Yes|max:100',
             ]);
         }
-        
-        if($request->input('step') == '8'){
+
+        if ($request->input('step') == '8') {
             $validator = Validator::make($request->all(), [
                 // Accommodation Requirements
                 'disability' => 'required|max:10',
@@ -386,8 +386,8 @@ class RegistrationController extends Controller
                 'special_accomodation' => 'required_if:disability,Yes|max:255',
             ]);
         }
-        
-        if($request->input('step') == '9'){
+
+        if ($request->input('step') == '9') {
             $validator = Validator::make($request->all(), [
                 // Additional Requirements
                 'max_rent_to_pay' => 'required|numeric|digits_between:1,10',
@@ -396,7 +396,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '10'){
+        if ($request->input('step') == '10') {
             $validator = Validator::make($request->all(), [
                 // Legal & Compliance
                 'criminal_record' => 'required|string|max:10',
@@ -404,7 +404,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '11'){
+        if ($request->input('step') == '11') {
             $validator = Validator::make($request->all(), [
                 // References
                 'reference_name' => 'string|max:100',
@@ -413,7 +413,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '12'){
+        if ($request->input('step') == '12') {
             $validator = Validator::make($request->all(), [
                 // Additional Notes
                 'general_note' => 'required|string|max:255',
@@ -423,11 +423,11 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '13'){
+        if ($request->input('step') == '13') {
             $validator = Validator::make($request->all(), [
                 // User Information
                 'user_name' => 'required|string|max:100',
-                'user_email' => 'required|email|unique:users,email',
+                'user_email' => 'required|email|unique:users,email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'password_confirmation' => 'required',
                 'password' => [
                     'required',
@@ -438,7 +438,7 @@ class RegistrationController extends Controller
                 ],
             ], [
                 'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-            ]); 
+            ]);
         }
 
         // Check if validation fails
@@ -450,7 +450,7 @@ class RegistrationController extends Controller
         }
 
         try {
-   
+
             return response()->json([
                 'success' => true,
                 'message' => 'validated successfully'

@@ -25,7 +25,7 @@
     }
 </style>
 <body data-page="logon">
-   
+
 	<main>
 	    <section id="logon">
             <div class="side" style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
@@ -41,7 +41,7 @@
                 <div class="flex_row">
                     <div class="col">
                         <div class="in_col">
-						
+
                             <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}" method="POST">
 								@csrf
                                 <div class="log_blk">
@@ -83,8 +83,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="btn_blk form_btn">
-                                        <button type="submit" class="site_btn block">Login</button>
+                                    <div class="row">
+                                        <div class="btn_blk form_btn">
+                                            <button type="submit" class="site_btn block">Login</button>
+                                        </div>
+                                        <div class="btn_blk form_btn">
+                                            <button type="button" class="site_btn block"><a href="http://lmf.gregorygadson.io/" style="text-decoration: none">Go To Website</a></button>
+                                        </div>
                                     </div>
                                     <!-- <div class="forgot text-center">
                                         <a href="forgot-password.php" id="pass">Forgot Password?</a>

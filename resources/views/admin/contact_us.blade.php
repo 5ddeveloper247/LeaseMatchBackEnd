@@ -6,10 +6,11 @@
 
 @section('content')
 <style>
-    #users_table{
-        font-size:x-small;
+    #users_table {
+        font-size: x-small;
     }
-    .bg-success{
+
+    .bg-success {
         background-color: #008000 !important;
     }
 </style>
@@ -22,12 +23,12 @@
         </ul>
         <div class="top_head mt-5">
             <h4>Contact Us</h4>
-            <div class="form_blk">
+            <div class="form_blk searchInListing">
                 <input type="text" id="searchInListing" class="text_box" placeholder="Search here" maxlength="50">
                 <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
             </div>
         </div>
-        
+
         <div class="blk listing_section">
             <div class="tbl_blk">
                 <table id="users_table" class="table table-responsive">
@@ -55,7 +56,7 @@
                     <div class="contain">
                         <div class="_inner">
                             <button type="button" class="x_btn" onclick="backToList();"></button>
-                            <h4 >Reply Contact</h4>
+                            <h4>Reply Contact</h4>
                             <form id="addreply_form">
                                 <div class="form_row row">
                                     <input type="hidden" id="contact_id" name="contact_id" value="">
@@ -81,19 +82,22 @@
                                         <h6><b>Reply Message</b><sup>**</sup>
                                         </h6>
                                         <div class="form_blk">
-                                            <textarea name="reply_message" id="reply_message" class="form-control text_box" placeholder="Type reply here..."></textarea>
+                                            <textarea name="reply_message" id="reply_message"
+                                                class="form-control text_box"
+                                                placeholder="Type reply here..."></textarea>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-sm-2">
                                         <div class="btn_blk">
-                                            <button type="button" class="site_btn md auto" id="contactReply_submit">Save</button>
+                                            <button type="button" class="site_btn md auto"
+                                                id="contactReply_submit">Save</button>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -101,7 +105,7 @@
         </div>
     </div>
 
-    
+
 </section>
 
 
@@ -109,7 +113,7 @@
 @endsection
 
 @push('script')
-    
+
 <script src="{{ asset('assets_admin/customjs/script_admincontactus.js') }}"></script>
-    
+
 @endpush
