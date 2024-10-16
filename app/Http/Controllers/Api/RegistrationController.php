@@ -51,7 +51,7 @@ class RegistrationController extends Controller
             // Financial Information
             'annual_income' => 'required|max:100',
             'employment_status' => 'required|max:100',
-            'employer_name' => 'required|max:100',
+            'employer_name' => 'nullable|max:100',
             'income_type' => 'required|max:100',
             'rental_budget' => 'required|numeric|digits_between:1,10',
 
@@ -63,14 +63,14 @@ class RegistrationController extends Controller
 
             // Current/Previous Living Situation
             'current_address' => 'required|max:255',
-            'moving_reason' => 'required|max:255',
-            'prev_landlord_contact' => 'required|max:100',
+            'moving_reason' => 'nullable|max:255',
+            'prev_landlord_contact' => 'nullable|max:100',
             'lease_violation' => 'max:255',
 
             // Household Info
             'household_size' => 'required|max:100',
-            'number_of_adults' => 'required|numeric|digits_between:1,10',
-            'number_of_child' => 'required|numeric|digits_between:1,10',
+            'number_of_adults' => 'required|string',
+            'number_of_child' => 'required|string',
 
             // Pet Information
             'has_pets' => 'required|max:10',
@@ -94,12 +94,12 @@ class RegistrationController extends Controller
             'legal_right' => 'required|max:100',
 
             // References
-            'reference_name' => 'string|max:100',
-            'reference_relationship' => 'string|max:100',
-            'contact_information' => 'string|max:255',
+            'reference_name' => 'nullable|string|max:100',
+            'reference_relationship' => 'nullable|string|max:100',
+            'contact_information' => 'nullable|string|max:255',
 
             // Additional Notes
-            'general_note' => 'required|max:255',
+            'general_note' => 'nullable|max:255',
             'work_with_broker' => 'required|max:10',
 
             // 'documents' => 'required',
@@ -185,9 +185,11 @@ class RegistrationController extends Controller
             // Household Info
             $UserHouseholdInfo = new HouseholdInfo();
             $UserHouseholdInfo->user_id = $User->id;
-            $UserHouseholdInfo->household_size = $request->input('household_size');
-            $UserHouseholdInfo->number_of_adults = $request->input('number_of_adults');
-            $UserHouseholdInfo->number_of_children = $request->input('number_of_child');
+            // Sanitize the inputs by removing everything except numbers, then cast them to integers
+            $UserHouseholdInfo->household_size = (int) preg_replace('/\D/', '', $request->input('household_size'));
+            $UserHouseholdInfo->number_of_adults = (int) preg_replace('/\D/', '', $request->input('number_of_adults'));
+            $UserHouseholdInfo->number_of_children = (int) preg_replace('/\D/', '', $request->input('number_of_child'));
+
             $UserHouseholdInfo->save();
 
             // Pet Information
@@ -291,6 +293,7 @@ class RegistrationController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
+                'error' => $e
             ], 500);
         }
     }
@@ -323,7 +326,7 @@ class RegistrationController extends Controller
                 // Financial Information
                 'annual_income' => 'required|string|max:100',
                 'employment_status' => 'required|string|max:100',
-                'employer_name' => 'required|string|max:100',
+                'employer_name' => 'nullable|string|max:100',
                 'income_type' => 'required|string|max:100',
                 'rental_budget' => 'required|numeric|digits_between:1,10',
             ]);
@@ -353,8 +356,8 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 // Current/Previous Living Situation
                 'current_address' => 'required|max:255',
-                'moving_reason' => 'required|max:255',
-                'prev_landlord_contact' => 'required|max:100',
+                'moving_reason' => 'nullable|max:255',
+                'prev_landlord_contact' => 'nullable|max:100',
                 'lease_violation' => 'max:255',
             ]);
         }
@@ -363,8 +366,8 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 // Household Info
                 'household_size' => 'required|max:100',
-                'number_of_adults' => 'required|numeric|digits_between:1,10',
-                'number_of_child' => 'required|numeric|digits_between:1,10',
+                'number_of_adults' => 'required|string',
+                'number_of_child' => 'required|string',
             ]);
         }
 
@@ -407,19 +410,19 @@ class RegistrationController extends Controller
         if ($request->input('step') == '11') {
             $validator = Validator::make($request->all(), [
                 // References
-                'reference_name' => 'string|max:100',
-                'reference_relationship' => 'string|max:100',
-                'contact_information' => 'string|max:255',
+                'reference_name' => 'nullable|string|max:100',
+                'reference_relationship' => 'nullable|string|max:100',
+                'contact_information' => 'nullable|string|max:255',
             ]);
         }
 
         if ($request->input('step') == '12') {
             $validator = Validator::make($request->all(), [
                 // Additional Notes
-                'general_note' => 'required|string|max:255',
+                'general_note' => 'nullable|string|max:255',
                 'work_with_broker' => 'required|string|max:10',
                 'documents' => 'required',
-                'documents.*' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
+                'documents.*' => 'image|mimes:jpeg,png,jpg|max:1024',
             ]);
         }
 

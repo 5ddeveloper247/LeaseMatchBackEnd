@@ -500,7 +500,7 @@ class AdminController extends Controller
 
     public function get_landlord_data(Request $request)
     {
-        $data['landlord_list'] = LandlordPersonal::with(['propertyDetail'])->get();
+        $data['landlord_list'] = LandlordPersonal::with(['propertyDetail', 'rentalDetail'])->get();
         $data['total'] = LandlordPersonal::count();
         $data['total_inactive'] = LandlordPersonal::where('status', '0')->count();
         $data['total_active'] = LandlordPersonal::where('status', '1')->count();
@@ -548,7 +548,7 @@ class AdminController extends Controller
 
         if (!is_null($prop_type)) {
             $query->whereHas('propertyDetail', function ($subQuery) use ($prop_type) {
-                $subQuery->where('property_type', $prop_type);
+                $subQuery->where('property_type', 'like', '%' . $prop_type . '%');
             });
         }
 
@@ -569,7 +569,6 @@ class AdminController extends Controller
 
         return response()->json(['status' => 200, 'data' => $data]);
     }
-
     public function change_status_landlord(Request $request)
     {
         $landlord_id = $request->id;
@@ -619,6 +618,10 @@ class AdminController extends Controller
     public function delete_landlord(Request $request)
     {
         $landlord_id = $request->id;
+        $checkInProperyMatches = PropertyMatches::where('landlord_id', $landlord_id)->first();
+        if ($checkInProperyMatches) {
+            return response()->json(['status' => 402, 'message' => 'Cannot delete this landlord as it is linked with property match.']);
+        }
 
         $landlord = LandlordPersonal::where('id', $landlord_id)->with(['propertyDetail'])->first();
         $images = LandlordPropertyImages::where('landlord_id', $landlord_id)->get();
@@ -861,12 +864,15 @@ class AdminController extends Controller
     public function get_subscriptions_data(Request $request)
     {
         $currentDate = Carbon::now()->format('Y-m-d');
-        $data['subscriptions_user_list'] = User::where('type', 3)->withCount(['userSubscriptions'])
+        $data['subscriptions_user_list'] = User::where('type', 3)
+            ->withCount(['userSubscriptions'])
             ->with(['personalInfo', 'activePlan.plan', 'activePlan' => function ($query) use ($currentDate) {
                 $query->where('start_date', '<=', $currentDate)
                     ->where('end_date', '>=', $currentDate);
             }])
+            ->having('user_subscriptions_count', '>', 0) // Exclude users with 0 subscriptions
             ->get();
+
 
         return response()->json(['status' => 200, 'data' => $data]);
     }

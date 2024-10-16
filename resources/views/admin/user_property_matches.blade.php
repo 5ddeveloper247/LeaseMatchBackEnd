@@ -169,6 +169,7 @@
                                             <tr>
                                                 <th width="10">#</th>
                                                 <th>Username</th>
+                                                <th>Email</th>
                                                 <th>Type</th>
                                                 <th>Apartment Number</th>
                                                 <th>Size</th>
@@ -195,6 +196,7 @@
                                         <tr>
                                             <th width="10">#</th>
                                             <th>Username</th>
+                                            <th>Email</th>
                                             <th>Type</th>
                                             <th>Apartment Number</th>
                                             <th>Size</th>
