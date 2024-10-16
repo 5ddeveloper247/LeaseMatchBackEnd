@@ -219,7 +219,7 @@ $(document).on('click', '.close_confirm', function (e) {
 $(document).on('click', '.assign_prop_confirmed', function (e) {
 
     var landlord_id = $("#landlord_id").val();
-    var user_id = $("#user_id").val();
+    var user_id = $("#active_user_id").val();
     e.preventDefault();
     let type = 'POST';
     let url = '/admin/assignLandlordToUser';

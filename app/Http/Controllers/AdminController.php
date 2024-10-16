@@ -847,7 +847,11 @@ class AdminController extends Controller
 
     public function get_payment_data(Request $request)
     {
-        $data['payment_user_list'] = User::where('type', 3)->withCount(['userPayments'])->with(['personalInfo'])->get();
+        $data['payment_user_list'] = User::where('type', 3)
+            ->withCount(['userPayments'])
+            ->with(['personalInfo'])
+            ->having('user_payments_count', '>', 0) // Exclude users with 0 payments
+            ->get();
 
         return response()->json(['status' => 200, 'data' => $data]);
     }
@@ -1140,8 +1144,15 @@ class AdminController extends Controller
         $prefferedHouseholdSize = $user_detail->householdInfo->household_size;
         $prefferedBedroomNeeded = $user_detail->residentialInfo->min_bedrooms_needed;
         $prefferedBathroomNeeded = $user_detail->residentialInfo->min_bathrooms_needed;
+        // return response()->json([
+        //     'propertyAssignMatchLimit' => $propertyAssignMatchLimit,
+        //     'preferredPropertyType' => $preferredPropertyType,
+        //     'prefferedHouseholdSize' => $prefferedHouseholdSize,
+        //     'prefferedBedroomNeeded' => $prefferedBedroomNeeded,
+        //     'prefferedBathroomNeeded' => $prefferedBathroomNeeded,
+        // ]);
 
-        $data['user_detail'] = $user_detail;
+        // $data['user_detail'] = $user_detail;
 
         // Fetch assigned matches
         $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)
@@ -1166,7 +1177,7 @@ class AdminController extends Controller
                     ->where('number_of_bedrooms', '>=', $prefferedBedroomNeeded)
                     ->where('number_of_bathrooms', '>=', $prefferedBathroomNeeded);
             })
-            ->limit($propertyAssignMatchLimit)
+            ->limit(10)
             ->get();
 
         return response()->json(['status' => 200, 'data' => $data]);

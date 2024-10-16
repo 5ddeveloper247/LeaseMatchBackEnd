@@ -26,7 +26,7 @@ function getprofiledataResponse(response) {
         $('#useremailformcontainer').text(details.email);
         $('#first_name').val(details.first_name);
         $('#user_name_container').text(details.first_name);
-        $('#phone_number').val(details.phone_number);
+        // $('#phone_number').val(details.phone_number);
         var html = ` ${details.email}
         <br> ${phone_number}`;
         $('#userdetailscontainer').html(html);

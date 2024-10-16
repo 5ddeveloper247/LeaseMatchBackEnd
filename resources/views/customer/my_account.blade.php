@@ -118,11 +118,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pl-1">
-                                                <div class="form-group">
+                                                {{-- <div class="form-group">
                                                     <label>Phone Number</label>
                                                     <input type="number" class="form-control" placeholder="Phone Number"
                                                         value="" id="phone_number" name="phone_number"  maxlength="18">
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -130,11 +130,11 @@
                                                 <div class="form-group">
                                                     <label>Old Password</label>
                                                     <!-- <input type="password" class="form-control"
-                                                        placeholder="********" value="" id="old_password" 
+                                                        placeholder="********" value="" id="old_password"
                                                         name="old_password"> -->
-                                                    
+
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="old_password" id="old_password" 
+                                                        <input type="password" name="old_password" id="old_password"
                                                             class="form-control" placeholder="********" autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
@@ -149,7 +149,7 @@
                                                         placeholder="********" value="" id="password"  maxlength="20"
                                                         name="password"> -->
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="password" id="password" 
+                                                        <input type="password" name="password" id="password"
                                                             class="form-control" placeholder="********" autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
@@ -162,7 +162,7 @@
                                                         placeholder="********" value="" maxlength="20"
                                                         id="password_confirmation" name="password_confirmation"> -->
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="password_confirmation" id="password_confirmation" 
+                                                        <input type="password" name="password_confirmation" id="password_confirmation"
                                                             class="form-control" placeholder="********" autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
@@ -252,7 +252,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="text-center " style="margin-top:12px">
                                             <button type="submit" class="site_btn  btn  btn-fill text-center">Update</button>
                                         </div>
