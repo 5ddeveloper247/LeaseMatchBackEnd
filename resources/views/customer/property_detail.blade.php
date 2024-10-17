@@ -51,11 +51,25 @@
     <div class="contain">
         <div class="title_blk">
             <div class="title">
-                <h2>Matched Lease: {{@$property_detail->propertyDetail->property_type}}</h2>
-                <p class="tagline">Note: {{trimText(@$property_detail->additionalDetail->special_note, 100)}}</p>
+                <?php $propertyType = isset($property_detail->propertyDetail->property_type) ? $property_detail->propertyDetail->property_type : 'N/A'; ?>
+                <h2>Matched Lease: {{ $propertyType }}</h2>
+
+                <?php
+                $specialNote = isset($property_detail->additionalDetail->special_note)
+                    ? trimText($property_detail->additionalDetail->special_note, 100)
+                    : 'No special notes available.';
+                ?>
+                <p class="tagline">Note: {{ $specialNote }}</p>
             </div>
+
             <div class="price_blk">
-                <div class="price"><span>&dollar;</span>{{@$property_detail->rentalDetail->monthly_rent}}</div>
+                <div class="price">
+                    <span>&dollar;</span>
+                    <?php
+                    $monthlyRent = isset($property_detail->rentalDetail->monthly_rent) ? $property_detail->rentalDetail->monthly_rent : '0.00';
+                    ?>
+                    {{ number_format($monthlyRent, 2) }}
+                </div>
             </div>
         </div>
 
@@ -64,36 +78,46 @@
                 <div class="in_col">
                     <div id="detail-slider">
                         <div id="slick-slider" class="slick-carousel">
-                            <?php $property_images = $property_detail->propertyImages;?>
-                            @if(count($property_images) > 0 )
+                            <?php $property_images = isset($property_detail->propertyImages) ? $property_detail->propertyImages : []; ?>
+
+                            @if(!empty($property_images) && is_array($property_images))
                             @foreach($property_images as $image)
                             <div class="img">
-                                <figure data-fancybox="detail" data-href="{{$image->path}}"><img src="{{$image->path}}"
-                                        alt=""></figure>
+                                <figure data-fancybox="detail"
+                                    data-href="{{ $image->path ?? asset('assets/images/property_default.jpg') }}">
+                                    <img src="{{ $image->path ?? asset('assets/images/property_default.jpg') }}" alt="">
+                                </figure>
                             </div>
                             @endforeach
                             @else
                             <div class="img">
                                 <figure data-fancybox="detail"
-                                    data-href="{{asset('assets/images/property_default.jpg')}}"><img
-                                        src="{{asset('assets/images/property_default.jpg')}}" alt=""></figure>
+                                    data-href="{{ asset('assets/images/property_default.jpg') }}">
+                                    <img src="{{ asset('assets/images/property_default.jpg') }}" alt="">
+                                </figure>
                             </div>
                             @endif
                         </div>
+
                         <div id="slick-thumbs" class="slick-carousel">
-                            @if(count($property_images) > 0 )
+                            @if(!empty($property_images) && is_array($property_images))
                             @foreach($property_images as $image)
                             <div class="thumb">
-                                <figure><img src="{{$image->path}}" alt=""></figure>
+                                <figure>
+                                    <img src="{{ $image->path ?? asset('assets/images/property_default.jpg') }}" alt="">
+                                </figure>
                             </div>
                             @endforeach
                             @else
                             <div class="thumb">
-                                <figure><img src="{{asset('assets/images/property_default.jpg')}}" alt=""></figure>
+                                <figure>
+                                    <img src="{{ asset('assets/images/property_default.jpg') }}" alt="">
+                                </figure>
                             </div>
                             @endif
                         </div>
                     </div>
+
                     <ul class="tab_list main_tab_list">
                         <li class="active"><a href="#General" data-toggle="tab">Additional Information</a></li>
                         <li><a href="#Features" data-toggle="tab">Rental Information</a></li>
@@ -166,48 +190,39 @@
                 <div class="in_col">
                     <h6 class="sub_heading">PROPERTY DETAIL</h6>
                     <ul class="icon_lst">
-                        @if(@$property_detail->propertyDetail->neighbourhood)
                         <li>
-                            <img src="{{asset('assets/images/icon-neighbour.svg')}}" title="Borough/Neighborhood">
-                            {{ @$property_detail->propertyDetail->neighbourhood }}
+                            <img src="{{ asset('assets/images/icon-neighbour.svg') }}" title="Borough/Neighborhood">
+                            {{ isset($property_detail->propertyDetail->neighbourhood) ?
+                            $property_detail->propertyDetail->neighbourhood : 'N/A' }}
                         </li>
-                        @endif
-
-                        @if(@$property_detail->propertyDetail->property_type)
                         <li>
-                            <img src="{{asset('assets/images/icon-property.svg')}}" title="Property Type">
-                            {{ @$property_detail->propertyDetail->property_type }}
+                            <img src="{{ asset('assets/images/icon-property.svg') }}" title="Property Type">
+                            {{ isset($property_detail->propertyDetail->property_type) ?
+                            $property_detail->propertyDetail->property_type : 'N/A' }}
                         </li>
-                        @endif
-
-                        @if(@$property_detail->propertyDetail->number_of_units)
                         <li>
-                            <img src="{{asset('assets/images/icon-multi-unit.svg')}}" title="Number of Units">
-                            {{ @$property_detail->propertyDetail->number_of_units }}
+                            <img src="{{ asset('assets/images/icon-multi-unit.svg') }}" title="Number of Units">
+                            {{ isset($property_detail->propertyDetail->number_of_units) ?
+                            $property_detail->propertyDetail->number_of_units : 'N/A' }}
                         </li>
-                        @endif
-
-                        @if(@$property_detail->propertyDetail->year_built)
                         <li>
-                            <img src="{{asset('assets/images/icon-build.svg')}}" title="Year Built">
-                            {{ @$property_detail->propertyDetail->year_built }}
+                            <img src="{{ asset('assets/images/icon-build.svg') }}" title="Year Built">
+                            {{ isset($property_detail->propertyDetail->year_built) ?
+                            $property_detail->propertyDetail->year_built : 'N/A' }}
                         </li>
-                        @endif
-
-                        @if(@$property_detail->propertyDetail->major_renovation)
                         <li>
-                            <img src="{{asset('assets/images/icon-renovation.svg')}}"
+                            <img src="{{ asset('assets/images/icon-renovation.svg') }}"
                                 title="Year of Last Major Renovation">
-                            {{ @$property_detail->propertyDetail->major_renovation }}
+                            {{ isset($property_detail->propertyDetail->major_renovation) ?
+                            $property_detail->propertyDetail->major_renovation : 'N/A' }}
                         </li>
-                        @endif
                     </ul>
-
 
                     <div class="btn_blk form_btn">
                         <a href="javascript:;" class="site_btn block" id="contact_lanlord_btn"
-                            data-id="{{@$property_detail->id}}">Contact Landlord</a>
+                            data-id="{{ $property_detail->id ?? '' }}">Contact Landlord</a>
                     </div>
+
                     <div class="dealer_blk blk contact_landlord_section" style="filter: blur(5px);">
                         <div class="head text-center">
                             <h4><a href="javascript:;" id="company_name">SQ Lease Group Ltd</a></h4>
@@ -216,37 +231,40 @@
                         <div class="txt">
                             <ul class="sm_lst flex">
                                 <li>
-                                    <img src="{{asset('assets/images/icon-user.svg')}}" alt="">
-                                    <a href="javascript:;" id="landlord_name">John Pie</a>
+                                    <img src="{{ asset('assets/images/icon-user.svg') }}" alt="">
+                                    <a href="javascript:;" id="landlord_name">{{ isset($landlord_name) ? $landlord_name
+                                        : 'N/A' }}</a>
                                 </li>
                                 <li>
-                                    <img src="{{asset('assets/images/icon-company.svg')}}" alt="">
-                                    <a href="javascript:;" id="landlord_company">John Pie</a>
+                                    <img src="{{ asset('assets/images/icon-company.svg') }}" alt="">
+                                    <a href="javascript:;" id="landlord_company">{{ isset($landlord_company) ?
+                                        $landlord_company : 'N/A' }}</a>
                                 </li>
                                 <li>
-                                    <img src="{{asset('assets/images/symbol-envelope.svg')}}" alt="">
-                                    <a href="mailto:example@example.com" id="landlord_email">johnpie@example.com</a>
+                                    <img src="{{ asset('assets/images/symbol-envelope.svg') }}" alt="">
+                                    <a href="mailto:{{ isset($landlord_email) ? $landlord_email : 'example@example.com' }}"
+                                        id="landlord_email">{{ isset($landlord_email) ? $landlord_email : 'N/A' }}</a>
                                 </li>
                                 <li>
-                                    <img src="{{asset('assets/images/symbol-headphone.svg')}}" alt="">
-                                    <a href="tel:(0118) 443 4892" id="landlord_phone">090022334656</a>
+                                    <img src="{{ asset('assets/images/symbol-headphone.svg') }}" alt="">
+                                    <a href="tel:{{ isset($landlord_phone) ? $landlord_phone : '0000000000' }}"
+                                        id="landlord_phone">{{ isset($landlord_phone) ? $landlord_phone : 'N/A' }}</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    @if(@$enquiry_detail == null)
 
+                    @if(is_null($enquiry_detail))
                     @if($property_detail->enquiry_status != 3)
-                    @if(@$curr_plan->process_application_flag == 1 || @$curr_plan->necessary_doc_flag == 1)
+                    @if(isset($curr_plan) && ($curr_plan->process_application_flag == 1 ||
+                    $curr_plan->necessary_doc_flag == 1))
                     <div class="blk">
                         <h6 class="sub_heading">Process Application Request</h6>
                         <form action="javascript:;" id="processApp_form">
-                            <input type="hidden" name="landlord_id" value="{{@$property_detail->id}}">
-                            @if(@$curr_plan->process_application_flag == 1)
-                            <input type="hidden" name="process_type" value="1">
-                            @elseif(@$curr_plan->necessary_doc_flag == 1)
-                            <input type="hidden" name="process_type" value="2">
-                            @endif
+                            <input type="hidden" name="landlord_id" value="{{ $property_detail->id ?? '' }}">
+                            <input type="hidden" name="process_type"
+                                value="{{ $curr_plan->process_application_flag == 1 ? '1' : ($curr_plan->necessary_doc_flag == 1 ? '2' : '') }}">
+
                             <div class="form_row row">
                                 <div class="col-xs-12">
                                     <h6>Message<sup>*</sup></h6>
@@ -269,31 +287,29 @@
                             <label><b>Status</b></label>
                             <button type="button" class="site_btn block">Booked</button>
                         </div>
-                        </form>
                     </div>
                     @endif
-
                     @else
-                    @if(@$enquiry_detail->status == '4' || @$enquiry_detail->status == '7')
+                    @if(in_array($enquiry_detail->status, ['4', '7']))
                     <div class="blk">
-                        <h6 class="sub_heading">Upload Documents {{@$enquiry_detail->status == 7 ? 'Again' : ''}}</h6>
+                        <h6 class="sub_heading">Upload Documents {{ $enquiry_detail->status == 7 ? 'Again' : '' }}</h6>
                         <form action="javascript:;" id="tenant_enquiry_document_form" enctype="multipart/formdata">
-
-                            <input type="hidden" id="enquiry_id" name="enquiry_id" value="{{@$enquiry_detail->id}}">
+                            <input type="hidden" id="enquiry_id" name="enquiry_id"
+                                value="{{ $enquiry_detail->id ?? '' }}">
                             <div class="form_row row">
-                                @foreach(@$upload_documents as $req_doc)
+                                @foreach($upload_documents as $req_doc)
                                 @if($req_doc->status == 1)
                                 <div class="col-xs-12">
-                                    <h6 style="color:green;"><i class="fa fa-check"></i>Upload {{
-                                        $req_doc->required_document->name }}</h6>
+                                    <h6 style="color:green;"><i class="fa fa-check"></i>Upload
+                                        {{$req_doc->required_document->name}}</h6>
                                 </div>
                                 @else
                                 <input type="hidden" name="req_doc_ids[]" value="{{ $req_doc->id }}">
                                 <div class="col-xs-12">
-                                    <h6>Upload {{ $req_doc->required_document->name }}<sup>*</sup></h6>
+                                    <h6>Upload {{$req_doc->required_document->name}}<sup>*</sup></h6>
                                     <div class="form_blk">
-                                        <input type="file" name="upload_document[]" class="file_input"
-                                            id="fileInput-{{ $req_doc->id }}">
+                                        <input type="file" name="upload_document[]"
+                                            data-name="{{$req_doc->required_document->name}}">
                                     </div>
                                 </div>
                                 @endif
@@ -310,19 +326,16 @@
                     <div class="blk">
                         <div class="btn_blk form_btn">
                             <label><b>Status</b></label>
-                            <button type="button"
-                                class="site_btn block">{{@TenantEnquiryHeader::STATUS_LABELS[@$enquiry_detail->status]}}</button>
+                            <button type="button" class="site_btn block">{{
+                                TenantEnquiryHeader::STATUS_LABELS[$enquiry_detail->status] ?? 'Unknown Status'
+                                }}</button>
                         </div>
-                        </form>
                     </div>
                     @endif
                     @endif
-
-
-
-
                 </div>
             </div>
+
         </div>
     </div>
 

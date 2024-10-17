@@ -29,10 +29,9 @@
 
 <body data-page="logon">
 
-    <main>
-        <section id="logon">
-            <div class="side"
-                style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
+	<main>
+	    <section id="logon">
+            <div class="side" style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
                 <div class="content text-center">
                     <div class="logo">
                         <a href="index.php"
@@ -47,9 +46,8 @@
                     <div class="col">
                         <div class="in_col">
 
-                            <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}"
-                                method="POST">
-                                @csrf
+                            <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}" method="POST">
+								@csrf
                                 <div class="log_blk">
                                     <div class="txt text-center">
                                         <h2>Sign In</h2>
@@ -92,14 +90,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row">
                                         <div class="btn_blk form_btn">
                                             <button type="submit" class="site_btn block">Login</button>
                                         </div>
-                                        <p class=" text-center mt-5">OR</p>
                                         <div class="btn_blk form_btn">
-                                            <a href="http://lmf.gregorygadson.io/" class="site_btn block">Go To
-                                                Website</a>
+                                            <button type="button" class="site_btn block"><a href="http://lmf.gregorygadson.io/" style="text-decoration: none">Go To Website</a></button>
                                         </div>
                                     </div>
                                     <!-- <div class="forgot text-center">

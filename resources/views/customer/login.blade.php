@@ -15,24 +15,29 @@
     <link rel="stylesheet" href="{{ asset('assets/css/slick.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
-    
+
 </head>
 <style>
     @media (max-width: 500px) {
-        .side, .content {
-            height:16vh !important;
+
+        .side,
+        .content {
+            height: 16vh !important;
             background-color: #051855 !important;
         }
     }
 </style>
+
 <body data-page="logon">
-   
-	<main>
-	    <section id="logon">
-            <div class="side" style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
+
+    <main>
+        <section id="logon">
+            <div class="side"
+                style="background-image: url('{{ asset('assets/images/Number-of-Vetted-Renters.jpg') }}');">
                 <div class="content text-center">
                     <div class="logo">
-                        <a href="#" style="background-image: url('{{ asset('assets/images/logo-light.png') }}'),  url('{{ asset('assets/images/logo-light.png') }}');"></a>
+                        <a href="#"
+                            style="background-image: url('{{ asset('assets/images/logo-light.png') }}'),  url('{{ asset('assets/images/logo-light.png') }}');"></a>
                     </div>
                     <h1>Please Login to continue</h1>
                     <p>A platform with efficient integration of many features and so much more</p>
@@ -42,37 +47,40 @@
                 <div class="flex_row">
                     <div class="col">
                         <div class="in_col">
-						
+
                             <form action="{{route('customer.loginSubmit')}}" method="POST">
-								@csrf
+                                @csrf
                                 <div class="log_blk">
                                     <div class="txt text-center">
                                         <h2>Sign In</h2>
                                         <!-- <p>Don’t have an account? <a href="register.php">Register</a></p> -->
                                     </div>
-									@if(session('error'))
-										<div class="alert alert-danger">
-											{{session('error')}}
-										</div>
-									@elseif($errors->any())
-										<div class="alert alert-danger">
-											@foreach ($errors->all() as $error)
-												<p class="mb-0">{{ $error }}</p>
-											@endforeach
-										</div>
-									@endif
-                                    
+                                    @if(session('error'))
+                                    <div class="alert alert-danger">
+                                        {{session('error')}}
+                                    </div>
+                                    @elseif($errors->any())
+                                    <div class="alert alert-danger">
+                                        @foreach ($errors->all() as $error)
+                                        <p class="mb-0">{{ $error }}</p>
+                                        @endforeach
+                                    </div>
+                                    @endif
+
                                     <div class="form_row row">
                                         <div class="col-xs-12">
                                             <h6>Email Address<sup>*</sup></h6>
                                             <div class="form_blk">
-                                                <input type="email" name="email" id="email" class="text_box" placeholder="eg: sample@gmail.com">
+                                                <input type="email" name="email" id="email" class="text_box"
+                                                    placeholder="eg: sample@gmail.com">
                                             </div>
                                         </div>
                                         <div class="col-xs-12">
                                             <h6>Password<sup>*</sup></h6>
                                             <div class="form_blk pass_blk">
-                                                <input type="password" name="password" id="password" class="text_box password-input" placeholder="eg: PassLogin%7" autocomplete="new-password">
+                                                <input type="password" name="password" id="password"
+                                                    class="text_box password-input" placeholder="eg: PassLogin%7"
+                                                    autocomplete="new-password">
                                                 <i class="icon-eye toggle-password" id="eye"></i>
                                             </div>
                                         </div>
@@ -85,8 +93,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="btn_blk form_btn">
-                                        <button type="submit" class="site_btn block">Login</button>
+                                    <div class="row">
+                                        <div class="btn_blk form_btn">
+                                            <button type="submit" class="site_btn block">Login</button>
+                                        </div>
+                                        <div class="btn_blk form_btn">
+                                            <button type="button" class="site_btn block"><a href="http://lmf.gregorygadson.io/" style="text-decoration: none">Go To Website</a></button>
+                                        </div>
                                     </div>
                                     <div class="forgot text-center">
                                         <a href="{{route('customer.forgotpassword')}}" id="pass">Forgot Password?</a>

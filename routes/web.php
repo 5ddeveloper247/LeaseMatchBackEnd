@@ -53,7 +53,6 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/my_account', [AdminController::class, 'my_account'])->name('admin.my_account');
 
             Route::get('/property_matches', [AdminController::class, 'propertyMatches'])->name('admin.property_matches');
-
             // Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
             Route::get('/required_documents', [AdminController::class, 'required_documents'])->name('admin.required_documents');
             Route::get('/enquiry_requests', [AdminController::class, 'enquiry_requests'])->name('admin.enquiry_requests');

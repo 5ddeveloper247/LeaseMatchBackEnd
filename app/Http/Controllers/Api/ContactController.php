@@ -23,12 +23,7 @@ class ContactController extends Controller
         $validator = Validator::make($request->all(), [
             // Contact Us
             'name' => 'required|max:255',
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                'regex:/^[\w\.-]+@[\w\.-]+\.[a-z]{2,}$/i' // Regex to ensure @ and valid domain extensions
-            ],
+            'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             'subject' => 'required|max:255',
             'phone_number' => 'required|numeric|digits_between:7,18',
             'message' => 'required',

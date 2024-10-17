@@ -1,35 +1,37 @@
-function getprofiledata(){
+function getprofiledata() {
     let type = 'GET';
-	let url = '/customer/getprofiledata';
-	let message = '';
-	let form = '';
-	
-	
-	// PASSING DATA TO FUNCTION
-	SendAjaxRequestToServer(type, url, '', '', getprofiledataResponse, '', '');
+    let url = '/customer/getprofiledata';
+    let message = '';
+    let form = '';
+
+
+    // PASSING DATA TO FUNCTION
+    SendAjaxRequestToServer(type, url, '', '', getprofiledataResponse, '', '');
 
 }
 
-function getprofiledataResponse(response){
+function getprofiledataResponse(response) {
     if (response.status == 200 || response.status == '200') {
         var data = response.data;
         var details = data.details;
-        if(details.phone_number == '' || details.phone_number == null){
+        if (details.phone_number == '' || details.phone_number == null) {
             var phone_number = ''
         }
-        else{
+        else {
             var phone_number = details.phone_number;
         }
 
+        console.log(details)
+        console.log("Fadsfasdfasdfas")
         $('#useremailformcontainer').text(details.email);
         $('#first_name').val(details.first_name);
         $('#user_name_container').text(details.first_name);
-        $('#phone_number').val(details.phone_number);
+        // $('#phone_number').val(details.phone_number);
         var html = ` ${details.email}
         <br> ${phone_number}`;
         $('#userdetailscontainer').html(html);
-        
-        
+
+
         $('#email').val(details.personal_info.email);
         $('#name').val(details.personal_info.name);
         $('#user_name_container_personal').text(details.personal_info.name);
@@ -38,27 +40,27 @@ function getprofiledataResponse(response){
         var html = ` ${details.personal_info.email}
         <br> ${phone_number}`;
         $('#userdetailscontainer_personal').html(html);
-       
+
     }
-    else{
+    else {
 
     }
 }
 
-$('#update_btn').click(function(e){
+$('#update_btn').click(function (e) {
     e.preventDefault();
-	let type = 'POST';
-	let url = '/customer/updateprofile';
-	let message = '';
-	let form = $("#profileform");
-	let data = new FormData(form[0]);
-	
-	// PASSING DATA TO FUNCTION
-	$('[name]').removeClass('is-invalid');
-	SendAjaxRequestToServer(type, url, data, '', updateprofileResponse, '', ''); 
+    let type = 'POST';
+    let url = '/customer/updateprofile';
+    let message = '';
+    let form = $("#profileform");
+    let data = new FormData(form[0]);
+
+    // PASSING DATA TO FUNCTION
+    $('[name]').removeClass('is-invalid');
+    SendAjaxRequestToServer(type, url, data, '', updateprofileResponse, '', '');
 });
 
-function updateprofileResponse(response){
+function updateprofileResponse(response) {
     if (response.status == 200 || response.status == '200') {
         toastr.success(response.message, '', {
             timeOut: 3000
@@ -88,20 +90,20 @@ function updateprofileResponse(response){
 }
 
 
-$('#personaldataform').submit(function(e){
+$('#personaldataform').submit(function (e) {
     e.preventDefault();
-	let type = 'POST';
-	let url = '/customer/updatepersonaldata';
-	let message = '';
-	let form = $("#personaldataform");
-	let data = new FormData(form[0]);
-	
-	// PASSING DATA TO FUNCTION
-	$('[name]').removeClass('is-invalid');
-	SendAjaxRequestToServer(type, url, data, '', updatepersonaldataResponse, '', ''); 
-}); 
+    let type = 'POST';
+    let url = '/customer/updatepersonaldata';
+    let message = '';
+    let form = $("#personaldataform");
+    let data = new FormData(form[0]);
 
-function updatepersonaldataResponse(response){
+    // PASSING DATA TO FUNCTION
+    $('[name]').removeClass('is-invalid');
+    SendAjaxRequestToServer(type, url, data, '', updatepersonaldataResponse, '', '');
+});
+
+function updatepersonaldataResponse(response) {
     if (response.status == 200 || response.status == '200') {
         toastr.success(response.message, '', {
             timeOut: 3000
@@ -130,7 +132,7 @@ function updatepersonaldataResponse(response){
     });
 }
 // number not allowed
-$('[name="name"], [name="first_name"]').on('keydown', function(e) {
+$('[name="name"], [name="first_name"]').on('keydown', function (e) {
     var key = e.keyCode || e.which;
     var char = String.fromCharCode(key);
     var controlKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
@@ -145,10 +147,10 @@ $('[name="name"], [name="first_name"]').on('keydown', function(e) {
 });
 
 
-$(document).ready(function(){
+$(document).ready(function () {
     getprofiledata();
-   
+
 
     // $('#date_of_birth').datepicker({ dateFormat: 'yyyy/mm/dd' })
-    
+
 })

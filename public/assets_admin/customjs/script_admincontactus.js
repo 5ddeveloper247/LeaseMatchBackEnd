@@ -56,7 +56,7 @@ function makeContactUsListing(contactus_list) {
 
 $(document).on('click', '.replybtn', function (e) {
     var contact_id = $(this).attr('data-id');
-    $('.form_blk').hide();
+    $('.searchInListing').hide();
     e.preventDefault();
     let type = 'POST';
     let url = '/admin/getSpecificContactUsDetail';
@@ -67,7 +67,6 @@ $(document).on('click', '.replybtn', function (e) {
 
     // PASSING DATA TO FUNCTION
     SendAjaxRequestToServer(type, url, data, '', getSpecificContactUsResponse, '', '.replybtn');
-
 });
 
 function getSpecificContactUsResponse(response) {
@@ -150,7 +149,7 @@ function saveContactReplyResponse(response) {
 function backToList() {
     $(".detail_section").hide();
     $(".listing_section").show(1000);
-    $('.form_blk').show();
+    $('.searchInListing').show();
 }
 
 

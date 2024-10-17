@@ -169,6 +169,8 @@ class LandlordController extends Controller
 
     public function validateForm(Request $request)
     {
+
+
         if ($request->input('step') == '1') {
             // Define validation rules
             $validator = Validator::make($request->all(), [

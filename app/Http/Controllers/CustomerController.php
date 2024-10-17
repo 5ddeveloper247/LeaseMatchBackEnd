@@ -146,6 +146,12 @@ class CustomerController extends Controller
             return redirect()->back();
         }
         $currentDate = Carbon::now()->format('Y-m-d');
+
+        if (!$request->has('landlord_id')) {
+            return redirect()->to('/customer/myMatches');
+        }
+
+
         $data['page'] = 'Matches';
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
             ->where('end_date', '>=', $currentDate)

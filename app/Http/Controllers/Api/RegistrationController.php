@@ -65,17 +65,17 @@ class RegistrationController extends Controller
             'current_address' => 'required|max:255',
             'moving_reason' => 'nullable|max:255',
             'prev_landlord_contact' => 'nullable|max:100',
-            'lease_violation' => 'nullable|max:255',
+            'lease_violation' => 'max:255',
 
             // Household Info
             'household_size' => 'required|max:100',
-            'number_of_adults' => 'required|numeric|digits_between:1,10',
-            'number_of_child' => 'required|numeric|digits_between:1,10',
+            'number_of_adults' => 'required|string',
+            'number_of_child' => 'required|string',
 
             // Pet Information
             'has_pets' => 'required|max:10',
             'pet_type' => 'required_if:has_pets,Yes|max:100',
-            'number_of_pets' => 'required_if:has_pets,Yes',//|digits_between:1,10
+            'number_of_pets' => 'required_if:has_pets,Yes', //|digits_between:1,10
             'pet_size' => 'required_if:has_pets,Yes|max:100',
 
             // Accommodation Requirements
@@ -185,9 +185,11 @@ class RegistrationController extends Controller
             // Household Info
             $UserHouseholdInfo = new HouseholdInfo();
             $UserHouseholdInfo->user_id = $User->id;
-            $UserHouseholdInfo->household_size = $request->input('household_size');
-            $UserHouseholdInfo->number_of_adults = $request->input('number_of_adults');
-            $UserHouseholdInfo->number_of_children = $request->input('number_of_child');
+            // Sanitize the inputs by removing everything except numbers, then cast them to integers
+            $UserHouseholdInfo->household_size = (int) preg_replace('/\D/', '', $request->input('household_size'));
+            $UserHouseholdInfo->number_of_adults = (int) preg_replace('/\D/', '', $request->input('number_of_adults'));
+            $UserHouseholdInfo->number_of_children = (int) preg_replace('/\D/', '', $request->input('number_of_child'));
+
             $UserHouseholdInfo->save();
 
             // Pet Information
@@ -266,7 +268,7 @@ class RegistrationController extends Controller
             $Notification = new Notifications();
             $Notification->module_code =  'TENANT REGISTRATION';
             $Notification->from_user_id =  $User->id;
-            $Notification->to_user_id =  '1';// for admin notification
+            $Notification->to_user_id =  '1'; // for admin notification
             $Notification->subject =  "Tenant Registration";
             $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
             $Notification->read_flag =  '0';
@@ -277,7 +279,7 @@ class RegistrationController extends Controller
             $mailData['email'] = $User->email;
             $mailData['password'] = $password;
             $body = view('emails.tenant_created', $mailData);
-            $userEmailsSend[] = $User->email;//'hamza@5dsolutions.ae';//
+            $userEmailsSend[] = $User->email; //'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
             sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
 
@@ -288,27 +290,28 @@ class RegistrationController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             Log::error('Error storing user info: ' . $e->getMessage());
-
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
+                'error' => $e
             ], 500);
         }
     }
 
+
     public function validateForm(Request $request)
     {
-        if($request->input('step') == '1'){
+        if ($request->input('step') == '1') {
             $validator = Validator::make($request->all(), [
                 //personal Information
                 'name' => 'required|string|max:100',
                 'date_of_birth' => 'required|date_format:Y-m-d|before:today',
-                'email' => 'required|email',
+                'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'phone_number' => 'required|numeric|digits_between:7,18',
             ]);
         }
 
-        if($request->input('step') == '2'){
+        if ($request->input('step') == '2') {
             $validator = Validator::make($request->all(), [
                 // Residential Preference
                 'preferred_location' => 'required|string|max:100',
@@ -318,7 +321,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '3'){
+        if ($request->input('step') == '3') {
             $validator = Validator::make($request->all(), [
                 // Financial Information
                 'annual_income' => 'required|string|max:100',
@@ -329,8 +332,8 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '4'){
-            if($request->rental_voucher == 'Yes'){
+        if ($request->input('step') == '4') {
+            if ($request->rental_voucher == 'Yes') {
                 $validator = Validator::make($request->all(), [
                     // Rental Assistance
                     'rental_voucher' => 'required|max:10',
@@ -338,7 +341,7 @@ class RegistrationController extends Controller
                     'certification_detail' => 'required|max:255',
                     'certification_expiry' => 'required|date_format:Y-m-d|after:today',
                 ]);
-            }else{
+            } else {
                 $validator = Validator::make($request->all(), [
                     // Rental Assistance
                     'rental_voucher' => 'required|max:10',
@@ -349,36 +352,36 @@ class RegistrationController extends Controller
             }
         }
 
-        if($request->input('step') == '5'){
+        if ($request->input('step') == '5') {
             $validator = Validator::make($request->all(), [
                 // Current/Previous Living Situation
                 'current_address' => 'required|max:255',
                 'moving_reason' => 'nullable|max:255',
                 'prev_landlord_contact' => 'nullable|max:100',
-                'lease_violation' => 'nullable|max:255',
+                'lease_violation' => 'max:255',
             ]);
         }
 
-        if($request->input('step') == '6'){
+        if ($request->input('step') == '6') {
             $validator = Validator::make($request->all(), [
                 // Household Info
                 'household_size' => 'required|max:100',
-                'number_of_adults' => 'required|numeric|digits_between:1,10',
-                'number_of_child' => 'required|numeric|digits_between:1,10',
+                'number_of_adults' => 'required|string',
+                'number_of_child' => 'required|string',
             ]);
         }
 
-        if($request->input('step') == '7'){
+        if ($request->input('step') == '7') {
             $validator = Validator::make($request->all(), [
                 // Pet Information
                 'has_pets' => 'required|max:10',
                 'pet_type' => 'required_if:has_pets,Yes|max:100',
-                'number_of_pets' => 'required_if:has_pets,Yes',//|digits_between:1,10
+                'number_of_pets' => 'required_if:has_pets,Yes', //|digits_between:1,10
                 'pet_size' => 'required_if:has_pets,Yes|max:100',
             ]);
         }
 
-        if($request->input('step') == '8'){
+        if ($request->input('step') == '8') {
             $validator = Validator::make($request->all(), [
                 // Accommodation Requirements
                 'disability' => 'required|max:10',
@@ -387,7 +390,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '9'){
+        if ($request->input('step') == '9') {
             $validator = Validator::make($request->all(), [
                 // Additional Requirements
                 'max_rent_to_pay' => 'required|numeric|digits_between:1,10',
@@ -396,7 +399,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '10'){
+        if ($request->input('step') == '10') {
             $validator = Validator::make($request->all(), [
                 // Legal & Compliance
                 'criminal_record' => 'required|string|max:10',
@@ -404,7 +407,7 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '11'){
+        if ($request->input('step') == '11') {
             $validator = Validator::make($request->all(), [
                 // References
                 'reference_name' => 'nullable|string|max:100',
@@ -413,21 +416,21 @@ class RegistrationController extends Controller
             ]);
         }
 
-        if($request->input('step') == '12'){
+        if ($request->input('step') == '12') {
             $validator = Validator::make($request->all(), [
                 // Additional Notes
                 'general_note' => 'nullable|string|max:255',
                 'work_with_broker' => 'required|string|max:10',
                 'documents' => 'required',
-                'documents.*' => 'image|mimes:jpeg,png,jpg,gif|max:10024',
+                'documents.*' => 'image|mimes:jpeg,png,jpg|max:1024',
             ]);
         }
 
-        if($request->input('step') == '13'){
+        if ($request->input('step') == '13') {
             $validator = Validator::make($request->all(), [
                 // User Information
                 'user_name' => 'required|string|max:100',
-                'user_email' => 'required|email|unique:users,email',
+                'user_email' => 'required|email|unique:users,email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'password_confirmation' => 'required',
                 'password' => [
                     'required',

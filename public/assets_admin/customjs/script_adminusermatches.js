@@ -76,10 +76,6 @@ function viewDetailResponse(response) {
     var user_detail = data.user_detail;
     var landlord_listing = data.landlord_listing;
     var assigned_match_listing = data.assigned_match_listing;
-    console.log("djsfklalkdsjflas")
-    console.log(assigned_match_listing)
-    console.log("datallllllllllllll")
-    console.log(data)
 
     if (user_detail != null) {
         $("#user_id").val(user_detail.id);
@@ -102,82 +98,113 @@ $('#reset_search_filter').on('click', function () {
     const user_id = $('#active_user_id').val();
     $('#landlord_username').val('');
     $('#landlord_email').val('');
+    $('#property_type').val('');
+    $('#rental_type').val('');
     viewMatchesListWrtUserResponse(user_id);
-})
+});
 
 function makeUserPropertyListing(landlord_listing) {
-
     var html = '';
 
-    if (landlord_listing.length > 0) {
-        $.each(landlord_listing, function (index, value) {
+    try {
+        // Check if landlord_listing is an array and has at least one element
+        if (Array.isArray(landlord_listing) && landlord_listing.length > 0) {
+            $.each(landlord_listing, function (index, value) {
+                // Safely access values and check for null/undefined cases
+                var fullName = value.full_name ? trimText(value.full_name, 20) : '';
+                var email = value.email ? trimText(value.email, 20) : '';
+                var propertyType = value.property_detail && value.property_detail.property_type ? value.property_detail.property_type : '';
+                var apartmentNumber = value.property_detail && value.property_detail.appartment_number ? value.property_detail.appartment_number : '';
+                var sizeSquareFeet = value.rental_detail && value.rental_detail.size_square_feet ? value.rental_detail.size_square_feet : '';
+                var numberOfBedrooms = value.rental_detail && value.rental_detail.number_of_bedrooms ? value.rental_detail.number_of_bedrooms : '';
+                var numberOfBathrooms = value.rental_detail && value.rental_detail.number_of_bathrooms ? value.rental_detail.number_of_bathrooms : '';
+                var rentalType = value.rental_detail && value.rental_detail.rental_type ? value.rental_detail.rental_type : '';
 
-            html += `<tr class="identify">
-						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${trimText(value.full_name, 20)}</td>
-						<td class="grid-p-searchby">${value.property_detail != null ? value.property_detail.property_type : ''}</td>
-						<td class="nowrap grid-p-searchby">${value.property_detail != null ? value.property_detail.appartment_number : ''}</td>
-                        <td class="nowrap grid-p-searchby">${value.rental_detail != null ? value.rental_detail.size_square_feet : ''}</td>
-                        <td class="nowrap grid-p-searchby">${value.rental_detail != null ? value.rental_detail.number_of_bedrooms : ''}</td>
-						<td class="nowrap grid-p-searchby">${value.rental_detail != null ? value.rental_detail.number_of_bathrooms : ''}</td>
-						<td class="nowrap grid-p-searchby">${value.rental_detail != null ? value.rental_detail.rental_type : ''}</td>
-						<td class="nowrap">
-							<div class="act_btn">
-								<button class="site_btn assign_prop_confirm" data-id="${value.id}">Add</button>
-							</div>
-						</td>
-					</tr>`;
-        });
-    } else {
+                html += `<tr class="identify">
+                            <td class="nowrap grid-p-searchby">${index + 1}</td>
+                            <td class="grid-p-searchby">${fullName}</td>
+                            <td class="grid-p-searchby">${email}</td>
+                            <td class="grid-p-searchby">${propertyType}</td>
+                            <td class="nowrap grid-p-searchby">${apartmentNumber}</td>
+                            <td class="nowrap grid-p-searchby">${sizeSquareFeet}</td>
+                            <td class="nowrap grid-p-searchby">${numberOfBedrooms}</td>
+                            <td class="nowrap grid-p-searchby">${numberOfBathrooms}</td>
+                            <td class="nowrap grid-p-searchby">${rentalType}</td>
+                            <td class="nowrap">
+                                <div class="act_btn">
+                                    <button class="site_btn assign_prop_confirm" data-id="${value.id ? value.id : ''}">Add</button>
+                                </div>
+                            </td>
+                        </tr>`;
+            });
+        } else {
+            // Display message if no records found
+            html = `<tr>
+                        <td colspan="8"><p class="text-center">No record found!</p></td>
+                    </tr>`;
+        }
+    } catch (error) {
+        console.error('Error in makeUserPropertyListing:', error);
         html = `<tr>
-					<td colspan="8"><p class="text-center">No record found!</p></td>
-				</tr>`;
+                    <td colspan="8"><p class="text-center text-danger">An error occurred while loading the listings.</p></td>
+                </tr>`;
     }
 
+    // Update the HTML content of the table
     $("#detail_listing_table").html(html);
 }
 
-function makeAssignedPropertyListing(assigned_match_listing) {
 
+function makeAssignedPropertyListing(assigned_match_listing) {
     var html = '';
 
-    if (assigned_match_listing.length > 0) {
-        $.each(assigned_match_listing, function (index, value) {
-            var landlord_personal = value.landlord_personal;
+    try {
+        if (Array.isArray(assigned_match_listing) && assigned_match_listing.length > 0) {
+            $.each(assigned_match_listing, function (index, value) {
+                var landlord_personal = value.landlord_personal || {}; // Fallback to empty object if null/undefined
 
-            html += `<tr class="identify">
-						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${trimText(landlord_personal.full_name, 20)}</td>
-						<td class="grid-p-searchby">${landlord_personal.property_detail != null ? landlord_personal.property_detail.property_type : ''}</td>
-						<td class="nowrap grid-p-searchby">${landlord_personal.property_detail != null ? landlord_personal.property_detail.appartment_number : ''}</td>
-                        <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail != null ? landlord_personal.rental_detail.size_square_feet : ''}</td>
-                        <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail != null ? landlord_personal.rental_detail.number_of_bedrooms : ''}</td>
-						<td class="nowrap grid-p-searchby">${landlord_personal.rental_detail != null ? landlord_personal.rental_detail.number_of_bathrooms : ''}</td>
-						<td class="nowrap grid-p-searchby">${landlord_personal.rental_detail != null ? landlord_personal.rental_detail.rental_type : ''}</td>
-						<td class="nowrap">
-							<div class="act_btn">
-								<button class="site_btn delete_assigned_confirm" data-propMatchId="${value.id}" data-landlordId="${landlord_personal.id}" title="Remove" style="color:red;"><b>X</b></button>
-							</div>
-						</td>
-					</tr>`;
-        });
-    } else {
+                html += `<tr class="identify">
+                    <td class="nowrap grid-p-searchby">${index + 1}</td>
+                    <td class="grid-p-searchby">${trimText(landlord_personal.full_name ? landlord_personal.full_name : '', 20)}</td>
+                    <td class="grid-p-searchby">${trimText(landlord_personal.email ? landlord_personal.email : '', 30)}</td>
+                    <td class="grid-p-searchby">${landlord_personal.property_detail && landlord_personal.property_detail.property_type ? landlord_personal.property_detail.property_type : ''}</td>
+                    <td class="nowrap grid-p-searchby">${landlord_personal.property_detail && landlord_personal.property_detail.appartment_number ? landlord_personal.property_detail.appartment_number : ''}</td>
+                    <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail && landlord_personal.rental_detail.size_square_feet ? landlord_personal.rental_detail.size_square_feet : ''}</td>
+                    <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail && landlord_personal.rental_detail.number_of_bedrooms ? landlord_personal.rental_detail.number_of_bedrooms : ''}</td>
+                    <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail && landlord_personal.rental_detail.number_of_bathrooms ? landlord_personal.rental_detail.number_of_bathrooms : ''}</td>
+                    <td class="nowrap grid-p-searchby">${landlord_personal.rental_detail && landlord_personal.rental_detail.rental_type ? landlord_personal.rental_detail.rental_type : ''}</td>
+                    <td class="nowrap">
+                        <div class="act_btn">
+                            <button class="site_btn delete_assigned_confirm" data-propMatchId="${value.id || ''}" data-landlordId="${landlord_personal.id || ''}" title="Remove" style="color:red;"><b>X</b></button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+        } else {
+            html = `<tr>
+                <td colspan="8"><p class="text-center">No record found!</p></td>
+            </tr>`;
+        }
+    } catch (error) {
+
         html = `<tr>
-					<td colspan="8"><p class="text-center">No record found!</p></td>
-				</tr>`;
+            <td colspan="8"><p class="text-center text-danger">An error occurred while loading the listing.</p></td>
+        </tr>`;
     }
 
+    // Update the HTML content
     $("#assigned_listing_table").html(html);
 }
+
 
 $(document).on('click', '.assign_prop_confirm', function (e) {
 
     var landlord_id = $(this).attr('data-id');
     $("#landlord_id").val(landlord_id);
-
     $("html").addClass("flow");
     $("#confirm_popup").fadeIn();
 });
+
 
 $(document).on('click', '.close_confirm', function (e) {
 
@@ -190,7 +217,7 @@ $(document).on('click', '.close_confirm', function (e) {
 $(document).on('click', '.assign_prop_confirmed', function (e) {
 
     var landlord_id = $("#landlord_id").val();
-    var user_id = $("#user_id").val();
+    var user_id = $("#active_user_id").val();
     e.preventDefault();
     let type = 'POST';
     let url = '/admin/assignLandlordToUser';
@@ -215,12 +242,16 @@ function assignLandlordToUserResponse(response) {
         var assigned_match_listing = data.assigned_match_listing;
 
         makeAssignedPropertyListing(assigned_match_listing);
+        const user_id = $('#active_user_id').val();
+        viewMatchesListWrtUserResponse(user_id);
 
         toastr.success(response.message, '', {
             timeOut: 3000
         });
+        //location.reload();
 
-    } else {
+    }
+    else {
         toastr.error(response.message, '', {
             timeOut: 3000
         });
@@ -335,7 +366,6 @@ $(document).ready(function () {
 
 $('#searchInListing').on("keyup", function (e) {
     var tr = $('.identify');
-
     if ($(this).val().length >= 1) {//character limit in search box.
         var noElem = true;
         var val = $.trim(this.value).toLowerCase();
