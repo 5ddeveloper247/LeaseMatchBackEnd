@@ -170,7 +170,6 @@ class LandlordController extends Controller
     public function validateForm(Request $request)
     {
 
-
         if ($request->input('step') == '1') {
             // Define validation rules
             $validator = Validator::make($request->all(), [
@@ -188,8 +187,8 @@ class LandlordController extends Controller
                 'neighbourhood' => 'required|max:100',
                 'property_type' => 'required|max:100',
                 'number_of_units' => 'required|numeric|digits_between:1,10',
-                'year_built' => 'required|numeric|digits_between:1,10',
-                'major_renovation' => $request->filled('major_renovation') ? 'numeric|digits_between:1,10' : '',
+                'year_built' => 'required|numeric|digits:4|min:1000|max:' . date('Y'), // Ensure year_built is exactly 4 digits and no earlier than 1000
+                'major_renovation' => $request->filled('major_renovation') ? 'numeric|digits:4|min:1000|max:' . date('Y') : '', // If filled, it must be a 4-digit year
             ]);
         }
         if ($request->input('step') == '3') {

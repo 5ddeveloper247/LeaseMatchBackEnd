@@ -31,8 +31,13 @@ class PropertyMatches extends Model
     // }
 
     public function tenantEnquiryHeader()
-    {   
+    {
         return $this->hasOne(TenantEnquiryHeader::class, 'landlord_id', 'landlord_id')
         ->where('user_id', '=', Auth::user()->id);
+    }
+
+    public function landlord()
+    {
+        return $this->belongsTo(LandlordPersonal::class, 'landlord_id');
     }
 }

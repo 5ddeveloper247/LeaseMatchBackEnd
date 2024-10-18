@@ -422,7 +422,7 @@ class RegistrationController extends Controller
                 'general_note' => 'nullable|string|max:255',
                 'work_with_broker' => 'required|string|max:10',
                 'documents' => 'required',
-                'documents.*' => 'image|mimes:jpeg,png,jpg|max:1024',
+                'documents.*' => 'image|mimes:jpeg,png,jpg|max:10024',
             ]);
         }
 

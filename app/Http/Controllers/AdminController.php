@@ -1260,53 +1260,48 @@ class AdminController extends Controller
         $property_type = $request->property_type;
         $rental_type = $request->rental_type;
 
-        // Ensure at least one filter is selected
         if (is_null($landlord_username) && is_null($landlord_email) && is_null($property_type) && is_null($rental_type)) {
             return response()->json(['status' => 402, 'message' => 'Choose at least one filter first!']);
         }
 
-        // Build the query for fetching landlord listings
         $query = LandlordPersonal::where('status', '1')
             ->where('enquiry_status', '1')
             ->with(['propertyDetail', 'rentalDetail']);
 
-        // Filter by landlord username
         if (!is_null($landlord_username)) {
             $query->where('full_name', 'like', '%' . $landlord_username . '%');
         }
 
-        // Filter by landlord email
         if (!is_null($landlord_email)) {
             $query->where('email', 'like', '%' . $landlord_email . '%');
         }
 
-        // Filter by property type
         if (!is_null($property_type)) {
             $query->whereHas('propertyDetail', function ($subQuery) use ($property_type) {
                 $subQuery->where('property_type', $property_type);
             });
         }
 
-        // Filter by rental type
         if (!is_null($rental_type)) {
             $query->whereHas('rentalDetail', function ($subQuery) use ($rental_type) {
                 $subQuery->where('rental_type', $rental_type);
             });
         }
 
-        // Exclude landlords who are already matched with this user
+        // Use whereNotExists to exclude already matched landlords
         $query->whereNotExists(function ($subQuery) use ($user_id) {
             $subQuery->select(DB::raw(1))
-                ->from('property_matches') // Reference to the property_matches table
-                ->whereRaw('property_matches.landlord_id = landlord_personal.id') // Match landlord IDs
-                ->where('property_matches.user_id', $user_id); // Check user_id for the match
+                ->from('property_matches')
+                ->whereRaw('property_matches.landlord_id = landlord_personal.id')
+                ->where('property_matches.user_id', $user_id);
         });
 
-        // Execute the query and get the results
         $data['landlord_listing'] = $query->get();
 
         return response()->json(['status' => 200, 'data' => $data]);
     }
+
+
 
 
 

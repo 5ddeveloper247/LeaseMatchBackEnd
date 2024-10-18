@@ -85,10 +85,14 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-12">
-                                            <div class="form_blk">
-                                                <div class="lbl_btn">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="lbl_btn d-flex align-items-center">
                                                     <input type="checkbox" name="remember" id="remember">
-                                                    <label for="remember">Remember me</label>
+                                                    <label for="remember" class="ms-2 mb-0">Remember me</label>
+                                                </div>
+                                                <div class="forgot">
+                                                    <a href="{{route('customer.forgotpassword')}}" id="pass">Forgot
+                                                        Password?</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -98,12 +102,12 @@
                                             <button type="submit" class="site_btn block">Login</button>
                                         </div>
                                         <div class="btn_blk form_btn">
-                                            <button type="button" class="site_btn block"><a href="http://lmf.gregorygadson.io/" style="text-decoration: none">Go To Website</a></button>
+                                            <button type="button" class="site_btn block"><a class="site_btn block"
+                                                    href="http://lmf.gregorygadson.io/" style="text-decoration: none">Go
+                                                    To Website</a></button>
                                         </div>
                                     </div>
-                                    <div class="forgot text-center">
-                                        <a href="{{route('customer.forgotpassword')}}" id="pass">Forgot Password?</a>
-                                    </div>
+
                                 </div>
                             </form>
                         </div>
