@@ -5,13 +5,13 @@ use Carbon\Carbon;
     <div class="contain-fluid">
         <div id="nav">
             <nav class="ease"></nav>
-           
+
             <ul id="icon_btn" class="drop_down">
                 <div class="drop_btn">
                     <li id="noti">
                         <a href="#">
                             <img src="{{asset('assets/images/icon-bell.svg')}}" alt="">
-                            <?php 
+                            <?php
                                 $notifCount = getNotifCount();
                             ?>
                             @if($notifCount>0)
@@ -37,7 +37,7 @@ use Carbon\Carbon;
                                 @endif
                             </div>
                             <div class="content-scrollbar">
-                                <?php 
+                                <?php
                                     $notifications = getAllUnReadNotifs();
                                 ?>
                                 @if(count($notifications) > 0)
@@ -66,7 +66,7 @@ use Carbon\Carbon;
                                 @else
                                 <div class="text-center">No new notifications...</div>
                                 @endif
-                                
+
                             </div>
                         </div>
                     </div>
@@ -76,13 +76,17 @@ use Carbon\Carbon;
             <div id="pro_btn" class="drop_down">
                 <div class="drop_btn">
                     <div class="ico">
+                        @if (Auth::user()->profile_picture !==null)
+                        <img src="{{url('/').Auth::user()->profile_picture}}" alt="">
+                        @else
                         <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
+                        @endif
                     </div>
                     <div class="name text-capitalize" title="{{Auth::user()->first_name}}">{{trimText(Auth::user()->first_name, 10)}} <small>Customer</small></div>
                 </div>
                 <div class="drop_cnt">
                     <ul class="drop_lst">
-                       
+
                         <li><a href="{{route('customer.logout')}}">Logout</a></li>
                     </ul>
                 </div>

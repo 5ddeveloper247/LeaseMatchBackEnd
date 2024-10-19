@@ -26,14 +26,14 @@ function loadUsersListResponse(response) {
     var inactive_users = response.data.inactive_users;
     var active_users = response.data.active_users;
     var total_users = users_list.length;
-    
+
     $.each(users_list, function (index, value) {
-        
+
         var html = `<tr class="identify">
                         <td class="nowrap grid-p-searchby">${index + 1}</td>
                         <td class="grid-p-searchby">${trimText(value.first_name, 20)}</td>
                         <td class="grid-p-searchby">${value.email}</td>
-                        <td class="nowrap grid-p-searchby" >${value.phone_number?value.phone_number:''}</td>
+                        <td class="nowrap grid-p-searchby" >${value.phone_number ? value.phone_number : ''}</td>
                         <td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
                         <td data-center>
                             <div class="switch" >
@@ -41,7 +41,7 @@ function loadUsersListResponse(response) {
                                 <em></em>
                             </div>
                         </td>
-                        
+
                         <td class="nowrap" data-center>
                             <div class="act_btn">
                                 <button type="button" class="edit pop_btn edit_btn"title="Edit"  data-popup="edit-data-popup" data-id = "${value.id}"></button>
@@ -49,7 +49,7 @@ function loadUsersListResponse(response) {
                             </div>
                         </td>
                     </tr>`;
-            usersTableBody.append(html);
+        usersTableBody.append(html);
     });
 
     $('#total_users').text(total_users);
@@ -61,7 +61,6 @@ function loadUsersListResponse(response) {
 
 $(document).on('click', '#saveuser_btn', function (e) {
     e.preventDefault();
-
     $('#uiBlocker').show();
     let form = document.getElementById('add_user_form');
     let data = new FormData(form);
@@ -73,16 +72,16 @@ $(document).on('click', '#saveuser_btn', function (e) {
 });
 
 function addUserResponse(response) {
-    
+
     $('#uiBlocker').hide();
-    
+
     if (response.status == 200) {
         toastr.success(response.message, '', {
             timeOut: 3000
         });
 
         let form = $('#add_user_form');
-        
+
         form.trigger("reset");
         loadUsersList();
         $('#close_add_modal_btn').click();
@@ -112,19 +111,19 @@ function addUserResponse(response) {
 }
 
 
-$(document).on('click', '.delete_btn', function(){
+$(document).on('click', '.delete_btn', function () {
     var del_id = $(this).attr('data-id');
-    
+
     $('#delete_confirmed_btn').attr('data-id', del_id);
 });
 
-$('#close_delete_modal_btn').click(function(){
+$('#close_delete_modal_btn').click(function () {
     $('.clode_delete_modal_default_btn').click();
     $('#delete_confirmed_btn').attr('data-id', '');
 });
 
-$('#delete_confirmed_btn').click(function(){
-    
+$('#delete_confirmed_btn').click(function () {
+
     $('#uiBlocker').show();
     var del_id = $(this).attr('data-id');
     let url = '/admin/deleteUser';
@@ -136,17 +135,17 @@ $('#delete_confirmed_btn').click(function(){
 });
 
 
-function deleteUserResponse(response){
+function deleteUserResponse(response) {
 
     $('#uiBlocker').hide();
 
     if (response.status == 200) {
-        
+
         toastr.success(response.message, '', {
             timeOut: 3000
         });
-        
-        
+
+
         loadUsersList();
         $('#close_delete_modal_btn').click();
     }
@@ -166,8 +165,8 @@ function deleteUserResponse(response){
     });
 }
 
-function changestatus(id){
-    
+function changestatus(id) {
+
     $('#uiBlocker').show();
     let url = '/admin/changestatus';
     let type = 'POST';
@@ -177,16 +176,16 @@ function changestatus(id){
 }
 
 
-function changeStatusResponse(response){
-    
+function changeStatusResponse(response) {
+
     $('#uiBlocker').hide();
-    
+
     if (response.status == 200) {
-        
+
         toastr.success(response.message, '', {
             timeOut: 3000
         });
-        
+
         loadUsersList();
     }
 
@@ -199,7 +198,7 @@ function changeStatusResponse(response){
     toastr.error(error, '', {
         timeOut: 3000
     });
-}   
+}
 
 
 $(document).on('click', '.edit_btn', function (e) {
@@ -213,38 +212,64 @@ $(document).on('click', '.edit_btn', function (e) {
 });
 
 
-function getUserdataResponse(response){
-    
+function getUserdataResponse(response) {
     $('#uiBlocker').hide();
-    
-    if (response.status == 200) {
+
+    // Check if the response has a status property
+    if (response && response.status === 200) {
         var user = response.data;
-        var menu_controls = user.menu_controls;
-       
-        
-        $('#user_id').val(user.id);
-        $('#first_name_edit').val(user.first_name);
-        $('#middle_name_edit').val(user.middle_name);
-        $('#last_name_edit').val(user.last_name);
-        $('#phone_number_edit').val(user.phone_number);
-        $('#email_edit').text(user.email);
 
-        $(".menu-control-chk").prop('checked', false);
-        if(menu_controls != null){
-            $.each(menu_controls, function (index, value) {
-                $("#menu_chk_"+value['menu_id']).prop('checked', true);
-            });
+        // Ensure user data is defined before accessing properties
+        if (user) {
+            var menu_controls = user.menu_controls || []; // Fallback to an empty array
+            var profile_picture = user.profile_picture ? base_url + user.profile_picture : ''; // Fallback to empty string
+            const previewDiv = document.getElementById('preview-edit');
+
+            // Clear previous preview
+            previewDiv.innerHTML = '';
+            if (profile_picture) { // Only create img element if the picture URL is valid
+                const img = document.createElement('img');
+                img.src = profile_picture;
+                img.alt = 'Image Preview';
+                img.classList.add('preview-img-edit'); // Add a class to control styling
+
+                // Append the image to the preview div
+                previewDiv.appendChild(img);
+            } else {
+                // Optionally handle the case where no profile picture exists
+                previewDiv.innerHTML = '<p>No profile picture available.</p>';
+            }
+
+            // Set user data in the form fields
+            $('#user_id').val(user.id || '');
+            $('#first_name_edit').val(user.first_name || '');
+            $('#middle_name_edit').val(user.middle_name || '');
+            $('#last_name_edit').val(user.last_name || '');
+            $('#phone_number_edit').val(user.phone_number || '');
+            $('#email_edit').text(user.email || ''); // Use text() to avoid XSS vulnerabilities
+
+            // Reset and check menu controls
+            $(".menu-control-chk").prop('checked', false);
+            if (menu_controls.length > 0) {
+                $.each(menu_controls, function (index, value) {
+                    if (value && value.menu_id) { // Ensure menu_id is defined
+                        $("#menu_chk_" + value.menu_id).prop('checked', true);
+                    }
+                });
+            }
+        } else {
+            toastr.error('User data not found.', '', { timeOut: 3000 });
         }
+    } else if (response.status === 402) {
+        // Handle specific error case
+        var error = response.message || 'An error occurred.';
+        toastr.error(error, '', { timeOut: 3000 });
+    } else {
+        // Handle unexpected status codes
+        toastr.error('Unexpected response status: ' + response.status, '', { timeOut: 3000 });
     }
-
-    if (response.status == 402) {
-        var error = response.message;
-        toastr.error(error, '', {
-            timeOut: 3000
-        });
-    } 
-    
 }
+
 
 
 $(document).on('click', '#edituser_btn', function (e) {
@@ -258,16 +283,16 @@ $(document).on('click', '#edituser_btn', function (e) {
     SendAjaxRequestToServer(type, url, data, '', updateUserResponse, '', 'submitButton');
 });
 
-function updateUserResponse(response){
+function updateUserResponse(response) {
 
     $('#uiBlocker').hide();
 
     if (response.status == 200) {
-        
+
         toastr.success(response.message, '', {
             timeOut: 3000
         });
-        
+
         loadUsersList();
         $('#close_update_modal_default_btn').click();
     }
@@ -282,7 +307,7 @@ function updateUserResponse(response){
     });
 }
 
-$('[name="first_name"], [name="middle_name"], [name="last_name"],[name="first_name_edit"], [name="middle_name_edit"], [name="last_name_edit"]').on('keydown', function(e) {
+$('[name="first_name"], [name="middle_name"], [name="last_name"],[name="first_name_edit"], [name="middle_name_edit"], [name="last_name_edit"]').on('keydown', function (e) {
     var key = e.keyCode || e.which;
     var char = String.fromCharCode(key);
     var controlKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
@@ -299,25 +324,25 @@ $('[name="first_name"], [name="middle_name"], [name="last_name"],[name="first_na
 $(document).ready(function () {
 
     loadUsersList();
-    
+
 });
 
-$('#searchInListing').on("keyup", function (e)  {     
+$('#searchInListing').on("keyup", function (e) {
     var tr = $('.identify');
-    
+
     if ($(this).val().length >= 1) {//character limit in search box.
         var noElem = true;
         var val = $.trim(this.value).toLowerCase();
-        el = tr.filter(function() {
+        el = tr.filter(function () {
             return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
         });
         if (el.length >= 1) {
             noElem = false;
         }
         tr.not(el).hide();
-		el.fadeIn();
-	} else {
-		tr.fadeIn();
+        el.fadeIn();
+    } else {
+        tr.fadeIn();
     }
 });
 

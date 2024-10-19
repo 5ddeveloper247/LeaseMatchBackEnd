@@ -69,6 +69,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/updateUser', [AdminController::class, 'update_user'])->name('admin.updateUser');
         Route::post('/addUser', [AdminController::class, 'add_user'])->name('admin.addUser');
 
+
         Route::post('/getLandlordPageData', [AdminController::class, 'get_landlord_data'])->name('admin.getLandlordPageData');
         Route::post('/changeStatusLandlord', [AdminController::class, 'change_status_landlord'])->name('admin.changeStatusLandlord');
         Route::post('/getSpecificLandlordDetail', [AdminController::class, 'get_specific_landlord'])->name('admin.getSpecificLandlordDetail');
@@ -164,5 +165,6 @@ Route::group(['prefix' => 'customer'], function () {
         Route::post('/uploadTenantEnquiryDocuments', [CustomerController::class, 'uploadTenantEnquiryDocuments'])->name('customer.uploadTenantEnquiryDocuments');
 
         Route::post('/readAllNotifications', [CustomerController::class, 'readAllNotifications'])->name('customer.readAllNotifications');
+        Route::post('/account/profile', [CustomerController::class, 'customer_account_profile'])->name('customer_account_profile');
     });
 });

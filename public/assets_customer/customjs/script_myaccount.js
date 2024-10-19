@@ -11,41 +11,51 @@ function getprofiledata() {
 }
 
 function getprofiledataResponse(response) {
-    if (response.status == 200 || response.status == '200') {
-        var data = response.data;
-        var details = data.details;
-        if (details.phone_number == '' || details.phone_number == null) {
-            var phone_number = ''
-        }
-        else {
-            var phone_number = details.phone_number;
-        }
+    // Check if the response has a status property
+    if (response && (response.status === 200 || response.status === '200')) {
+        var data = response.data || {}; // Fallback to an empty object if data is undefined
+        var details = data.details || {}; // Fallback to an empty object if details is undefined
 
-        console.log(details)
-        console.log("Fadsfasdfasdfas")
-        $('#useremailformcontainer').text(details.email);
-        $('#first_name').val(details.first_name);
-        $('#user_name_container').text(details.first_name);
-        // $('#phone_number').val(details.phone_number);
-        var html = ` ${details.email}
-        <br> ${phone_number}`;
+        // Handle phone number safely
+        var phone_number = details.phone_number || ''; // Fallback to empty string
+
+        console.log(details);
+        console.log("Debug: User details retrieved.");
+
+        // Safely set user email and name
+        $('#useremailformcontainer').text(details.email || '');
+        $('#first_name').val(details.first_name || '');
+        $('#user_name_container').text(details.first_name || '');
+
+        // Create user details HTML safely
+        var html = `
+            ${details.email || ''}
+            <br> ${phone_number}
+        `;
         $('#userdetailscontainer').html(html);
 
+        // Safely access personal info
+        var personal_info = details.personal_info || {}; // Fallback to empty object
+        $('#email').val(personal_info.email || '');
+        $('#name').val(personal_info.name || '');
+        $('#user_name_container_personal').text(personal_info.name || '');
+        $('#phone_number_personal').val(personal_info.phone_number || '');
+        $('#date_of_birth').val(personal_info.date_of_birth || '');
 
-        $('#email').val(details.personal_info.email);
-        $('#name').val(details.personal_info.name);
-        $('#user_name_container_personal').text(details.personal_info.name);
-        $('#phone_number_personal').val(details.personal_info.phone_number);
-        $('#date_of_birth').val(details.personal_info.date_of_birth);
-        var html = ` ${details.personal_info.email}
-        <br> ${phone_number}`;
-        $('#userdetailscontainer_personal').html(html);
-
-    }
-    else {
-
+        // Create personal user details HTML safely
+        var personalHtml = `
+            ${personal_info.email || ''}
+            <br> ${phone_number}
+        `;
+        $('#userdetailscontainer_personal').html(personalHtml);
+    } else {
+        // Handle errors or unexpected status codes
+        var errorMessage = response && response.message ? response.message : 'An unexpected error occurred.';
+        console.error(errorMessage); // Log the error
+        toastr.error(errorMessage, '', { timeOut: 3000 }); // Display error message
     }
 }
+
 
 $('#update_btn').click(function (e) {
     e.preventDefault();

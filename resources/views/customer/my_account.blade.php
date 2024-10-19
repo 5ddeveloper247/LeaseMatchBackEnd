@@ -191,15 +191,21 @@
                                     alt="...">
                             </div>
                             <div class="card-body">
-                                <div class="author">
+                                <div class="author" id="uploadImage-edit">
                                     <a href="#">
+                                        @if(Auth::user()->profile_picture !==null)
+                                        <img class="avatar border-gray"
+                                            src="{{url('/').Auth::user()->profile_picture }}" alt="...">
+                                        @else
                                         <img class="avatar border-gray"
                                             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
                                             alt="...">
+                                        @endif
 
                                         <h5 class="title" id="user_name_container"></h5>
                                     </a>
-
+                                    <input type="file" name="profile" id="profile-img-edit" style="display: none"
+                                        accept="image/*">
                                 </div>
                                 <p class="description text-center" id="userdetailscontainer">
 
@@ -226,9 +232,9 @@
                                         <div class="row">
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
-                                                    <label>Email</label>
-                                                    <input type="email" class="form-control" placeholder="Email"
-                                                        value="" id="email" name="email" maxlength="100">
+                                                    <label>Name</label>
+                                                    <input type="text" class="form-control" placeholder="Name" value=""
+                                                        id="name" name="name" maxlength="50">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-1">
@@ -239,13 +245,14 @@
                                                 </div>
                                             </div>
 
+
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
-                                                    <label>Name</label>
-                                                    <input type="text" class="form-control" placeholder="Name" value=""
-                                                        id="name" name="name" maxlength="50">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" placeholder="Email"
+                                                        value="" id="email" name="email" maxlength="100">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pl-1">
@@ -276,10 +283,17 @@
                             </div>
                             <div class="card-body">
                                 <div class="author">
-                                    <a href="javascript:;">
+                                    <a href="#">
+                                        @if(Auth::user()->profile_picture !==null)
+                                        <img class="avatar border-gray"
+                                            src="{{url('/').Auth::user()->profile_picture }}" alt="...">
+                                        @else
                                         <img class="avatar border-gray"
                                             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
                                             alt="...">
+                                        @endif
+
+                                        <h5 class="title" id="user_name_container"></h5>
                                     </a>
                                     <a href="javascript:;">
                                         <h5 class="title" id="user_name_container_personal"></h5>
@@ -302,5 +316,32 @@
 @push('script')
 
 <script src="{{ asset('assets_customer/customjs/script_myaccount.js') }}"></script>
+<script>
+    document.getElementById('uploadImage-edit').addEventListener('click', function() {
+    // Trigger the hidden file input when the button is clicked
+    document.getElementById('profile-img-edit').click();
+});
+document.getElementById('profile-img-edit').addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+        const type="post";
+        const url = "/customer/account/profile";
+        const data=new FormData();
+        data.append('profile_picture',file)
+        SendAjaxRequestToServer(type, url, data, '', getProfileEditResponse, '', '');
 
+    }
+    function getProfileEditResponse(response){
+        if(response.status==200){
+            location.reload();
+        }
+        else{
+            toastr.error('Oops! something went wrong','',{
+                "timeOut":3000,
+            })
+        }
+
+    }
+});
+</script>
 @endpush

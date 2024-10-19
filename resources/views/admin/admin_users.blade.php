@@ -8,6 +8,27 @@
     #users_table {
         font-size: x-small;
     }
+
+    /* Center the image and reduce its size by half */
+    #preview.preview-edit {
+        display: flex;
+        justify-content: center;
+        /* Horizontally center the image */
+        align-items: center;
+        /* Vertically center the image */
+        height: 200px;
+        /* Set a fixed height for the preview area */
+    }
+
+    .preview-img-eidt {
+        /* Reduce width to 50% */
+        max-width: 50%;
+        max-height: 50%;
+        /* Reduce height to 50% */
+        object-fit: contain;
+        /* Keep aspect ratio of the image */
+        /* Optional: Rounded corners for the image */
+    }
 </style>
 
 <section id="listing">
@@ -136,6 +157,16 @@
                                                 <p id="email_edit" class="text_box">
                                             </div>
                                         </div>
+                                        <div class="btn_blk form_btn text-center">
+                                            <button type="button" class="site_btn long"
+                                                style="background-color: red !important;" id="uploadImage-edit">Upload
+                                                Image</button>
+                                            <input type="file" name="profile" id="profile-img-edit"
+                                                style="display: none" accept="image/*">
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div id="preview-edit" class="preview-edit"></div>
+                                        </div>
 
                                         <?php
                                             $menu = getAllMenu();
@@ -228,6 +259,18 @@
                                                     placeholder="eg: someone@example.com" maxlength="50">
                                             </div>
                                         </div>
+                                        <div class="btn_blk form_btn text-center">
+                                            <button type="button" class="site_btn long"
+                                                style="background-color: red !important;" id="uploadImage">Upload
+                                                Image</button>
+                                            <input type="file" name="profile" id="profile-img" style="display: none"
+                                                accept="image/*">
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div id="preview" class="preview"></div>
+                                        </div>
+
+
 
                                         <?php
                                             $menu = getAllMenu();
@@ -303,5 +346,74 @@
 @push('script')
 
 <script src="{{ asset('assets_admin/customjs/script_adminusers.js') }}"></script>
+<script>
+    // for add user
+    document.getElementById('uploadImage').addEventListener('click', function() {
+    // Trigger the hidden file input when the button is clicked
+    document.getElementById('profile-img').click();
+});
 
+
+ // for edit user
+    document.getElementById('uploadImage-edit').addEventListener('click', function() {
+    // Trigger the hidden file input when the button is clicked
+    document.getElementById('profile-img-edit').click();
+});
+
+document.getElementById('profile-img').addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the selected file
+    const previewDiv = document.getElementById('preview');
+
+    // Clear previous preview
+    previewDiv.innerHTML = '';
+
+    if (file) {
+        const reader = new FileReader(); // Create a FileReader object to read the image
+
+        reader.onload = function(e) {
+            // Create an image element and set the source to the file's data URL
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Image Preview';
+            img.classList.add('preview-img'); // Add a class to control styling
+
+            // Append the image to the preview div
+            previewDiv.appendChild(img);
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+    } else {
+        previewDiv.textContent = 'No image selected'; // Fallback message if no file is chosen
+    }
+});
+document.getElementById('profile-img-edit').addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the selected file
+    const previewDiv = document.getElementById('preview-edit');
+
+    // Clear previous preview
+    previewDiv.innerHTML = '';
+
+    if (file) {
+        const reader = new FileReader(); // Create a FileReader object to read the image
+
+        reader.onload = function(e) {
+            // Create an image element and set the source to the file's data URL
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Image Preview';
+            img.classList.add('preview-img-edit'); // Add a class to control styling
+
+            // Append the image to the preview div
+            previewDiv.appendChild(img);
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+    } else {
+        previewDiv.textContent = 'No image selected'; // Fallback message if no file is chosen
+    }
+});
+
+</script>
 @endpush

@@ -66,82 +66,82 @@ class User extends Authenticatable
 
     public function personalInfo()
     {
-    	return $this->hasOne(UserPersonalInfo::class, 'user_id');
+        return $this->hasOne(UserPersonalInfo::class, 'user_id');
     }
 
     public function residentialInfo()
     {
-    	return $this->hasOne(ResidentialPreference::class, 'user_id');
+        return $this->hasOne(ResidentialPreference::class, 'user_id');
     }
 
     public function financialInfo()
     {
-    	return $this->hasOne(FinancialInfo::class, 'user_id');
+        return $this->hasOne(FinancialInfo::class, 'user_id');
     }
 
     public function rentalInfo()
     {
-    	return $this->hasOne(RentalAssistance::class, 'user_id');
+        return $this->hasOne(RentalAssistance::class, 'user_id');
     }
 
     public function livingInfo()
     {
-    	return $this->hasOne(LivingSituation::class, 'user_id');
+        return $this->hasOne(LivingSituation::class, 'user_id');
     }
 
     public function householdInfo()
     {
-    	return $this->hasOne(HouseholdInfo::class, 'user_id');
+        return $this->hasOne(HouseholdInfo::class, 'user_id');
     }
 
     public function petInfo()
     {
-    	return $this->hasOne(PetInformation::class, 'user_id');
+        return $this->hasOne(PetInformation::class, 'user_id');
     }
 
     public function accomodationInfo()
     {
-    	return $this->hasOne(AccommodationRequirements::class, 'user_id');
+        return $this->hasOne(AccommodationRequirements::class, 'user_id');
     }
 
     public function additionalInfo()
     {
-    	return $this->hasOne(AdditionalInfo::class, 'user_id');
+        return $this->hasOne(AdditionalInfo::class, 'user_id');
     }
 
     public function legalInfo()
     {
-    	return $this->hasOne(LegalCompliance::class, 'user_id');
+        return $this->hasOne(LegalCompliance::class, 'user_id');
     }
 
     public function references()
     {
-    	return $this->hasOne(UserReferences::class, 'user_id');
+        return $this->hasOne(UserReferences::class, 'user_id');
     }
 
     public function additionalNote()
     {
-    	return $this->hasOne(AdditionalNotes::class, 'user_id');
+        return $this->hasOne(AdditionalNotes::class, 'user_id');
     }
 
     public function userDocs()
     {
-    	return $this->hasMany(UserDocuments::class, 'user_id');
+        return $this->hasMany(UserDocuments::class, 'user_id');
     }
 
     public function userPayments()
     {
-    	return $this->hasMany(UserPayments::class, 'user_id');
+        return $this->hasMany(UserPayments::class, 'user_id');
     }
 
     public function userSubscriptions()
     {
-    	return $this->hasMany(UserSubscription::class, 'user_id');
+        return $this->hasMany(UserSubscription::class, 'user_id');
     }
 
     public function userMatches()
     {
-    	return $this->hasMany(PropertyMatches::class, 'user_id');
+        return $this->hasMany(PropertyMatches::class, 'user_id');
     }
 
     public function activePlan()
@@ -150,5 +150,4 @@ class User extends Authenticatable
             ->where('start_date', '<=', now())
             ->where('end_date', '>=', now());
     }
-    
 }

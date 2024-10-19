@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -346,9 +347,31 @@ class AdminController extends Controller
             'email' => 'required|email|max:50|unique:users',
             'phone_number' => 'required|numeric|digits_between:7,18',
             'menu_control' => 'required',
+            'profile' => 'nullable|mimes:jpeg,jpg,png,jfif,avif'
         ], [
             'menu_control.required' => 'Choose atleast one menu control.'
         ]);
+
+        $savedFilePaths = '';
+        $req_file = 'profile';
+        $path = '/uploads/user/profile';
+
+        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0777, true);
+            }
+
+            $uploadedFile = $request->file($req_file); // No need for double dollar sign
+            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $date_append = Str::random(32);
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
+
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+        }
+
+        //Log::info('File saved path: ' . $savedFilePaths); // More informative log
+
+
         $user = new User;
         $user->type = '2';
         $user->first_name = $request->first_name;
@@ -357,6 +380,7 @@ class AdminController extends Controller
         $user->email = $request->email;
         $user->phone_number = $request->phone_number;
         $user->status = 0;
+        $user->profile_picture = $savedFilePaths;
         $user->created_by = Auth::user()->id;
         $password = Str::random(10);
         $user->password = bcrypt($password); //Hash::make();
@@ -474,11 +498,30 @@ class AdminController extends Controller
         ], [
             'menu_control.required' => 'Choose atleast one menu control.'
         ]);
+
+        $savedFilePaths = '';
+        $req_file = 'profile';
+        $path = '/uploads/user/profile';
+
+        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0777, true);
+            }
+
+            $uploadedFile = $request->file($req_file); // No need for double dollar sign
+            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $date_append = Str::random(32);
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
+
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+        }
+
         $user = User::where('id', $request->user_id)->first();
         $user->first_name = $request->first_name_edit;
         $user->middle_name = $request->middle_name_edit;
         $user->last_name = $request->last_name_edit;
         // $user->email = $request->email;
+        $user->profile_picture = $savedFilePaths;
         $user->phone_number = $request->phone_number_edit;
         $user->updated_by = Auth::user()->id;
         $user->save();

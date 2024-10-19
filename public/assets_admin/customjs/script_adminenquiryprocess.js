@@ -11,9 +11,9 @@ function getEnquiryPageData(){
 function getEnquiryPageDataResponse(response){
 
 	var data = response.data;
-	
+
 	console.log(data);
-	
+
     // makeUserSubscriptionsListing(subscriptions_user_list);
 }
 
@@ -35,7 +35,7 @@ function getEnquiryPageDataResponse(response){
 // 							</div>
 // 						</td>
 // 					</tr>`;
-				
+
 // 		});
 // 	}else{
 // 		html = `<tr>
@@ -47,7 +47,7 @@ function getEnquiryPageDataResponse(response){
 
 
 // $(document).on('click', '.view_subscriptions_detail', function (e) {
-    
+
 //     var user_id = $(this).attr('data-id');
 // 	e.preventDefault();
 // 	let type = 'POST';
@@ -59,7 +59,7 @@ function getEnquiryPageDataResponse(response){
 
 // 	// PASSING DATA TO FUNCTION
 // 	SendAjaxRequestToServer(type, url, data, '', viewDetailResponse, '', '#save_plan_submit');
-	
+
 // });
 
 // function viewDetailResponse(response) {
@@ -117,6 +117,6 @@ function getEnquiryPageDataResponse(response){
 $(document).ready(function () {
 
     getEnquiryPageData();
-    
+
     // $("[name]").prop('disabled', true);
 });
