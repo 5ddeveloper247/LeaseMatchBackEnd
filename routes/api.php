@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LandlordController;
+use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\PricingController;
 use App\Http\Controllers\Api\ContactController;
@@ -32,6 +33,6 @@ Route::prefix('5d/v1')->group(function () {
 
     Route::get('pricing/getAllPricingList', [PricingController::class, 'getAllPricings'])->name('pricing.getAllPricingList');
     Route::post('contact/send', [ContactController::class, 'storeContactUs'])->name('contact.send');
-
-
+    Route::post('inquiry/validate', [InquiryController::class, 'inquiryValidate'])->name('lanlord.commercialValidate');
+    Route::post('inquiry/store', [InquiryController::class, 'inquiryStore'])->name('lanlord.inquiryStore');
 });

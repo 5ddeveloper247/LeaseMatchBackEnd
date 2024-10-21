@@ -237,8 +237,6 @@ class LandlordController extends Controller
 
         try {
 
-
-
             return response()->json([
                 'success' => true,
                 'message' => 'validated successfully'
