@@ -6,81 +6,81 @@
 
 @section('content')
 <style>
-.profile {
-    padding: 2rem;
-}
+    .profile {
+        padding: 2rem;
+    }
 
-.edit-profile .card {
-    border-radius: 5px;
-    padding: 15px;
-}
+    .edit-profile .card {
+        border-radius: 5px;
+        padding: 15px;
+    }
 
-.card-user .card-image img {
-    height: 110px !important;
-}
+    .card-user .card-image img {
+        height: 110px !important;
+    }
 
-.card-user .card-body {
-    min-height: 210px;
-    padding: 15px 15px 10px;
-}
+    .card-user .card-body {
+        min-height: 210px;
+        padding: 15px 15px 10px;
+    }
 
-.card-user .author {
-    text-align: center;
-    text-transform: none;
-    font-size: 12px;
-    margin-top: -70px;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+    .card-user .author {
+        text-align: center;
+        text-transform: none;
+        font-size: 12px;
+        margin-top: -70px;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-.card-user .avatar {
-    width: 124px;
-    height: 124px;
-    border: 5px solid #fff;
-    border-color: #eee;
-    position: relative;
-    margin-bottom: 15px;
-    overflow: hidden;
-    border-radius: 50%;
-    margin-right: 5px;
-}
+    .card-user .avatar {
+        width: 124px;
+        height: 124px;
+        border: 5px solid #fff;
+        border-color: #eee;
+        position: relative;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
 
-.card-user .title {
-    line-height: 24px;
-}
+    .card-user .title {
+        line-height: 24px;
+    }
 
-.btn-simple.btn-icon {
-    padding: 8px;
-}
+    .btn-simple.btn-icon {
+        padding: 8px;
+    }
 
-.button-container img {
-    width: 18px;
-}
+    .button-container img {
+        width: 18px;
+    }
 
-.edit-profile-icon {
-    position: absolute;
-    height: 20px;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 33%;
-}
+    .edit-profile-icon {
+        position: absolute;
+        height: 20px;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 33%;
+    }
 
-.card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: .25rem;
-}
+    .card {
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, .125);
+        border-radius: .25rem;
+    }
 </style>
 <section>
     <ul class="tab_list">
@@ -104,24 +104,25 @@
                                             <div class="col-md-12 pr-1">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <p class="form-control" id="useremailformcontainer" title="Email can not be changed"></p>
+                                                    <p class="form-control" id="useremailformcontainer"
+                                                        title="Email can not be changed"></p>
                                                 </div>
                                             </div>
 
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6 pr-1">
+                                            <div class="col-md-12 pr-1">
                                                 <div class="form-group">
                                                     <label>First Name</label>
                                                     <input type="text" class="form-control" placeholder="First Name"
-                                                        value="" id="first_name" name="first_name"  maxlength="50">
+                                                        value="" id="first_name" name="first_name" maxlength="50">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pl-1">
                                                 {{-- <div class="form-group">
                                                     <label>Phone Number</label>
                                                     <input type="number" class="form-control" placeholder="Phone Number"
-                                                        value="" id="phone_number" name="phone_number"  maxlength="18">
+                                                        value="" id="phone_number" name="phone_number" maxlength="18">
                                                 </div> --}}
                                             </div>
                                         </div>
@@ -135,7 +136,8 @@
 
                                                     <div class="form_blk pass_blk">
                                                         <input type="password" name="old_password" id="old_password"
-                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                            class="form-control" placeholder="********"
+                                                            autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
                                                 </div>
@@ -150,7 +152,8 @@
                                                         name="password"> -->
                                                     <div class="form_blk pass_blk">
                                                         <input type="password" name="password" id="password"
-                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                            class="form-control" placeholder="********"
+                                                            autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
                                                 </div>
@@ -162,8 +165,9 @@
                                                         placeholder="********" value="" maxlength="20"
                                                         id="password_confirmation" name="password_confirmation"> -->
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="password_confirmation" id="password_confirmation"
-                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <input type="password" name="password_confirmation"
+                                                            id="password_confirmation" class="form-control"
+                                                            placeholder="********" autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
                                                 </div>
@@ -187,15 +191,21 @@
                                     alt="...">
                             </div>
                             <div class="card-body">
-                                <div class="author">
+                                <div class="author" id="uploadImage-edit">
                                     <a href="#">
+                                        @if(Auth::user()->profile_picture !==null)
+                                        <img class="avatar border-gray"
+                                            src="{{url('/').Auth::user()->profile_picture }}" alt="...">
+                                        @else
                                         <img class="avatar border-gray"
                                             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
                                             alt="...">
+                                        @endif
 
                                         <h5 class="title" id="user_name_container"></h5>
                                     </a>
-
+                                    <input type="file" name="profile" id="profile-img-edit" style="display: none"
+                                        accept="image/*">
                                 </div>
                                 <p class="description text-center" id="userdetailscontainer">
 
@@ -222,39 +232,42 @@
                                         <div class="row">
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
-                                                    <label>Email</label>
-                                                    <input type="email" class="form-control" placeholder="Email"
-                                                        value="" id="email" name="email" maxlength="100">
+                                                    <label>Name</label>
+                                                    <input type="text" class="form-control" placeholder="Name" value=""
+                                                        id="name" name="name" maxlength="50">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
                                                     <label>DOB</label>
-                                                    <input type="date" class="form-control" placeholder="DOB"
-                                                        value="" id="date_of_birth" name="date_of_birth">
+                                                    <input type="date" class="form-control" placeholder="DOB" value=""
+                                                        id="date_of_birth" name="date_of_birth">
                                                 </div>
                                             </div>
+
 
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
-                                                    <label>Name</label>
-                                                    <input type="text" class="form-control" placeholder="Name"
-                                                        value="" id="name" name="name" maxlength="50">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" placeholder="Email"
+                                                        value="" id="email" name="email" maxlength="100">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pl-1">
                                                 <div class="form-group">
                                                     <label>Phone Number</label>
                                                     <input type="number" class="form-control" placeholder="Phone Number"
-                                                        value="" id="phone_number_personal" name="phone_number_personal" maxlength="18">
+                                                        value="" id="phone_number_personal" name="phone_number_personal"
+                                                        maxlength="18">
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="text-center " style="margin-top:12px">
-                                            <button type="submit" class="site_btn  btn  btn-fill text-center">Update</button>
+                                            <button type="submit"
+                                                class="site_btn  btn  btn-fill text-center">Update</button>
                                         </div>
                                         <div class="clearfix"></div>
                                     </form>
@@ -270,10 +283,17 @@
                             </div>
                             <div class="card-body">
                                 <div class="author">
-                                    <a href="javascript:;">
+                                    <a href="#">
+                                        @if(Auth::user()->profile_picture !==null)
+                                        <img class="avatar border-gray"
+                                            src="{{url('/').Auth::user()->profile_picture }}" alt="...">
+                                        @else
                                         <img class="avatar border-gray"
                                             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
                                             alt="...">
+                                        @endif
+
+                                        <h5 class="title" id="user_name_container"></h5>
                                     </a>
                                     <a href="javascript:;">
                                         <h5 class="title" id="user_name_container_personal"></h5>
@@ -296,5 +316,32 @@
 @push('script')
 
 <script src="{{ asset('assets_customer/customjs/script_myaccount.js') }}"></script>
+<script>
+    document.getElementById('uploadImage-edit').addEventListener('click', function() {
+    // Trigger the hidden file input when the button is clicked
+    document.getElementById('profile-img-edit').click();
+});
+document.getElementById('profile-img-edit').addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+        const type="post";
+        const url = "/customer/account/profile";
+        const data=new FormData();
+        data.append('profile_picture',file)
+        SendAjaxRequestToServer(type, url, data, '', getProfileEditResponse, '', '');
 
+    }
+    function getProfileEditResponse(response){
+        if(response.status==200){
+            location.reload();
+        }
+        else{
+            toastr.error('Oops! something went wrong','',{
+                "timeOut":3000,
+            })
+        }
+
+    }
+});
+</script>
 @endpush

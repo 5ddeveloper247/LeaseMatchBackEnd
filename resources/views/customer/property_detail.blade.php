@@ -56,7 +56,7 @@
 
                 <?php
                 $specialNote = isset($property_detail->additionalDetail->special_note)
-                    ? trimText($property_detail->additionalDetail->special_note, 100)
+                    ? $property_detail->additionalDetail->special_note
                     : 'No special notes available.';
                 ?>
                 <p class="tagline">Note: {{ $specialNote }}</p>

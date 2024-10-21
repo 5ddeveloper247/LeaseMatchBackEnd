@@ -605,4 +605,40 @@ class CustomerController extends Controller
 
         return response()->json(['status' => 200, 'message' => 'Read Notifications successfully']);
     }
+
+
+    public function customer_account_profile(Request $request)
+{
+    $user = Auth::user(); // Get the authenticated user
+    $savedFilePaths = '';
+    $req_file = 'profile_picture';
+    $path = 'uploads/user/profile'; // Remove leading slash for correct path
+
+    // Validate the incoming request for file
+    $request->validate([
+        $req_file => 'nullable|file|mimes:jpeg,jpg,png,avif|max:2048' // Add validation rules
+    ]);
+
+    if ($request->hasFile($req_file)) {
+        if (!File::isDirectory(public_path($path))) {
+            File::makeDirectory(public_path($path), 0777, true);
+        }
+
+        $uploadedFile = $request->file($req_file);
+        $file_extension = $uploadedFile->getClientOriginalExtension();
+        $date_append = Str::random(32);
+        $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension);
+
+        $savedFilePaths = '/' . $path . '/' . $date_append . '.' . $file_extension; // Correct path for saved file
+    }
+
+    // Update the user's profile picture if a new one was uploaded
+    if ($savedFilePaths) {
+        $user->profile_picture = $savedFilePaths;
+        $user->save(); // Save the updated user model
+    }
+
+    return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
+}
+
 }

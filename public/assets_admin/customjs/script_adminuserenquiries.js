@@ -153,117 +153,150 @@ function viewEnquiryDetail(enquiry_id) {
 }
 
 function getSpecificEnquiryResponse(response) {
+    try {
+        // Ensure the response status is valid and the response contains data
+        if (response && (response.status === 200 || response.status === '200') && response.data) {
+            var data = response.data;
+            var enquiry_detail = data.enquiry_detail || {};
 
-    // SHOWING MESSAGE ACCORDING TO RESPONSE
-    if (response.status == 200 || response.status == '200') {
+            // Ensure enquiry_detail exists before proceeding
+            if (enquiry_detail) {
+                var status = enquiry_detail.status || null;
+                var user_detail = enquiry_detail.user || {};
 
-        var data = response.data;
-        var enquiry_detail = data.enquiry_detail;
+                // Handle user details safely
+                if (user_detail) {
+                    $("#tenant_name").text(user_detail.first_name || 'N/A');
+                    $("#tenant_email").text(user_detail.email || 'N/A');
+                    $("#tenant_phone").text(user_detail.personal_info?.phone_number || 'N/A');
+                    $("#tenant_propType").text(user_detail.residential_info?.preferred_property_type || 'N/A');
+                }
 
+                // Handle different enquiry status
+                switch (status) {
+                    case '1': // application requested
+                        $("#action_button").html(`
+                            <button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
+                            <button type="button" class="site_btn md long" onclick="confirmEnquiry();">Confirm Request</button>
+                        `);
+                        break;
+                    case '2': // application confirmed
+                        $("#action_button").html(`
+                            <button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
+                            <button type="button" class="site_btn md long" onclick="enquiryRequestForDoc();">Request For Document</button>
+                        `);
+                        break;
+                    case '4': // waiting for document upload
+                        $("#action_button").html(`
+                            <button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
+                            <button type="button" class="site_btn md long" disabled>Waiting for Document Upload</button>
+                        `);
+                        break;
+                    case '5': // documents ready to view
+                        $("#action_button").html(`
+                            <button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
+                            <button type="button" class="site_btn md long" onclick="viewEnquiryDocs();">View Documents</button>
+                        `);
+                        break;
+                    case '6':
+                    case '8':
+                        $("#action_button").html(`<button type="button" class="site_btn md long" disabled>${enquiry_detail.status_text || 'N/A'}</button>`);
+                        break;
+                    case '7':
+                        $("#action_button").html(`
+                            <button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
+                            <button type="button" class="site_btn md long" disabled>${enquiry_detail.status_text || 'N/A'}</button>
+                        `);
+                        break;
+                    case '9': // waiting for confirmation
+                        $("#action_button").html(`
+                            <button type="button" class="site_btn md long" onclick="confirmEnquiry();">Confirm Request</button>
+                        `);
+                        break;
+                    default:
+                        $("#action_button").html(`<button type="button" class="site_btn md long" disabled>Unknown Status</button>`);
+                        break;
+                }
 
-        if (enquiry_detail != null) {
+                $("#enquiry_id").val(enquiry_detail.id || '');
 
-            var status = enquiry_detail.status;
-            var user_detail = data.enquiry_detail.user;
+                var landlord = enquiry_detail.landlord || {};
 
-            if (user_detail != null) {
-                $("#tenant_name").text(user_detail.first_name);
-                $("#tenant_email").text(user_detail.email);
-                $("#tenant_phone").text(user_detail.personal_info.phone_number);
-                $("#tenant_propType").text(user_detail.residential_info.preferred_property_type);
+                // Handle landlord details safely
+                $("#full_name").val(landlord.full_name || '');
+                $("#email").val(landlord.email || '');
+                $("#phone_number").val(landlord.phone_number || '');
+                $("#company_name").val(landlord.company_name || '');
+
+                // Handle property details safely
+                var propertydetail = landlord.property_detail || {};
+                if (propertydetail) {
+                    $("#street_address").val(propertydetail.street_address || '');
+                    $("#appartment_number").val(propertydetail.appartment_number || '');
+                    $("#neighbourhood").val(propertydetail.neighbourhood || '');
+                    $("#property_type").val(propertydetail.property_type || '');
+                    $("#number_of_units").val(propertydetail.number_of_units || '');
+                    $("#year_built").val(propertydetail.year_built || '');
+                    $("#major_renovation").val(propertydetail.major_renovation || '');
+                }
+
+                // Handle rental details safely
+                var rentalInfo = landlord.rental_detail || {};
+                if (rentalInfo) {
+                    $("#size_square_feet").val(rentalInfo.size_square_feet || '');
+                    $("#number_of_bedrooms").val(rentalInfo.number_of_bedrooms || '');
+                    $("#number_of_bathrooms").val(rentalInfo.number_of_bathrooms || '');
+                    $("#rental_type").val(rentalInfo.rental_type || '');
+                    $("#monthly_rent").val(rentalInfo.monthly_rent || '');
+                    $("#security_deposit").val(rentalInfo.security_deposit || '');
+                    $("#renwal_option").val(rentalInfo.renwal_option || '');
+                    $("#lease_duration").val(rentalInfo.lease_duration || '');
+                    $("#list_of_amenities").val(rentalInfo.list_of_amenities || '');
+                    $("#special_feature").val(rentalInfo.special_feature || '');
+                }
+
+                // Handle tenant details safely
+                var tenantInfo = landlord.tenant_detail || {};
+                if (tenantInfo) {
+                    $("#tenant_characteristics").val(tenantInfo.tenant_characteristics || '');
+                    $("#credit_score").val(tenantInfo.credit_score || '');
+                    $("#income_requirements").val(tenantInfo.income_requirements || '');
+                    $("#rental_history").val(tenantInfo.rental_history || '');
+                }
+
+                // Handle additional landlord info
+                var additionalInfo = landlord.additional_detail || {};
+                if (additionalInfo) {
+                    $("#special_note").val(additionalInfo.special_note || '');
+                }
+
+                // Handle property images safely
+                var property_images = landlord.property_images || [];
+                var images_html = '';
+                if (property_images.length > 0) {
+                    $.each(property_images, function (index, value) {
+                        images_html += `<li>
+                                            <div class="thumb">
+                                                <img src="${value.path}" alt="">
+                                            </div>
+                                        </li>`;
+                    });
+                }
+                $("#propertyImages_html").html(images_html);
             }
 
-            if (status == '1') {		// application requested
-                $("#action_button").html(`<button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
-											<button type="button" class="site_btn md long" onclick="confirmEnquiry();">Confirm Request</button>`);
-            } else if (status == '2') {	// application confirmed
-                $("#action_button").html(`<button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
-											<button type="button" class="site_btn md long" onclick="enquiryRequestForDoc();">Request For Document</button>`);
-            } else if (status == '4') {
-                $("#action_button").html(`<button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
-											<button type="button" class="site_btn md long" disabled>Waiting for Document Upload</button>`);
-            } else if (status == '5') {
-                $("#action_button").html(`<button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
-											<button type="button" class="site_btn md long" onclick="viewEnquiryDocs();">View Documents</button>`);
-            } else if (status == '6' || status == '8') {
-                $("#action_button").html(`<button type="button" class="site_btn md long" disabled>${enquiry_detail.status_text}</button>`);
-            } else if (status == '7') {
-                $("#action_button").html(`<button type="button" class="site_btn md simple border changeStatusEnquiry" data-status="8">Cancel</button>
-											<button type="button" class="site_btn md long" disabled>${enquiry_detail.status_text}</button>`);
-            } else if (status == '9') {		// waiting
-                $("#action_button").html(`<button type="button" class="site_btn md long" onclick="confirmEnquiry();">Confirm Request</button>`);
-            }
-
-            $("#enquiry_id").val(enquiry_detail.id);
-
-            var landlord = enquiry_detail.landlord;
-
-            var propertydetail = landlord.property_detail;
-            var rentalInfo = landlord.rental_detail;
-            var tenantInfo = landlord.tenant_detail;
-            var additionalInfo = landlord.additional_detail;
-
-            $("#full_name").val(landlord.full_name);
-            $("#email").val(landlord.email);
-            $("#phone_number").val(landlord.phone_number);
-            $("#company_name").val(landlord.company_name);
-
-            if (propertydetail != null) {
-                $("#street_address").val(propertydetail.street_address);
-                $("#appartment_number").val(propertydetail.appartment_number);
-                $("#neighbourhood").val(propertydetail.neighbourhood);
-                $("#property_type").val(propertydetail.property_type);
-                $("#number_of_units").val(propertydetail.number_of_units);
-                $("#year_built").val(propertydetail.year_built);
-                $("#major_renovation").val(propertydetail.major_renovation);
-            }
-
-            if (rentalInfo != null) {
-                $("#size_square_feet").val(rentalInfo.size_square_feet);
-                $("#number_of_bedrooms").val(rentalInfo.number_of_bedrooms);
-                $("#number_of_bathrooms").val(rentalInfo.number_of_bathrooms);
-                $("#rental_type").val(rentalInfo.rental_type);
-                $("#monthly_rent").val(rentalInfo.monthly_rent);
-                $("#security_deposit").val(rentalInfo.security_deposit);
-                $("#renwal_option").val(rentalInfo.renwal_option);
-                $("#lease_duration").val(rentalInfo.lease_duration);
-                $("#list_of_amenities").val(rentalInfo.list_of_amenities);
-                $("#special_feature").val(rentalInfo.special_feature);
-            }
-
-
-            if (tenantInfo != null) {
-                $("#tenant_characteristics").val(tenantInfo.tenant_characteristics);
-                $("#credit_score").val(tenantInfo.credit_score);
-                $("#income_requirements").val(tenantInfo.income_requirements);
-                $("#rental_history").val(tenantInfo.rental_history);
-            }
-
-            if (additionalInfo != null) {
-                $("#special_note").val(additionalInfo.special_note);
-            }
-
-            var property_images = landlord.property_images;
-            var images_html = '';
-            if (property_images.length > 0) {
-                $.each(property_images, function (index, value) {
-                    images_html += `<li id="">
-										<div class="thumb">
-											<img src="${value.path}" alt="">
-										</div>
-									</li>`;
-
-                });
-            }
-
-            $("#propertyImages_html").html(images_html);
+            // Show or hide sections based on the content
+            $(".listing_section").hide();
+            $(".detail_section").show('slow');
+        } else {
+            throw new Error("Invalid enquiry details.");
         }
-
-        $(".listing_section").hide();
-        $(".detail_section").show('slow');
-
+    } catch (error) {
+        console.error("Error processing response: ", error.message);
+        alert("An error occurred while processing the enquiry response. Please try again.");
     }
 }
+
 
 function confirmEnquiry() {
     $("html").addClass("flow");

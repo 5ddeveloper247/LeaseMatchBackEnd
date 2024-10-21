@@ -4,6 +4,7 @@ namespace App\Models\Api;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\PropertyMatches;
 
 class LandlordPersonal extends Model
 {
@@ -13,31 +14,31 @@ class LandlordPersonal extends Model
 
     public function propertyDetail()
     {
-    	return $this->hasOne(LandlordProperty::class, 'landlord_id');
+        return $this->hasOne(LandlordProperty::class, 'landlord_id');
     }
 
     public function rentalDetail()
     {
-    	return $this->hasOne(LandlordRental::class, 'landlord_id');
+        return $this->hasOne(LandlordRental::class, 'landlord_id');
     }
 
     public function tenantDetail()
     {
-    	return $this->hasOne(LandlordTenant::class, 'landlord_id');
+        return $this->hasOne(LandlordTenant::class, 'landlord_id');
     }
 
     public function additionalDetail()
     {
-    	return $this->hasOne(LandlordAdditional::class, 'landlord_id');
+        return $this->hasOne(LandlordAdditional::class, 'landlord_id');
     }
 
     public function propertyImages()
     {
-    	return $this->hasMany(LandlordPropertyImages::class, 'landlord_id');
+        return $this->hasMany(LandlordPropertyImages::class, 'landlord_id');
     }
 
     public function propertyMatches()
     {
-        return $this->hasMany(PropertyMatch::class, 'landlord_id');
+        return $this->hasMany(PropertyMatches::class, 'landlord_id');
     }
 }

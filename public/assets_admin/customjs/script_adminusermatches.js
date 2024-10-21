@@ -260,7 +260,7 @@ function assignLandlordToUserResponse(response) {
 
 $(document).on('click', '#search_filter_submit', function (e) {
 
-    var user_id = $("#user_id").val();
+    var user_id = $("#active_user_id").val();
     e.preventDefault();
     let type = 'POST';
     let url = '/admin/searchLandlordListingAssign';
@@ -311,7 +311,7 @@ $(document).on('click', '.delete_assigned_confirmed', function (e) {
 
     var property_match_id = $("#property_match_id").val();
     var match_landlord_id = $("#match_landlord_id").val();
-    var user_id = $("#user_id").val();
+    var user_id = $("#active_user_id").val();
 
     e.preventDefault();
     let type = 'POST';
