@@ -71,27 +71,84 @@ function viewMatchesListWrtUserResponse(user_id) {
 
 }
 
+// function viewDetailResponse(response) {
+//     var data = response.data;
+//     var user_detail = data.user_detail;
+//     var landlord_listing = data.landlord_listing;
+//     var assigned_match_listing = data.assigned_match_listing;
+
+
+//     if (user_detail != null) {
+//         $("#user_id").val(user_detail.id);
+//         $("#user_name").text(user_detail.first_name);
+//         $("#user_email").text(user_detail.email);
+
+//         $("#user_phone").text(user_detail.personal_info.phone_number);
+//         $("#user_dob").text(formatDate(user_detail.personal_info.date_of_birth));
+//     }
+
+//     makeUserPropertyListing(landlord_listing);
+//     makeAssignedPropertyListing(assigned_match_listing);
+
+//     $(".listing_section").hide();
+//     $(".detail_section").show(1000);
+// }
 function viewDetailResponse(response) {
-    var data = response.data;
-    var user_detail = data.user_detail;
-    var landlord_listing = data.landlord_listing;
-    var assigned_match_listing = data.assigned_match_listing;
-
-    if (user_detail != null) {
-        $("#user_id").val(user_detail.id);
-        $("#user_name").text(user_detail.first_name);
-        $("#user_email").text(user_detail.email);
-
-        $("#user_phone").text(user_detail.personal_info.phone_number);
-        $("#user_dob").text(formatDate(user_detail.personal_info.date_of_birth));
+    // Ensure response and data exist
+    if (!response || !response.data) {
+        toastr.error('Opps' + ' ' + response?.responseJSON?.message == '' || "Something Went Wrong", '', {
+            "positionClass": "toast-top-right",
+            "timeOut": "2000"
+        });
+        return;
     }
 
-    makeUserPropertyListing(landlord_listing);
-    makeAssignedPropertyListing(assigned_match_listing);
+    var data = response?.data;
+    var user_detail = data?.user_detail || null;
+    var landlord_listing = data?.landlord_listing || [];
+    var assigned_match_listing = data?.assigned_match_listing || [];
 
+    // Ensure user_detail exists before accessing its properties
+    if (user_detail) {
+        $("#user_id").val(user_detail.id || '');
+        $("#user_name").text(user_detail.first_name || 'N/A');
+        $("#user_email").text(user_detail.email || 'N/A');
+        // Safely access nested properties within personal_info
+        $("#user_phone").text(user_detail.phone_number || 'N/A');
+        $("#user_dob").text(user_detail.created_at
+            ? formatDate(user_detail.created_at)
+            : 'N/A');
+    }
+    else {
+        console.warn("User details not found in response");
+        $("#user_id").val('');
+        $("#user_name").text('N/A');
+        $("#user_email").text('N/A');
+        $("#user_phone").text('N/A');
+        $("#user_dob").text('N/A');
+    }
+
+    // Ensure landlord_listing exists and pass it to the rendering function
+    if (Array.isArray(landlord_listing)) {
+        makeUserPropertyListing(landlord_listing);
+    } else {
+        console.warn("Landlord listings data is invalid or empty");
+        makeUserPropertyListing([]);
+    }
+
+    // Ensure assigned_match_listing exists and pass it to the rendering function
+    if (Array.isArray(assigned_match_listing)) {
+        makeAssignedPropertyListing(assigned_match_listing);
+    } else {
+        console.log("Assigned match listings data is invalid or empty");
+        makeAssignedPropertyListing([]);
+    }
+
+    // Show the detail section with a transition effect
     $(".listing_section").hide();
     $(".detail_section").show(1000);
 }
+
 
 //reseting the search filters
 $('#reset_search_filter').on('click', function () {

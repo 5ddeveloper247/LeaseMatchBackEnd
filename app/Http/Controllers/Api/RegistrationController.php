@@ -461,7 +461,6 @@ class RegistrationController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             Log::error('Error storing contact: ' . $e->getMessage());
-
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",

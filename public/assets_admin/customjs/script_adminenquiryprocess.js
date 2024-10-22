@@ -1,18 +1,18 @@
-function getEnquiryPageData(){
+function getEnquiryPageData() {
     let type = 'POST';
-	let url = '/admin/getEnquiryPageData';
-	let message = '';
-	let form = '';
-	let data = '';
-	// PASSING DATA TO FUNCTION
-	SendAjaxRequestToServer(type, url, data, '', getEnquiryPageDataResponse, '', 'submit_button');
+    let url = '/admin/getEnquiryPageData';
+    let message = '';
+    let form = '';
+    let data = '';
+    // PASSING DATA TO FUNCTION
+    SendAjaxRequestToServer(type, url, data, '', getEnquiryPageDataResponse, '', 'submit_button');
 }
 
-function getEnquiryPageDataResponse(response){
+function getEnquiryPageDataResponse(response) {
 
-	var data = response.data;
+    var data = response.data;
 
-	console.log(data);
+    console.log(data);
 
     // makeUserSubscriptionsListing(subscriptions_user_list);
 }

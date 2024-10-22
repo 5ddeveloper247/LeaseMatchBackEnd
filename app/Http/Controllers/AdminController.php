@@ -1046,7 +1046,7 @@ class AdminController extends Controller
 
     public function get_matches_data(Request $request)
     {
-        $data['user_list'] = User::where('type', 3)->withCount(['userMatches'])
+        $data['user_list'] = User::where('type', 3)->where('status', 1)->withCount(['userMatches'])
             ->with(['personalInfo', 'activePlan.plan'])->get();
 
         return response()->json(['status' => 200, 'data' => $data]);
@@ -1146,7 +1146,6 @@ class AdminController extends Controller
     // public function get_matches_list_user(Request $request)
     // {
     //     $user_id = $request->id;
-
     //     $user_detail = User::where('id', $user_id)->where('type', 3)->with(['personalInfo', 'residentialInfo', 'householdInfo', 'activePlan.plan'])->first();
     //     // dd($user_detail);
     //     $propertyAssignMatchLimit = isset($user_detail->activePlan->plan->number_of_matches) ? $user_detail->activePlan->plan->number_of_matches : 0;
@@ -1176,28 +1175,45 @@ class AdminController extends Controller
     public function get_matches_list_user(Request $request)
     {
         $user_id = $request->id;
-
+        $data = [];
         // Fetch user details
         $user_detail = User::where('id', $user_id)
             ->where('type', 3)
             ->with(['personalInfo', 'residentialInfo', 'householdInfo', 'activePlan.plan'])
             ->first();
 
-        // Check user's match limit and preferences
-        $propertyAssignMatchLimit = isset($user_detail->activePlan->plan->number_of_matches) ? $user_detail->activePlan->plan->number_of_matches : 0;
-        $preferredPropertyType = $user_detail->residentialInfo->preferred_property_type;
-        $prefferedHouseholdSize = $user_detail->householdInfo->household_size;
-        $prefferedBedroomNeeded = $user_detail->residentialInfo->min_bedrooms_needed;
-        $prefferedBathroomNeeded = $user_detail->residentialInfo->min_bathrooms_needed;
-        // return response()->json([
-        //     'propertyAssignMatchLimit' => $propertyAssignMatchLimit,
-        //     'preferredPropertyType' => $preferredPropertyType,
-        //     'prefferedHouseholdSize' => $prefferedHouseholdSize,
-        //     'prefferedBedroomNeeded' => $prefferedBedroomNeeded,
-        //     'prefferedBathroomNeeded' => $prefferedBathroomNeeded,
-        // ]);
+        // Check if user details exist
+        if (!$user_detail) {
+            $data = [];
+            return response()->json(['status' => 404, 'message' => 'User not found.', 'data' => $data]);
+        }
 
-        // $data['user_detail'] = $user_detail;
+        // Set default values in case any field is missing
+        $data['user_detail'] = $user_detail;
+        $propertyAssignMatchLimit = isset($user_detail->activePlan->plan->number_of_matches)
+            ? $user_detail->activePlan->plan->number_of_matches
+            : 0;
+
+        $preferredPropertyType = isset($user_detail->residentialInfo->preferred_property_type)
+            ? $user_detail->residentialInfo->preferred_property_type
+            : null;
+
+        $prefferedHouseholdSize = isset($user_detail->householdInfo->household_size)
+            ? $user_detail->householdInfo->household_size
+            : null;
+
+        $prefferedBedroomNeeded = isset($user_detail->residentialInfo->min_bedrooms_needed)
+            ? $user_detail->residentialInfo->min_bedrooms_needed
+            : null;
+
+        $prefferedBathroomNeeded = isset($user_detail->residentialInfo->min_bathrooms_needed)
+            ? $user_detail->residentialInfo->min_bathrooms_needed
+            : null;
+
+        // If any of the essential data is missing, return a warning message
+        if (is_null($preferredPropertyType) || is_null($prefferedHouseholdSize) || is_null($prefferedBedroomNeeded) || is_null($prefferedBathroomNeeded)) {
+            return response()->json(['status' => 404, 'message' => 'Incomplete user data for matching.', 'data' => $data]);
+        }
 
         // Fetch assigned matches
         $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)
@@ -1227,6 +1243,7 @@ class AdminController extends Controller
 
         return response()->json(['status' => 200, 'data' => $data]);
     }
+
 
 
 
@@ -1700,5 +1717,40 @@ class AdminController extends Controller
         ]);
 
         return response()->json(['status' => 200, 'message' => 'Read Notifications successfully']);
+    }
+
+
+    public function admin_account_profile(Request $request)
+    {
+        $user = Auth::user(); // Get the authenticated user
+        $savedFilePaths = '';
+        $req_file = 'profile_picture';
+        $path = 'uploads/user/profile'; // Remove leading slash for correct path
+
+        // Validate the incoming request for file
+        $request->validate([
+            $req_file => 'nullable|file|mimes:jpeg,jpg,png,avif|max:2048' // Add validation rules
+        ]);
+
+        if ($request->hasFile($req_file)) {
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0777, true);
+            }
+
+            $uploadedFile = $request->file($req_file);
+            $file_extension = $uploadedFile->getClientOriginalExtension();
+            $date_append = Str::random(32);
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension);
+
+            $savedFilePaths = '/' . $path . '/' . $date_append . '.' . $file_extension; // Correct path for saved file
+        }
+
+        // Update the user's profile picture if a new one was uploaded
+        if ($savedFilePaths) {
+            $user->profile_picture = $savedFilePaths;
+            $user->save(); // Save the updated user model
+        }
+
+        return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
     }
 }
