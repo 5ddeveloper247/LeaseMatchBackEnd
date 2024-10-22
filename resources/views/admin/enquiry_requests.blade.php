@@ -26,7 +26,7 @@
                     <div class="top_head mt-5">
                         <h4 class="filter-toggle">
                             <i class="fa fa-arrow-circle-right"></i>&nbsp;
-                            Advance Search Filter 
+                            Advance Search Filter
                         </h4>
                     </div>
                     <div class="_inner filter-box" style="display:none;">
@@ -155,7 +155,7 @@
                 <div class="top_head">
                     <h4>Enquiry Landlord Information</h4>
                     <div id="action_button">
-                        
+
                     </div>
                 </div>
 
@@ -184,7 +184,7 @@
                         </p>
                     </div>
                 </div>
-                
+
                 <div class="blk">
                     <form action="" method="POST">
                         <input type="hidden" id="enquiry_id" value="">
@@ -408,7 +408,7 @@
                                     <div class="col-xs-12">
                                         <div class="upload_lst_blk text_box">
                                             <ul class="img_list flex" id="propertyImages_html">
-                                                
+
                                             </ul>
                                         </div>
                                     </div>
@@ -423,9 +423,9 @@
                 </div>
             </div>
         </div>
-        
-        
-        
+
+
+
         <!-- delete modal start  -->
         <div class="popup sm" id="confirm_popup">
             <div class="table_dv">
@@ -433,7 +433,7 @@
                     <div class="contain">
                         <div class="_inner">
                             <div class="form_row row">
-                                
+
                                 <div class="col-sm-12 col-12" style="text-align: center;">
                                     <h5>Are you sure you want to confirm this application request...!!!</h5>
                                 </div>
@@ -459,14 +459,14 @@
                         <div class="_inner editor_blk">
                             <button type="button" class="x_btn" id="close_add_modal_btn"></button>
                             <div id="Inspection" class="tab-pane fade active in">
-                            
+
                                 <form action="javascript:;" method="" id="required_doc_form">
-                                    
+
                                     <fieldset>
                                         <div class="blk">
                                             <h5 class="color">Required Documents</h5>
                                             <div class="form_row row">
-                                                <?php 
+                                                <?php
                                                     $reqDocs = getReqDocs();
                                                 ?>
                                                 @if(count($reqDocs) > 0)
@@ -481,14 +481,14 @@
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                
+
                                             </div>
-                                        
+
                                         <div class="btn_blk form_btn text-center">
                                             <button type="button" class="site_btn long md request_doc_submit">Submit</button>
                                         </div>
                                     </fieldset>
-                                    
+
                                 </form>
                             </div>
                         </div>
@@ -497,7 +497,7 @@
             </div>
         </div>
         <!-- modal to request documents popup end  -->
-        
+
         <!-- modal to view uploaded docs popup start  -->
         <div class="popup sm" id="view_docs_popup">
             <div class="table_dv">
@@ -506,9 +506,9 @@
                         <div class="_inner editor_blk">
                             <button type="button" class="x_btn" id="close_add_modal_btn"></button>
                             <div id="Inspection" class="tab-pane fade active in">
-                            
+
                                 <form action="javascript:;" method="" id="required_doc_form">
-                                    
+
                                     <fieldset>
                                         <div class="blk">
                                             <h5 class="color">Uploaded Documents</h5>
@@ -520,7 +520,7 @@
                                             <button type="button" class="site_btn small sm changeStatusEnquiry" data-status="6" style="background: #008000;">Approve</button>
                                         </div>
                                     </fieldset>
-                                    
+
                                 </form>
                             </div>
                         </div>
@@ -537,7 +537,7 @@
                     <div class="contain">
                         <div class="_inner">
                             <div class="form_row row">
-                                
+
                                 <div class="blk" id="return_doc_mark_section" style="display:none;">
                                     <h5 class="color">Mark document to return...</h5>
                                     <div class="form_row row" id="uploaded_docs_section1"></div>
@@ -566,7 +566,7 @@
 @endsection
 
 @push('script')
-    
+
 <script src="{{ asset('assets_admin/customjs/script_adminuserenquiries.js') }}"></script>
-    
+
 @endpush

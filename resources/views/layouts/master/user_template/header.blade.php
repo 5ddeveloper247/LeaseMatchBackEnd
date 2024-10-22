@@ -15,7 +15,7 @@ use Carbon\Carbon;
                                 $notifCount = getNotifCount();
                             ?>
                             @if($notifCount>0)
-                                <span class="notif-icon" style="left: 25px;top: -5px;"></span>
+                            <span class="notif-icon" style="left: 25px;top: -5px;"></span>
                             @endif
                         </a>
                     </li>
@@ -32,8 +32,8 @@ use Carbon\Carbon;
                         <div id="All" class="tab-pane fade in active">
                             <div class="d-flex align-items-center justify-content-between see-all-div">
                                 @if($notifCount>0)
-                                    <h5>Earlier</h5>
-                                    <a class="pointer read_all_notif_user">Read All</a>
+                                <h5>Earlier</h5>
+                                <a class="pointer read_all_notif_user">Read All</a>
                                 @endif
                             </div>
                             <div class="content-scrollbar">
@@ -43,23 +43,25 @@ use Carbon\Carbon;
                                 @if(count($notifications) > 0)
                                 @foreach($notifications as $key=>$value)
                                 @php
-                                    $class = '';
-                                    switch ($key % 3) {
-                                        case 0:
-                                            $class = 'custom-name-success';break;
-                                        case 1:
-                                            $class = 'custom-name-info';break;
-                                        case 2:
-                                            $class = 'custom-name-danger';break;
-                                    }
+                                $class = '';
+                                switch ($key % 3) {
+                                case 0:
+                                $class = 'custom-name-success';break;
+                                case 1:
+                                $class = 'custom-name-info';break;
+                                case 2:
+                                $class = 'custom-name-danger';break;
+                                }
                                 @endphp
                                 <div class="d-flex align-items-center Notifications-sub-dropdown-main">
                                     <!-- <img src="{{asset('assets/images/users/5.jpg')}}" alt=""> -->
                                     <div class="custom-name me-2 {{@$class}}">
                                         {{ strtoupper(substr(@$value->fromUser->first_name, 0, 2)) }}
                                     </div>
-                                    <p><span class="bold">{{@$value->fromUser->first_name}}</span> {{@$value->subject}}<br>
-                                        <span class="coloured-small-text">{{ Carbon::parse(@$value->created_at)->format('d M Y - h:i A') }}</span>
+                                    <p><span class="bold">{{@$value->fromUser->first_name}}</span>
+                                        {{@$value->subject}}<br>
+                                        <span class="coloured-small-text">{{
+                                            Carbon::parse(@$value->created_at)->format('d M Y - h:i A') }}</span>
                                     </p>
                                 </div>
                                 @endforeach
@@ -77,12 +79,13 @@ use Carbon\Carbon;
                 <div class="drop_btn">
                     <div class="ico">
                         @if (Auth::user()->profile_picture !==null)
-                        <img src="{{url('/').Auth::user()->profile_picture}}" alt="">
+                        <img src="{{url('/').'/public'.Auth::user()->profile_picture}}" alt="">
                         @else
                         <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
                         @endif
                     </div>
-                    <div class="name text-capitalize" title="{{Auth::user()->first_name}}">{{trimText(Auth::user()->first_name, 10)}} <small>Customer</small></div>
+                    <div class="name text-capitalize" title="{{Auth::user()->first_name}}">
+                        {{trimText(Auth::user()->first_name, 10)}} <small>Customer</small></div>
                 </div>
                 <div class="drop_cnt">
                     <ul class="drop_lst">

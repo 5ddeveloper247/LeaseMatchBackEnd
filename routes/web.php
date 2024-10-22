@@ -123,6 +123,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/searchLandlordListing', [AdminController::class, 'search_landlord_listing'])->name('admin.searchLandlordListing');
         Route::post('/searchTenantListing', [AdminController::class, 'search_tenant_listing'])->name('admin.searchTenantListing');
         Route::post('/searchEnquiryListing', [AdminController::class, 'search_enquiry_listing'])->name('admin.searchEnquiryListing');
+        Route::post('/account/profile', [AdminController::class, 'admin_account_profile'])->name('admin_account_profile');
     });
 });
 

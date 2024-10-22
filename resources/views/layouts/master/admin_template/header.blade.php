@@ -79,7 +79,7 @@ use Carbon\Carbon;
                     <div class="drop_btn">
                         <div class="ico">
                             @if (Auth::user()->profile_picture !==null)
-                            <img src="{{url('/').Auth::user()->profile_picture}}" alt="">
+                            <img src="{{url('/').'/public'.Auth::user()->profile_picture}}" alt="">
                             @else
                             <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
                             @endif

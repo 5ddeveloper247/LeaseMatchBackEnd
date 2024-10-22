@@ -6,86 +6,86 @@
 
 @section('content')
 <style>
-.profile {
-    padding: 2rem;
-}
+    .profile {
+        padding: 2rem;
+    }
 
-.edit-profile .card {
-    border-radius: 5px;
-    padding: 15px;
-}
+    .edit-profile .card {
+        border-radius: 5px;
+        padding: 15px;
+    }
 
-.card-user .card-image img {
-    height: 110px !important;
-    object-fit: cover;
-}
+    .card-user .card-image img {
+        height: 110px !important;
+        object-fit: cover;
+    }
 
-.card-user .card-body {
-    min-height: 210px;
-    padding: 15px 15px 10px;
-}
+    .card-user .card-body {
+        min-height: 210px;
+        padding: 15px 15px 10px;
+    }
 
-.card-user .author {
-    text-align: center;
-    text-transform: none;
-    font-size: 12px;
-    margin-top: -70px;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+    .card-user .author {
+        text-align: center;
+        text-transform: none;
+        font-size: 12px;
+        margin-top: -70px;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-.card-user .avatar {
-    width: 124px;
-    height: 124px;
-    border: 5px solid #fff;
-    border-color: #eee;
-    position: relative;
-    margin-bottom: 15px;
-    overflow: hidden;
-    border-radius: 50%;
-    margin-right: 5px;
-}
+    .card-user .avatar {
+        width: 124px;
+        height: 124px;
+        border: 5px solid #fff;
+        border-color: #eee;
+        position: relative;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
 
-.card-user .title {
-    line-height: 24px;
-}
+    .card-user .title {
+        line-height: 24px;
+    }
 
-.btn-simple.btn-icon {
-    padding: 8px;
-}
+    .btn-simple.btn-icon {
+        padding: 8px;
+    }
 
-.button-container img {
-    width: 18px;
-}
+    .button-container img {
+        width: 18px;
+    }
 
-.edit-profile-icon {
-    position: absolute;
-    height: 20px;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 33%;
-}
+    .edit-profile-icon {
+        position: absolute;
+        height: 20px;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 33%;
+    }
 
-.card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: .25rem;
-}
+    .card {
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, .125);
+        border-radius: .25rem;
+    }
 </style>
 <section>
 
-    
+
     <div class="tab-content" style="">
         <div id="user_data_tab" class="tab-pane fade in active">
             <div class="profile" style="padding-top: unset;">
@@ -106,7 +106,8 @@
                                             <div class="col-md-12 pr-1">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <p class="form-control" id="useremailformcontainer" title="Email can not be changed"></p>
+                                                    <p class="form-control" id="useremailformcontainer"
+                                                        title="Email can not be changed"></p>
                                                 </div>
                                             </div>
 
@@ -134,10 +135,11 @@
                                                     <!-- <input type="password" class="form-control text_box"
                                                         placeholder="Old Password" value="" id="old_password"
                                                         name="old_password" maxlength="20"> -->
-                                                    
+
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="old_password" id="old_password" 
-                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <input type="password" name="old_password" id="old_password"
+                                                            class="form-control" placeholder="********"
+                                                            autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
                                                 </div>
@@ -152,8 +154,9 @@
                                                         name="password" maxlength="20"> -->
 
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="password" id="password" 
-                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <input type="password" name="password" id="password"
+                                                            class="form-control" placeholder="********"
+                                                            autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
                                                 </div>
@@ -164,10 +167,11 @@
                                                     <!-- <input type="password" class="form-control"
                                                         placeholder="Confirm New Password" value=""
                                                         id="password_confirmation" name="password_confirmation" maxlength="20"> -->
-                                                    
+
                                                     <div class="form_blk pass_blk">
-                                                        <input type="password" name="password_confirmation" id="password_confirmation" 
-                                                            class="form-control" placeholder="********" autocomplete="false" maxlength="20">
+                                                        <input type="password" name="password_confirmation"
+                                                            id="password_confirmation" class="form-control"
+                                                            placeholder="********" autocomplete="false" maxlength="20">
                                                         <i class="icon-eye view_pass" id="eye"></i>
                                                     </div>
                                                 </div>
@@ -187,21 +191,26 @@
                     <div class="col-sm-4">
                         <div class="card card-user">
                             <div class="card-image">
-                                <img src="{{asset('assets/images/users/user-background-placeholder.png')}}"
-                                    alt="...">
+                                <img src="{{asset('assets/images/users/user-background-placeholder.png')}}" alt="...">
                             </div>
                             <div class="card-body">
-                                <div class="author">
+                                <div class="author" id="uploadImage-edit">
                                     <a href="javascript:;">
+                                        @if (Auth::user()->profile_picture !==null)
                                         <img class="avatar border-gray"
-                                            src="{{asset('assets/images/users/user-placeholder.png')}}"
-                                            alt="...">
+                                        src="{{url('/').'/public'.Auth::user()->profile_picture}}" alt="...">
+                                        @else
+                                        <img class="avatar border-gray"
+                                        src="{{asset('assets/images/users/user-placeholder.png')}}" alt="...">
+                                        @endif
+
                                     </a>
                                     <a href="javascript:;">
                                         <h5 class="title" id="user_name_container"></h5>
                                     </a>
 
                                 </div>
+                                <input type="file" name="profile" id="profile-img-edit" style="display: none">
                                 <p class="description text-center" id="userdetailscontainer">
 
                                 </p>
@@ -213,7 +222,7 @@
             </div>
         </div>
 
-        
+
 </section>
 
 @endsection
@@ -221,5 +230,33 @@
 @push('script')
 
 <script src="{{ asset('assets_admin/customjs/script_myaccount.js') }}"></script>
+<script>
+    document.getElementById('uploadImage-edit').addEventListener('click', function() {
+    // Trigger the hidden file input when the button is clicked
+    document.getElementById('profile-img-edit').click();
+});
+document.getElementById('profile-img-edit').addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+        const type="post";
+        const url = "/admin/account/profile";
+        const data=new FormData();
+        data.append('profile_picture',file)
+        SendAjaxRequestToServer(type, url, data, '', getProfileEditResponse, '', '');
+
+    }
+    function getProfileEditResponse(response){
+        if(response.status==200){
+            location.reload();
+        }
+        else{
+            toastr.error('Oops! something went wrong','',{
+                "timeOut":3000,
+            })
+        }
+
+    }
+});
+</script>
 
 @endpush
