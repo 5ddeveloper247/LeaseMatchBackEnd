@@ -64,7 +64,7 @@
                             </p>
                             <!-- <h5 class="m-0 text-white" id="user_name"></h5> -->
                             <p class="d-flex align-items-center text-white">
-                                <i class="fa fa-phone" title="Phone Number"></i>
+                                <i class="fa fa-envelope" title="Email"></i>
                                 <span class="px-2" id="user_email"></span>
 
                             </p>

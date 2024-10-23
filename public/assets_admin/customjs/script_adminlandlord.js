@@ -24,41 +24,56 @@ function getLandlordPageDataResponse(response) {
 }
 
 function makeLandlordListing(landlord_list) {
-
     var html = '';
 
-    if (landlord_list.length > 0) {
-        $.each(landlord_list, function (index, value) {
-            html += `<tr class="identify">
-						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${trimText(value.full_name, 20)}</td>
-						<td class="grid-p-searchby">${value.email}</td>
-						<td class="nowrap grid-p-searchby" >${value.property_detail.property_type}</td>
-						<td class="nowrap grid-p-searchby" >${value.property_detail.appartment_number}</td>
-						<td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
-						<td data-center>
-							<div class="switch" >
-								<input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
-								<em></em>
-							</div>
-						</td>
+    try {
+        // Check if landlord_list is defined and is an array
+        if (Array.isArray(landlord_list) && landlord_list.length > 0) {
+            $.each(landlord_list, function (index, value) {
+                // Ensure value and property_detail exist before accessing them
+                if (value && value.property_detail) {
+                    html += `<tr class="identify">
+                                <td class="nowrap grid-p-searchby">${index + 1}</td>
+                                <td class="grid-p-searchby">${trimText(value.full_name, 20) || 'N/A'}</td>
+                                <td class="grid-p-searchby">${value.email || 'N/A'}</td>
+                                <td class="nowrap grid-p-searchby">${value.property_detail.property_type || 'N/A'}</td>
+                                <td class="nowrap grid-p-searchby">${value.property_detail.appartment_number || 'N/A'}</td>
+                                <td class="nowrap grid-p-searchby">${formatDate(value.created_at) || 'N/A'}</td>
+                                <td data-center>
+                                    <div class="switch">
+                                        <input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
+                                        <em></em>
+                                    </div>
+                                </td>
+                                <td class="nowrap" data-center>
+                                    <div class="act_btn">
+                                        <button type="button" class="eye view_landlord" title="View Landlord Detail" data-id="${value.id}"></button>
+                                        <button type="button" class="del delete_landlord_confirm" title="Delete Landlord" data-id="${value.id}"></button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                } else {
+                    console.error('Missing property details for landlord:', value);
+                }
+            });
+        } else {
+            html = `<tr>
+                        <td colspan="8"><p class="text-center">No record found!</p></td>
+                    </tr>`;
+        }
 
-						<td class="nowrap" data-center>
-							<div class="act_btn">
-								<button type="button" class="eye view_landlord" title="View Landlord Detail" data-id="${value.id}"></button>
-								<button type="button" class="del delete_landlord_confirm" title="Delete Landlord" data-id="${value.id}"></button>
-							</div>
-						</td>
-					</tr>`;
-
-        });
-    } else {
+    } catch (error) {
+        // Log the error and display a message in case of failure
+        console.error('An error occurred while generating the landlord listing:', error);
         html = `<tr>
-					<td colspan="8"><p class="text-center">No record found!</p></td>
-				</tr>`;
+                    <td colspan="8"><p class="text-center">Error loading data. Please try again later.</p></td>
+                </tr>`;
     }
+
+    // Inject the generated HTML into the page
     $("#landlordListing_html").html(html);
 }
+
 
 function changestatus(landlord_id) {
     let type = 'POST';

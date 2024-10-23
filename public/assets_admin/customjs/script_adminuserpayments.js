@@ -1,29 +1,29 @@
-function getPaymentsPageData(){
+function getPaymentsPageData() {
     let type = 'POST';
-	let url = '/admin/getPaymentsPageData';
-	let message = '';
-	let form = '';
-	let data = '';
-	// PASSING DATA TO FUNCTION
-	SendAjaxRequestToServer(type, url, data, '', getPaymentsPageDataResponse, '', 'submit_button');
+    let url = '/admin/getPaymentsPageData';
+    let message = '';
+    let form = '';
+    let data = '';
+    // PASSING DATA TO FUNCTION
+    SendAjaxRequestToServer(type, url, data, '', getPaymentsPageDataResponse, '', 'submit_button');
 }
 
-function getPaymentsPageDataResponse(response){
+function getPaymentsPageDataResponse(response) {
 
-	var data = response.data;
-	var payment_user_list = data['payment_user_list'];
-	
-    
-	makeUserPaymentListing(payment_user_list);
+    var data = response.data;
+    var payment_user_list = data['payment_user_list'];
+
+
+    makeUserPaymentListing(payment_user_list);
 }
 
-function makeUserPaymentListing(payments_list){
+function makeUserPaymentListing(payments_list) {
 
-	var html = '';
+    var html = '';
 
-	if(payments_list.length > 0){
-		$.each(payments_list, function (index, value) {
-			html += `<tr class="identify1">
+    if (payments_list.length > 0) {
+        $.each(payments_list, function (index, value) {
+            html += `<tr class="identify1">
 						<td class="nowrap grid-p-searchby1">${index + 1}</td>
 						<td class="grid-p-searchby1">${trimText(value.first_name, 20)}</td>
 						<td class="grid-p-searchby1">${value.email}</td>
@@ -35,31 +35,32 @@ function makeUserPaymentListing(payments_list){
 							</div>
 						</td>
 					</tr>`;
-				
-		});
-	}else{
-		html = `<tr>
+
+        });
+    } else {
+        html = `<tr>
 					<td colspan="8"><p class="text-center">No record found!</p></td>
 				</tr>`;
-	}
-	$("#payments_table_body").html(html);
+    }
+    $("#payments_table_body").html(html);
 }
 
 
 $(document).on('click', '.view_payment_detail', function (e) {
-    
-    var user_id = $(this).attr('data-id');
-	e.preventDefault();
-	let type = 'POST';
-	let url = '/admin/getPaymentListWrtUser';
-	let message = '';
-	let form = '';
-	let data = new FormData();
-	data.append('id', user_id);
 
-	// PASSING DATA TO FUNCTION
-	SendAjaxRequestToServer(type, url, data, '', viewDetailResponse, '', '#save_plan_submit');
-	
+    var user_id = $(this).attr('data-id');
+    e.preventDefault();
+    let type = 'POST';
+    let url = '/admin/getPaymentListWrtUser';
+    let message = '';
+    let form = '';
+    let data = new FormData();
+    data.append('id', user_id);
+    $('#searchInListing1').hide();
+
+    // PASSING DATA TO FUNCTION
+    SendAjaxRequestToServer(type, url, data, '', viewDetailResponse, '', '#save_plan_submit');
+
 });
 
 function viewDetailResponse(response) {
@@ -69,7 +70,7 @@ function viewDetailResponse(response) {
     var payment_list = detail.user_payments;
     var html = '';
 
-    if(detail != null){
+    if (detail != null) {
         $("#user_name").text(detail.first_name);
         $("#user_email").text(detail.email);
 
@@ -78,12 +79,12 @@ function viewDetailResponse(response) {
 
     }
 
-    if(payment_list.length > 0){
+    if (payment_list.length > 0) {
         $.each(payment_list, function (index, value) {
-			var payment = JSON.parse(value.response);
-			var receiptUrl = payment.receipt_url;
+            var payment = JSON.parse(value.response);
+            var receiptUrl = payment.receipt_url;
 
-			html += `<tr class="identify">
+            html += `<tr class="identify">
 						<td class="nowrap grid-p-searchby">${index + 1}</td>
 						<td class="grid-p-searchby">${trimText(detail.first_name, 20)}</td>
 						<td class="grid-p-searchby">${value.plan != null ? value.plan.title : ''}</td>
@@ -97,12 +98,12 @@ function viewDetailResponse(response) {
 							</div>
 						</td>
 					</tr>`;
-		});
-    }else{
-		html = `<tr>
+        });
+    } else {
+        html = `<tr>
 					<td colspan="8"><p class="text-center">No record found!</p></td>
 				</tr>`;
-	}
+    }
 
     $("#payment_list_table").html(html);
 
@@ -111,52 +112,53 @@ function viewDetailResponse(response) {
 }
 
 
-function backToList(){
+function backToList() {
     $(".paymentDetail_section").hide();
     $(".paymentList_section").show(1000);
+    $('#searchInListing1').show();
 }
 
 $(document).ready(function () {
 
     getPaymentsPageData();
-    
+
 });
 
-$('#searchInListing').on("keyup", function (e)  {     
+$('#searchInListing').on("keyup", function (e) {
     var tr = $('.identify');
-    
+
     if ($(this).val().length >= 1) {//character limit in search box.
         var noElem = true;
         var val = $.trim(this.value).toLowerCase();
-        el = tr.filter(function() {
+        el = tr.filter(function () {
             return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
         });
         if (el.length >= 1) {
             noElem = false;
         }
         tr.not(el).hide();
-		el.fadeIn();
-	} else {
-		tr.fadeIn();
+        el.fadeIn();
+    } else {
+        tr.fadeIn();
     }
 });
 
-$('#searchInListing1').on("keyup", function (e)  {     
+$('#searchInListing1').on("keyup", function (e) {
     var tr = $('.identify1');
-    
+
     if ($(this).val().length >= 1) {//character limit in search box.
         var noElem = true;
         var val = $.trim(this.value).toLowerCase();
-        el = tr.filter(function() {
+        el = tr.filter(function () {
             return $(this).find('.grid-p-searchby1').text().toLowerCase().match(val);
         });
         if (el.length >= 1) {
             noElem = false;
         }
         tr.not(el).hide();
-		el.fadeIn();
-	} else {
-		tr.fadeIn();
+        el.fadeIn();
+    } else {
+        tr.fadeIn();
     }
 });
 

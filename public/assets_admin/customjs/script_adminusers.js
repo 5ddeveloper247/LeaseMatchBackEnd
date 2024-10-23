@@ -1,5 +1,10 @@
+
+
+
 $('#add_user_btn').click(function () {
     $('#add-user-popup').show();
+    $('.preview-img').attr('src', '');
+    $('.preview-img').remove();
 });
 // $('#edit_btn').click(function () {
 //     $('#edit-manager-popup').show();
@@ -66,7 +71,7 @@ $(document).on('click', '#saveuser_btn', function (e) {
     let data = new FormData(form);
     let type = 'POST';
     let url = '/admin/addUser';
-    SendAjaxRequestToServer(type, url, data, '', addUserResponse, '', '#saveuser_btn');
+    SendAjaxRequestToServer(type, url, data, '', addUserResponse, '', '');
 
 
 });
@@ -74,7 +79,6 @@ $(document).on('click', '#saveuser_btn', function (e) {
 function addUserResponse(response) {
 
     $('#uiBlocker').hide();
-
     if (response.status == 200) {
         toastr.success(response.message, '', {
             timeOut: 3000
@@ -138,7 +142,6 @@ $('#delete_confirmed_btn').click(function () {
 function deleteUserResponse(response) {
 
     $('#uiBlocker').hide();
-
     if (response.status == 200) {
 
         toastr.success(response.message, '', {
@@ -152,13 +155,13 @@ function deleteUserResponse(response) {
 
     if (response.status == 402) {
         $('#close_delete_modal_btn').click();
-
         error = response.message;
 
-    } else {
+    }
+    else {
         $('#close_delete_modal_btn').click();
 
-        error = response.responseJSON.message;
+        error = "Oops! Something went wrong";
     }
     toastr.error(error, '', {
         timeOut: 3000
@@ -222,7 +225,7 @@ function getUserdataResponse(response) {
         // Ensure user data is defined before accessing properties
         if (user) {
             var menu_controls = user.menu_controls || []; // Fallback to an empty array
-            var profile_picture = user.profile_picture ? base_url + user.profile_picture : ''; // Fallback to empty string
+            var profile_picture = user.profile_picture ? base_url + '/public' + user.profile_picture : ''; // Fallback to empty string
             const previewDiv = document.getElementById('preview-edit');
 
             // Clear previous preview
