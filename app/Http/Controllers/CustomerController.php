@@ -134,6 +134,7 @@ class CustomerController extends Controller
                 $data['properties'] = array();
             }
 
+            // dd($data);
             return view('customer/my_matches')->with($data);
         } else {
             return redirect()->route('customer.mySubscription');
@@ -147,7 +148,6 @@ class CustomerController extends Controller
         if (!$request->has('landlord_id')) {
             return redirect()->to('/customer/myMatches');
         }
-
 
         $data['page'] = 'Matches';
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->where('start_date', '<=', $currentDate)
@@ -605,37 +605,36 @@ class CustomerController extends Controller
 
 
     public function customer_account_profile(Request $request)
-{
-    $user = Auth::user(); // Get the authenticated user
-    $savedFilePaths = '';
-    $req_file = 'profile_picture';
-    $path = 'uploads/user/profile'; // Remove leading slash for correct path
+    {
+        $user = Auth::user(); // Get the authenticated user
+        $savedFilePaths = '';
+        $req_file = 'profile_picture';
+        $path = 'uploads/user/profile'; // Remove leading slash for correct path
 
-    // Validate the incoming request for file
-    $request->validate([
-        $req_file => 'nullable|file|mimes:jpeg,jpg,png,avif|max:2048' // Add validation rules
-    ]);
+        // Validate the incoming request for file
+        $request->validate([
+            $req_file => 'nullable|file|mimes:jpeg,jpg,png,avif|max:2048' // Add validation rules
+        ]);
 
-    if ($request->hasFile($req_file)) {
-        if (!File::isDirectory(public_path($path))) {
-            File::makeDirectory(public_path($path), 0777, true);
+        if ($request->hasFile($req_file)) {
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0777, true);
+            }
+
+            $uploadedFile = $request->file($req_file);
+            $file_extension = $uploadedFile->getClientOriginalExtension();
+            $date_append = Str::random(32);
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension);
+
+            $savedFilePaths = '/' . $path . '/' . $date_append . '.' . $file_extension; // Correct path for saved file
         }
 
-        $uploadedFile = $request->file($req_file);
-        $file_extension = $uploadedFile->getClientOriginalExtension();
-        $date_append = Str::random(32);
-        $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension);
+        // Update the user's profile picture if a new one was uploaded
+        if ($savedFilePaths) {
+            $user->profile_picture = $savedFilePaths;
+            $user->save(); // Save the updated user model
+        }
 
-        $savedFilePaths = '/' . $path . '/' . $date_append . '.' . $file_extension; // Correct path for saved file
+        return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
     }
-
-    // Update the user's profile picture if a new one was uploaded
-    if ($savedFilePaths) {
-        $user->profile_picture = $savedFilePaths;
-        $user->save(); // Save the updated user model
-    }
-
-    return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
-}
-
 }

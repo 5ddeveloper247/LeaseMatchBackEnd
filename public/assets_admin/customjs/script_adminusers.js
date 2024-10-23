@@ -217,7 +217,6 @@ $(document).on('click', '.edit_btn', function (e) {
 
 function getUserdataResponse(response) {
     $('#uiBlocker').hide();
-
     // Check if the response has a status property
     if (response && response.status === 200) {
         var user = response.data;
@@ -235,7 +234,6 @@ function getUserdataResponse(response) {
                 img.src = profile_picture;
                 img.alt = 'Image Preview';
                 img.classList.add('preview-img-edit'); // Add a class to control styling
-
                 // Append the image to the preview div
                 previewDiv.appendChild(img);
             } else {
