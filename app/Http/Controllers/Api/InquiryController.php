@@ -18,7 +18,7 @@ class InquiryController extends Controller
                 'businessName' => 'required|string|max:255',
                 'industrySector' => 'required|string|max:255',
                 'year' => 'required|integer|digits:4|max:' . date('Y'), // Updated validation rule
-                'companyWebsite' => 'required|string|max:255',
+                'companyWebsite' => 'nullable|string|max:255',
             ]);
         }
 

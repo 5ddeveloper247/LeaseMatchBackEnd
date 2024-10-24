@@ -80,12 +80,13 @@
                         <div id="slick-slider" class="slick-carousel">
                             <?php $property_images = isset($property_detail->propertyImages) ? $property_detail->propertyImages : []; ?>
 
-                            @if(!empty($property_images) && is_array($property_images))
+                            @if(!empty($property_images))
                             @foreach($property_images as $image)
                             <div class="img">
                                 <figure data-fancybox="detail"
-                                    data-href="{{ $image->path ?? asset('assets/images/property_default.jpg') }}">
-                                    <img src="{{ $image->path ?? asset('assets/images/property_default.jpg') }}" alt="">
+                                    data-href="{{ url('/').$image->path ?? asset('assets/images/property_default.jpg') }}">
+                                    <img src="{{ url('/').$image->path ?? asset('assets/images/property_default.jpg') }}"
+                                        alt="">
                                 </figure>
                             </div>
                             @endforeach
@@ -100,11 +101,12 @@
                         </div>
 
                         <div id="slick-thumbs" class="slick-carousel">
-                            @if(!empty($property_images) && is_array($property_images))
+                            @if(!empty($property_images))
                             @foreach($property_images as $image)
                             <div class="thumb">
                                 <figure>
-                                    <img src="{{ $image->path ?? asset('assets/images/property_default.jpg') }}" alt="">
+                                    <img src="{{ url('/').$image->path ?? asset('assets/images/property_default.jpg') }}"
+                                        alt="">
                                 </figure>
                             </div>
                             @endforeach
