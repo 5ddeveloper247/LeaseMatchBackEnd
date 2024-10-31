@@ -119,10 +119,10 @@
             
         </div>
         <br><br>
-        <div id="payments_chart" style="width: 100%;height:400px;"></div>
+        <div id="payments_chart" class="reponse" style="width: 100%;height:400px;"></div>
 
         <br><br>
-        <div id="property_register_chart" style="width: 100%;height:400px;"></div>
+        <div id="property_register_chart" class="reponse" style="width: 100%;height:400px;"></div>
     </section>
         
 

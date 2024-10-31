@@ -9,11 +9,11 @@
     <div class="contain-fluid">
         <ul class="crumbs">
             <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-            <li>Landlord</li>
+            <li>Property Information</li>
         </ul>
         <div class="tab-content">
             <div id="Appointment" class="tab-pane fade in active">
-                <div class="top_head">
+                <div class="top_head">  
                     <h4>Tenant Information</h4>
                 </div>
                 
