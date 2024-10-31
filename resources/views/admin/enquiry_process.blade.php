@@ -8,6 +8,7 @@
     #users_table{
         font-size:x-small;
     }
+    
 </style>
 
 <section id="listing">

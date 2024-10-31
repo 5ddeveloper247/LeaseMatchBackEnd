@@ -13,6 +13,22 @@
     input {
         width: 100% !important;
     }
+    @media (max-width: 768px) {
+    .filter-box .form_blk .form-control,
+    .filter-box .form_blk .text_box {
+        width: 100%; 
+    }
+
+    .filter-box .form_row .col-sm-3,
+    .filter-box .form_row .col-sm-6 {
+        width: 100%; 
+        margin-bottom: -9px; 
+    }
+    .btn_blk{
+        float: left;
+    }
+   
+}
 </style>
 
 <section id="listing">
@@ -57,6 +73,7 @@
             </div>--}}
         </div>
         <div class="top_head mt-5">
+
             <h4 class="filter-toggle">
                 <i class="fa fa-arrow-circle-right"></i>&nbsp;
                 Advance Search Filter 
@@ -65,6 +82,7 @@
         <div class="_inner filter-box" style="display:none;">
             <!-- <button type="button" class="x_btn" ></button> -->
             <h4></h4>
+            
             <form id="filter_form">
                 <div class="form_row row">
                     <div class="col-sm-3">
@@ -139,6 +157,9 @@
                 </div>
             </form>
         </div>
+
+
+
         <div class="top_head mt-5">
             <h4></h4>
             <div class="form_blk">

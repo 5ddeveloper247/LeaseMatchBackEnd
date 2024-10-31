@@ -61,6 +61,7 @@
                 Advance Search Filter 
             </h4>
         </div>
+
         <div class="_inner filter-box" style="display:none;">
             <form id="filter_form">
                 <div class="form_row row">
@@ -132,6 +133,7 @@
                 </div>
             </form>
         </div>
+        
         <div class="top_head mt-5">
             <h4></h4>
             <div class="form_blk">
@@ -699,3 +701,31 @@
 <script src="{{ asset('assets_admin/customjs/script_admintenant.js') }}"></script>
     
 @endpush
+
+<style scoped>
+
+.form_row h6 {
+    min-height: 4rem; 
+    display: flex;
+    align-items: center; 
+    margin-bottom: 0.5rem;
+    white-space: normal; 
+}
+    @media (max-width: 768px) {
+    .filter-box .form_blk .form-control,
+    .filter-box .form_blk .text_box {
+        width: 100%; 
+    }
+
+    .filter-box .form_row .col-sm-3,
+    .filter-box .form_row .col-sm-6 {
+        width: 100%; 
+        margin-bottom: -9px; 
+    }
+    .btn_blk{
+        float: left;
+    }
+   
+}
+
+    </style>
