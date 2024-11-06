@@ -29,6 +29,12 @@
         /* Keep aspect ratio of the image */
         /* Optional: Rounded corners for the image */
     }
+    @media (max-width: 768px) {
+    #listing .card_row>.col {
+        
+        height: 30vh;
+    }
+}
 </style>
 
 <section id="listing">
@@ -38,7 +44,7 @@
             <li>Sub-Admins</li>
         </ul>
         <!-- <div class="card_row flex_row" style="justify-content:end"> -->
-        <div class="card_row flex_row">
+        <div class="card_row flex_row container d-flex justify-content-center align-items-center">
 
             <div class="col">
                 <div class="card_blk">
@@ -46,6 +52,8 @@
                     <strong>Total</strong>
                 </div>
             </div>
+
+
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="active_users"></div>
@@ -54,6 +62,8 @@
                     </strong>
                 </div>
             </div>
+
+
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="inactive_users"></div>
@@ -72,6 +82,7 @@
                     </strong>
                 </div>
             </div>
+
         </div>
         <div class="top_head mt-5">
             <h4>Sub-Admins</h4>

@@ -8,7 +8,7 @@
     #users_table{
         font-size:x-small;
     }
-    @media (max-width: 768px) {
+     @media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {
         width: 100%; 
@@ -22,8 +22,8 @@
     .btn_blk{
         float: left;
     }
-   
 }
+
 </style>
 
 <section id="listing">

@@ -58,7 +58,7 @@
 
 <style scoped>
 
-@media (max-width: 765px) {
+@media (max-width: 768px) {
     aside ul li a {
     position: relative;
 }

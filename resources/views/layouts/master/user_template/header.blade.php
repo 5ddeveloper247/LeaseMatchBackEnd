@@ -1,6 +1,8 @@
 @php
 use Carbon\Carbon;
+
 @endphp
+
 <header>
     <div class="contain-fluid">
         <div id="nav">
@@ -84,17 +86,59 @@ use Carbon\Carbon;
                         <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
                         @endif
                     </div>
+
+
+
+
+
+
                     <div class="name text-capitalize" title="{{Auth::user()->first_name}}">
                         {{trimText(Auth::user()->first_name, 10)}} <small>Customer</small></div>
                 </div>
-                <div class="drop_cnt">
+                <!-- <div class="drop_cnt">
                     <ul class="drop_lst">
-
+                      <li><a href=""><b>User</b></a></li>
+                      <li><a href=""><small>Customer</small></a></li>
                         <li><a href="{{route('customer.logout')}}">Logout</a></li>
+                       
+                        
+
                     </ul>
-                </div>
+                </div> -->
+            <div class="drop_cnt show-small">
+                <ul class="drop_lst">
+                  <li><a href=""><b>User</b></a></li>
+                  <li><a href=""><small>Customer</small></a></li>
+                <li><a href="{{route('customer.logout')}}">Logout</a></li>
+               </ul>
+            </div>
+
+
+
+
             </div>
         </div>
     </div>
 </header>
 <!-- header -->
+ <style scoped>
+@media (max-width: 320px) {
+    aside {
+       
+        width: 42%;
+    }
+}
+
+.show-small {
+    display: none;
+}
+
+
+@media (max-width: 557px) {
+    .show-small {
+        display: block;
+    }
+}
+
+
+    </style>

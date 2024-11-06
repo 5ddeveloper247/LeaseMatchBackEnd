@@ -91,6 +91,7 @@
                         </div>
                     </div>
                 </div>
+                
                 @endforeach
                 
             </div>
@@ -229,4 +230,9 @@
             });
         });
     </script>
+    <style scoped>
+
+        </style>
 @endpush
+
+

@@ -24,6 +24,17 @@
             height: 16vh !important;
             background-color: #051855 !important;
         }
+        .margin{
+            margin: 0 -4rem !important;
+        }
+    }
+    @media (max-width: 576px) {
+        #logon .forgot { 
+            margin-top: 1px; font-size: 11px;
+         }   
+        .lbl_btn label { 
+            font-size: 12px;
+         }                     
     }
 </style>
 
@@ -47,7 +58,7 @@
                     <div class="col">
                         <div class="in_col">
 
-                            <form class="mx-5 px-5 mx-lg-0 px-lg-0" action="{{route('admin.loginSubmit')}}"
+                            <form class="mx-5 px-5 mx-lg-0 px-lg-0 margin" action="{{route('admin.loginSubmit')}}"
                                 method="POST">
                                 @csrf
                                 <div class="log_blk">
