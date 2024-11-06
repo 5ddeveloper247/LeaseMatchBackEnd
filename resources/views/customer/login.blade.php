@@ -26,6 +26,15 @@
             background-color: #051855 !important;
         }
     }
+    @media (max-width: 576px) {
+        #logon .forgot { 
+            margin-top: 1px; font-size: 11px;
+         }   
+        .lbl_btn label { 
+            font-size: 12px;
+         }                     
+    }
+
 </style>
 
 <body data-page="logon">
@@ -84,6 +93,7 @@
                                                 <i class="icon-eye toggle-password" id="eye"></i>
                                             </div>
                                         </div>
+
                                         <div class="col-xs-12">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="lbl_btn d-flex align-items-center">
@@ -96,6 +106,9 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="btn_blk form_btn">

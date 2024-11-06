@@ -21,8 +21,8 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li>Tenant</li>
         </ul>
-
-        <div class="card_row flex_row" >
+        
+        <div class="card_row flex_row d-flex justify-content-center align-items-center" >
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="total_count"></div>
@@ -711,7 +711,7 @@
     margin-bottom: 0.5rem;
     white-space: normal; 
 }
-    @media (max-width: 768px) {
+@media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {
         width: 100%; 
@@ -725,7 +725,18 @@
     .btn_blk{
         float: left;
     }
-   
 }
+
+
+@media (max-width: 768px) {
+.site_btn {
+    width: 42%;
+}
+}
+@media (max-width: 768px) {
+    #listing .card_row>.col {
+        
+        height: 30vh;
+    }
 
     </style>

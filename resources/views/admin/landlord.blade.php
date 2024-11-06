@@ -13,7 +13,7 @@
     input {
         width: 100% !important;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {
         width: 100%; 
@@ -27,7 +27,13 @@
     .btn_blk{
         float: left;
     }
-   
+}
+
+
+@media (max-width: 768px) {
+.site_btn {
+    width: 42%;
+}
 }
 </style>
 
@@ -38,7 +44,7 @@
             <li>Landlord</li>
         </ul>
         
-        <div class="card_row flex_row" >
+        <div class="card_row flex_row d-flex justify-content-center align-items-center" >
             
             <div class="col">
                 <div class="card_blk">

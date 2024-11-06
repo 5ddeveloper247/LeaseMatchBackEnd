@@ -42,3 +42,7 @@
 .slick-dots li button {font-size: 0;line-height: 0;display: block;width: 2.4rem;height: 0.3rem;padding: 0;cursor: pointer;color: transparent;border: 0;outline: none;background: #fff;}
 
 .slick-dots li:not(.slick-active) button:not(:hover) {opacity: 0.5;}
+
+#plan #slick-pricing .item {
+    margin-left: 0 !important;
+}
