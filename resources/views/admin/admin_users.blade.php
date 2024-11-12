@@ -29,6 +29,12 @@
         /* Keep aspect ratio of the image */
         /* Optional: Rounded corners for the image */
     }
+
+    .preview-img {
+        width: 100px !important;
+        border-radius: 4px
+    }
+
     @media (max-width: 768px) {
     #listing .card_row>.col {
         
