@@ -198,10 +198,10 @@
                                     <a href="javascript:;">
                                         @if (Auth::user()->profile_picture !==null)
                                         <img class="avatar border-gray"
-                                        src="{{url('/').'/public'.Auth::user()->profile_picture}}" alt="...">
+                                            src="{{url('/').'/public'.Auth::user()->profile_picture}}" alt="...">
                                         @else
                                         <img class="avatar border-gray"
-                                        src="{{asset('assets/images/users/user-placeholder.png')}}" alt="...">
+                                            src="{{asset('assets/images/users/user-placeholder.png')}}" alt="...">
                                         @endif
 
                                     </a>
@@ -246,11 +246,25 @@ document.getElementById('profile-img-edit').addEventListener('change', function(
 
     }
     function getProfileEditResponse(response){
+
         if(response.status==200){
+            toastr.success("Profile picture updated successfully",'Updated',{
+                "timeOut":3000,
+            })
             location.reload();
+
         }
+        else if(response.status==422){
+            const err=response.responseJSON.errors;
+            const errors=Object.keys(err).map(function(key){
+                toastr.error(err[key][0],'Oops!',{
+                    "timeOut":3000,
+                })
+                });
+        }
+
         else{
-            toastr.error('Oops! something went wrong','',{
+            toastr.error("Oops! something went wrong",'Oops!',{
                 "timeOut":3000,
             })
         }

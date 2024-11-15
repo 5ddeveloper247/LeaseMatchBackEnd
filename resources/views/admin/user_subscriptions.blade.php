@@ -18,12 +18,12 @@
         </ul>
         <div class="top_head mt-5">
             <h4>User Subscriptions</h4>
-            <div class="form_blk">
+            <div class="form_blk searchContainer">
                 <input type="text" id="searchInListing1" class="text_box" placeholder="Search here" maxlength="50">
                 <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
             </div>
         </div>
-        
+
         <div class="blk listing_section">
             <div class="tbl_blk">
                 <table id="users_table" class="table table-responsive">
@@ -40,19 +40,19 @@
                     </thead>
                     <tbody id="subscription_table_body">
 
-                   
+
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="detail_section" style="display:none;">
-            
+
             <div class="payment-detail">
                 <div class="top-bar-user top-header-payment-details">
                     <div class="detail-image-top">
                         <img src="{{asset('assets/images/users/user-placeholder.png')}}" alt="">
                         <div class="px-2" style="padding-left: 2rem;">
-                            
+
                             <p class="d-flex align-items-center text-white">
                                 <i class="fa fa-user" title="Username"></i>
                                 <span class="px-2" id="user_name"></span>
@@ -133,7 +133,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -178,12 +178,12 @@
                                             <input type="date" name="" id="user_dob" class="form-control text_box" placeholder="">
                                         </div>
                                     </div>
-                                    
-                                    
-                                    
+
+
+
                                 </div>
                             </form>
-                            
+
                         </div>
                         <br>
                         <div class="tbl_blk">
@@ -209,16 +209,16 @@
                     </div>
                 </div>
             </div> -->
-            
+
         </div>
-        
+
     </div>
 </section>
 
 @endsection
 
 @push('script')
-    
+
 <script src="{{ asset('assets_admin/customjs/script_adminusersubscriptions.js') }}"></script>
-    
+
 @endpush

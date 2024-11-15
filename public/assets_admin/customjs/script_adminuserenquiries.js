@@ -78,7 +78,7 @@ function makeWaitingEnquiryListing(waiting_enquiries) {
             // Safely handle dynamic data rendering and ensure all fields are available
             html += `<tr class="identify1">
                         <td class="nowrap grid-p-searchby1">${index + 1}</td>
-                        <td class="grid-p-searchby">${trimText(value.user?.first_name || '', 15)}</td>
+                        <td class="grid-p-searchby1">${trimText(value.user?.first_name || '', 15)}</td>
                         <td class="grid-p-searchby1">${trimText(landlord.full_name || '', 15)}</td>
                         <td class="grid-p-searchby1">${enquiryType}</td>
                         <td class="grid-p-searchby1">${enquiryRequests[0]?.message ? trimText(enquiryRequests[0].message, 30) : ''}</td>

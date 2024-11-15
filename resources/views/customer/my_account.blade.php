@@ -6,22 +6,22 @@
 
 @section('content')
 <style>
-@media (max-width: 768px) {
-.card {
-   
-    margin-top: 3%;
-}
-}
+    @media (max-width: 768px) {
+        .card {
+
+            margin-top: 3%;
+        }
+    }
 
 
 
 
 
     .card-user .card-image img {
-    height: auto;
-    width: 100%;
-    object-fit: cover; 
-}
+        height: auto;
+        width: 100%;
+        object-fit: cover;
+    }
 
     .profile {
         padding: 2rem;
@@ -98,6 +98,7 @@
         border: 1px solid rgba(0, 0, 0, .125);
         border-radius: .25rem;
     }
+
     .tab_list {
         margin-left: 2%;
     }
@@ -351,16 +352,30 @@ document.getElementById('profile-img-edit').addEventListener('change', function(
 
     }
     function getProfileEditResponse(response){
-        if(response.status==200){
-            location.reload();
-        }
-        else{
-            toastr.error('Oops! something went wrong','',{
-                "timeOut":3000,
-            })
-        }
 
-    }
+if(response.status==200){
+    toastr.success("Profile picture updated successfully",'Updated',{
+        "timeOut":3000,
+    })
+    location.reload();
+
+}
+else if(response.status==422){
+    const err=response.responseJSON.errors;
+    const errors=Object.keys(err).map(function(key){
+        toastr.error(err[key][0],'Oops!',{
+            "timeOut":3000,
+        })
+        });
+}
+
+else{
+    toastr.error("Oops! something went wrong",'Oops!',{
+        "timeOut":3000,
+    })
+}
+
+}
 });
 </script>
 @endpush

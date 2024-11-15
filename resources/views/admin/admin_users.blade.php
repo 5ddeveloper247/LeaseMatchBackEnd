@@ -36,11 +36,11 @@
     }
 
     @media (max-width: 768px) {
-    #listing .card_row>.col {
-        
-        height: 30vh;
+        #listing .card_row>.col {
+
+            height: 30vh;
+        }
     }
-}
 </style>
 
 <section id="listing">
@@ -164,7 +164,7 @@
                                         <div class="col-xs-6">
                                             <div class="form_blk">
                                                 <h6>Contact Number</h6>
-                                                <input type="number" name="phone_number_edit" id="phone_number_edit"
+                                                <input type="text" name="phone_number_edit" id="phone_number_edit"
                                                     class="text_box" placeholder="eg: +92300 0000 000" maxlength="15">
                                             </div>
                                         </div>
@@ -265,7 +265,7 @@
                                         <div class="col-xs-6">
                                             <div class="form_blk">
                                                 <h6>Contact Number</h6>
-                                                <input type="number" name="phone_number" id="phone_number"
+                                                <input type="text" name="phone_number" id="phone_number"
                                                     class="text_box" placeholder="eg: +92300 0000 000" maxlength="18">
                                             </div>
                                         </div>
@@ -436,31 +436,16 @@ document.getElementById('profile-img-edit').addEventListener('change', function(
 
 
 <script>
-    $('#phone_number').on('keyup', function (e) {
-        var phone_number = $(this).val();
-        console.log(phone_number);
-        if (phone_number == 'e' || phone_number == 'E') {
-            $(this).val('');
-        }
-        var pattern = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
-        if (!pattern.test(phone_number)) {
-            $(this).val('');
-            toastr.error('Invalid phone number format.', '', { timeOut: 3000 });
-        }
-    })
-    $('#phone_number_edit').on('keyup', function (e) {
-        var phone_number = $(this).val();
-        console.log(phone_number);
+    $('#phone_number').on('input', function () {
+    // Remove all non-numeric characters
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
 
-        if (phone_number == 'e' || phone_number == 'E') {
-            $(this).val('');
-        }
-        var pattern = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
-        if (!pattern.test(phone_number)) {
-            $(this).val('');
-            toastr.error('Invalid phone number format.', '', { timeOut: 3000 });
-        }
-    })
+$('#phone_number_edit').on('input', function () {
+    // Remove all non-numeric characters
+    this.value = this.value.replace(/[^0-9]/g, '');
+
+});
 
 </script>
 @endpush

@@ -100,18 +100,18 @@ use Carbon\Carbon;
                       <li><a href=""><b>User</b></a></li>
                       <li><a href=""><small>Customer</small></a></li>
                         <li><a href="{{route('customer.logout')}}">Logout</a></li>
-                       
-                        
+
+
 
                     </ul>
                 </div> -->
-            <div class="drop_cnt show-small">
-                <ul class="drop_lst">
-                  <li><a href=""><b>User</b></a></li>
-                  <li><a href=""><small>Customer</small></a></li>
-                <li><a href="{{route('customer.logout')}}">Logout</a></li>
-               </ul>
-            </div>
+                <div class="drop_cnt show-small">
+                    <ul class="drop_lst">
+                        <li><a href=""><b>{{Auth::user()->first_name}}</b></a></li>
+                        {{-- <li><a href=""><small>Customer</small></a></li> --}}
+                        <li><a href="{{route('customer.logout')}}">Logout</a></li>
+                    </ul>
+                </div>
 
 
 
@@ -121,24 +121,22 @@ use Carbon\Carbon;
     </div>
 </header>
 <!-- header -->
- <style scoped>
-@media (max-width: 320px) {
-    aside {
-       
-        width: 42%;
+<style scoped>
+    @media (max-width: 320px) {
+        aside {
+
+            width: 42%;
+        }
     }
-}
 
-.show-small {
-    display: none;
-}
-
-
-@media (max-width: 557px) {
     .show-small {
-        display: block;
+        display: none;
     }
-}
 
 
-    </style>
+    @media (max-width: 557px) {
+        .show-small {
+            display: block;
+        }
+    }
+</style>
