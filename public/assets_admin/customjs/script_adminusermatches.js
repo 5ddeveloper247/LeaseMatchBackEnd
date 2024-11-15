@@ -53,7 +53,6 @@ $(document).on('click', '.view_matches_detail', function (e) {
     var user_id = $(this).attr('data-id');
     $('#active_user_id').val('');
     $('#active_user_id').val(user_id);
-
     viewMatchesListWrtUserResponse(user_id)
 
 });

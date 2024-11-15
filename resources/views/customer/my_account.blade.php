@@ -6,6 +6,23 @@
 
 @section('content')
 <style>
+@media (max-width: 768px) {
+.card {
+   
+    margin-top: 3%;
+}
+}
+
+
+
+
+
+    .card-user .card-image img {
+    height: auto;
+    width: 100%;
+    object-fit: cover; 
+}
+
     .profile {
         padding: 2rem;
     }
@@ -80,6 +97,9 @@
         background-clip: border-box;
         border: 1px solid rgba(0, 0, 0, .125);
         border-radius: .25rem;
+    }
+    .tab_list {
+        margin-left: 2%;
     }
 </style>
 <section>

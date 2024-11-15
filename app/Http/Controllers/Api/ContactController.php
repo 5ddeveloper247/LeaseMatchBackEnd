@@ -21,7 +21,7 @@ class ContactController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            //Contact Us
+            // Contact Us
             'name' => 'required|max:255',
             'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             'subject' => 'required|max:255',

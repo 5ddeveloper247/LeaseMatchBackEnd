@@ -8,6 +8,22 @@
     #users_table{
         font-size:x-small;
     }
+     @media (max-width: 460px) {
+    .filter-box .form_blk .form-control,
+    .filter-box .form_blk .text_box {
+        width: 100%; 
+    }
+
+    .filter-box .form_row .col-sm-3,
+    .filter-box .form_row .col-sm-6 {
+        width: 100%; 
+        margin-bottom: -9px; 
+    }
+    .btn_blk{
+        float: left;
+    }
+}
+
 </style>
 
 <section id="listing">

@@ -52,6 +52,7 @@ use App\Models\TenantEnquiryRequests;
 use App\Models\TenantEnquiryDocument;
 
 
+
 class AdminController extends Controller
 {
     /**
@@ -95,6 +96,7 @@ class AdminController extends Controller
         //                                         $query->select('landlord_id')
         //                                             ->from('property_matches');
         //                                     })->count();
+
 
         $endDate = Carbon::today();
         $startDate = $endDate->copy()->subDays(14);

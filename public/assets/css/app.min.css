@@ -5492,7 +5492,7 @@ footer .social_logos>li>a>img {
 
 #logon .forgot {
     margin-top: 1rem;
-    font-weight: 600
+    
 }
 
 #logon .otp_blk {
@@ -7571,6 +7571,13 @@ aside ul>li>a>span {
     #leasing_dash .main_row>.col {
         width: 100%
     }
+}
+
+@media (max-width: 901px) {
+#plan #slick-pricing .item {
+   
+    margin-left: 1%;
+}
 }
 
 #plan .pricing_row {

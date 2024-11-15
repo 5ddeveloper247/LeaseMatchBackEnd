@@ -21,7 +21,7 @@
             <li>Required Documents</li>
         </ul>
         
-        <div class="card_row flex_row" >
+        <div class="card_row flex_row d-flex justify-content-center align-items-center" >
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="total_active"></div>

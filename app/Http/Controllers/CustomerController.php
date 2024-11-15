@@ -143,6 +143,9 @@ class CustomerController extends Controller
 
     public function property_detail(Request $request)
     {
+        if (!$request->landlord_id) {
+            return redirect()->back();
+        }
         $currentDate = Carbon::now()->format('Y-m-d');
 
         if (!$request->has('landlord_id')) {

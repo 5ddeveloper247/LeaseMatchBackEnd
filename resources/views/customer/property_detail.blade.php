@@ -4,6 +4,7 @@
 @extends('layouts.master.user_template.master')
 
 @push('css')
+
 @endpush
 
 @section('content')
@@ -12,7 +13,40 @@
         font-size: x-small;
     }
 </style>
+<style>
+    .form_blk {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+    }
 
+    /* Style the file input */
+    .file_input {
+        width: 100%;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
+
+    .file_input::file-selector-button {
+        display: none;
+    }
+
+    .file_input::-webkit-file-upload-button {
+        display: none;
+        /* Hides default button */
+    }
+
+    /* Optional: Add hover effect for the file input */
+    .file_input:hover {
+        background-color: #e2e2e2;
+    }
+</style>
 <section id="detail">
     <div class="contain">
         <div class="title_blk">
@@ -38,7 +72,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="main_row flex_row">
             <div class="col col1">
