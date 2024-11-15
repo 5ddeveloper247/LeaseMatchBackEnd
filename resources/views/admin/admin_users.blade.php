@@ -416,4 +416,34 @@ document.getElementById('profile-img-edit').addEventListener('change', function(
 });
 
 </script>
+
+
+<script>
+    $('#phone_number').on('keyup', function (e) {
+        var phone_number = $(this).val();
+        console.log(phone_number);
+        if (phone_number == 'e' || phone_number == 'E') {
+            $(this).val('');
+        }
+        var pattern = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
+        if (!pattern.test(phone_number)) {
+            $(this).val('');
+            toastr.error('Invalid phone number format.', '', { timeOut: 3000 });
+        }
+    })
+    $('#phone_number_edit').on('keyup', function (e) {
+        var phone_number = $(this).val();
+        console.log(phone_number);
+
+        if (phone_number == 'e' || phone_number == 'E') {
+            $(this).val('');
+        }
+        var pattern = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
+        if (!pattern.test(phone_number)) {
+            $(this).val('');
+            toastr.error('Invalid phone number format.', '', { timeOut: 3000 });
+        }
+    })
+
+</script>
 @endpush

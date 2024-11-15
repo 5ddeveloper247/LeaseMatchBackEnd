@@ -164,9 +164,7 @@ class CustomerController extends Controller
                 'propertyImages'
             ])
             ->first();
-
         $data['curr_plan'] = isset($currentPlan->plan) ? $currentPlan->plan : '';
-
         $enquiry_detail = TenantEnquiryHeader::where('user_id', Auth::user()->id)->where('landlord_id', $request->landlord_id)->first();
         $data['enquiry_detail'] = $enquiry_detail;
 

@@ -326,6 +326,7 @@ $(document).ready(function () {
 
     loadUsersList();
 
+   
 });
 
 $('#searchInListing').on("keyup", function (e) {
@@ -345,6 +346,10 @@ $('#searchInListing').on("keyup", function (e) {
     } else {
         tr.fadeIn();
     }
+
+
+
+
 });
 
 

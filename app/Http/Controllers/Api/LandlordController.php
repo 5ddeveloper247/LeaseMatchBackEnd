@@ -163,6 +163,7 @@ class LandlordController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
+                'error' => $e->getMessage()
             ], 500);
         }
     }
