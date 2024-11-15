@@ -111,10 +111,10 @@ function viewDetailResponse(response) {
     // Ensure user_detail exists before accessing its properties
     if (user_detail) {
         $("#user_id").val(user_detail.id || '');
-        $("#user_name").text(user_detail?.personal_info?.name || 'N/A');
-        $("#user_email").text(user_detail?.personal_info?.email || 'N/A');
+        $("#user_name").text(data?.user_detail?.first_name || 'N/A');
+        $("#user_email").text(data?.user_detail?.email || 'N/A');
         // Safely access nested properties within personal_info
-        $("#user_phone").text(user_detail?.personal_info?.phone_number || 'N/A');
+        $("#user_phone").text(data?.user_detail?.phone_number || 'N/A');
         $("#user_dob").text(user_detail?.personal_info?.date_of_birth
             ? formatDate(user_detail?.created_at)
             : 'N/A');
