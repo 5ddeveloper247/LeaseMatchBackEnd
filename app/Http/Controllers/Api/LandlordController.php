@@ -17,12 +17,32 @@ use App\Models\Api\LandlordRental;
 use App\Models\Api\LandlordTenant;
 use App\Models\Api\LandlordAdditional;
 use App\Models\Api\LandlordPropertyImages;
+use Illuminate\Validation\Rule;
 
 class LandlordController extends Controller
 {
 
     public function storeLandlord(Request $request)
     {
+        // Sanitize numeric fields
+        $numericFields = [
+            'phone_number',
+            'number_of_units',
+            'year_built',
+            'major_renovation',
+            'size_square_feet',
+            'number_of_bedrooms',
+            'number_of_bathrooms',
+            'monthly_rent',
+            'security_deposit',
+            'lease_duration'
+        ];
+
+        foreach ($numericFields as $field) {
+            if ($request->has($field)) {
+                $request->merge([$field => preg_replace('/\D/', '', $request->input($field))]);
+            }
+        }
         $validator = Validator::make($request->all(), [
             'full_name' => 'required|string|max:100',
             'email' => 'required|email|max:100',
@@ -67,7 +87,6 @@ class LandlordController extends Controller
         }
 
         try {
-
             // If validation passes, handle the incoming request data and save it accordingly
             $personal = new LandlordPersonal();
             $personal->full_name = $request->input('full_name');
@@ -123,16 +142,12 @@ class LandlordController extends Controller
                 if (!File::isDirectory(public_path($path))) {
                     File::makeDirectory(public_path($path), 0777, true);
                 }
-
                 $uploadedFiles = $request->file($req_file);
-
                 foreach ($uploadedFiles as $file) {
                     $file_extension = $file->getClientOriginalExtension();
                     $date_append = Str::random(32);
                     $file->move(public_path($path), $date_append . '.' . $file_extension);
-
                     $savedFilePaths = '/public' . $path . '/' . $date_append . '.' . $file_extension;
-
                     $propertyImages = new LandlordPropertyImages();
                     $propertyImages->landlord_id = $personal->id;
                     $propertyImages->file_name = $file->getClientOriginalName();
@@ -159,27 +174,40 @@ class LandlordController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             Log::error('Error storing contact: ' . $e->getMessage());
-
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
-                'error' => $e->getMessage()
+                'error' => $e
             ], 500);
         }
     }
 
     public function validateForm(Request $request)
     {
-
         if ($request->input('step') == '1') {
+            // Preprocess the phone number field to remove spaces
+            $input = $request->all();
+
+            if (isset($input['phone_number'])) {
+                // Remove all spaces from the phone_number
+                $input['phone_number'] = preg_replace('/\D/', '', $input['phone_number']);
+            }
+
             // Define validation rules
-            $validator = Validator::make($request->all(), [
+            $validator = Validator::make($input, [
                 'full_name' => 'required|string|max:100',
-                'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                'phone_number' => 'required|numeric|digits_between:7,18',
+                'email' => [
+                    'required',
+                    'email',
+                    'max:100',
+                    'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                    Rule::unique('landlord_personal', 'email'), // Ensure email is unique in the landlord_personals table
+                ],
+                'phone_number' => 'required|numeric|digits_between:7,18', // Validate the sanitized phone number
                 'company_name' => 'required|max:100',
             ]);
         }
+
         if ($request->input('step') == '2') {
             // Define validation rules
             $validator = Validator::make($request->all(), [
@@ -193,9 +221,27 @@ class LandlordController extends Controller
             ]);
         }
         if ($request->input('step') == '3') {
+            // Preprocess fields to remove spaces
+            $input = $request->all();
+
+            $fieldsToClean = ['size_square_feet', 'number_of_bedrooms', 'number_of_bathrooms'];
+
+            foreach ($fieldsToClean as $field) {
+                if (isset($input[$field])) {
+                    // Remove all spaces and ensure the value is clean
+                    $input[$field] = preg_replace('/\D/', '', $input[$field]);
+
+                    // Ensure the cleaned value is a valid numeric (integer)
+                    if (!is_numeric($input[$field])) {
+                        // Set the value to null or trigger an error
+                        $input[$field] = null; // You can set this to null or handle it differently
+                    }
+                }
+            }
+
             // Define validation rules
-            $validator = Validator::make($request->all(), [
-                'size_square_feet' => 'required|numeric|digits_between:1,10',
+            $validator = Validator::make($input, [
+                'size_square_feet' => 'required|numeric|digits_between:1,10', // Use numeric instead of integer for better validation
                 'number_of_bedrooms' => 'required|numeric|digits_between:1,10',
                 'number_of_bathrooms' => 'required|numeric|digits_between:1,10',
                 'rental_type' => 'required|string|max:100',
@@ -207,6 +253,8 @@ class LandlordController extends Controller
                 'special_feature' => 'required|max:255',
             ]);
         }
+
+
 
         if ($request->input('step') == '4') {
             // Define validation rules
@@ -249,6 +297,7 @@ class LandlordController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
+                'error' => $e
             ], 500);
         }
     }

@@ -33,6 +33,26 @@ class RegistrationController extends Controller
 
     public function storeRegistration(Request $request)
     {
+        $input = $request->all();
+
+    // Sanitize all numeric fields
+    $numericFields = [
+        'phone_number', // Step 1
+        'min_bedrooms_needed', 'min_bathrooms_needed', // Step 2
+        'rental_budget', // Step 3
+        'number_of_pets', // Step 7
+        'max_rent_to_pay', // Step 9
+    ];
+
+    foreach ($numericFields as $field) {
+        if (isset($input[$field])) {
+            // Remove all non-numeric characters
+            $input[$field] = preg_replace('/\D/', '', $input[$field]);
+        }
+    }
+
+    // Replace the sanitized input back into the request for validation
+    $request->merge($input);
 
         // Define validation rules
         $validator = Validator::make($request->all(), [
@@ -301,6 +321,28 @@ class RegistrationController extends Controller
 
     public function validateForm(Request $request)
     {
+         // Get all input data
+    $input = $request->all();
+
+    // Sanitize all numeric fields
+    $numericFields = [
+        'phone_number', // Step 1
+        'min_bedrooms_needed', 'min_bathrooms_needed', // Step 2
+        'rental_budget', // Step 3
+        'number_of_pets', // Step 7
+        'max_rent_to_pay', // Step 9
+    ];
+
+    foreach ($numericFields as $field) {
+        if (isset($input[$field])) {
+            // Remove all non-numeric characters
+            $input[$field] = preg_replace('/\D/', '', $input[$field]);
+        }
+    }
+
+    // Replace the sanitized input back into the request for validation
+    $request->merge($input);
+
         if ($request->input('step') == '1') {
             $validator = Validator::make($request->all(), [
                 //personal Information
