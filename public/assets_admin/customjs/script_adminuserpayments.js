@@ -64,52 +64,60 @@ $(document).on('click', '.view_payment_detail', function (e) {
 });
 
 function viewDetailResponse(response) {
-
-    var data = response.data;
-    var detail = data.detail;
-    var payment_list = detail.user_payments;
+    var data = response?.data || {};
+    var detail = data?.detail || {};
+    var payment_list = detail?.user_payments || [];
     var html = '';
 
-    if (detail != null) {
-        $("#user_name").text(detail.first_name);
-        $("#user_email").text(detail.email);
+    // Handle detail section
+    if (Object.keys(detail).length > 0) {
+        $("#user_name").text(detail?.first_name || "N/A");
+        $("#user_email").text(detail?.email || "N/A");
 
-        $("#user_phone").text(detail.personal_info.phone_number);
-        $("#user_dob").text(formatDate(detail.personal_info.date_of_birth));
-
+        $("#user_phone").text(detail?.personal_info?.phone_number || "N/A");
+        $("#user_dob").text(formatDate(detail?.personal_info?.date_of_birth || ""));
+    } else {
+        $("#user_name").text("N/A");
+        $("#user_email").text("N/A");
+        $("#user_phone").text("N/A");
+        $("#user_dob").text("N/A");
     }
 
+    // Handle payment list section
     if (payment_list.length > 0) {
         $.each(payment_list, function (index, value) {
-            var payment = JSON.parse(value.response);
-            var receiptUrl = payment.receipt_url;
+            var payment = value?.response ? JSON.parse(value.response) : {};
+            var receiptUrl = payment?.receipt_url || "#";
 
             html += `<tr class="identify">
-						<td class="nowrap grid-p-searchby">${index + 1}</td>
-						<td class="grid-p-searchby">${trimText(detail.first_name, 20)}</td>
-						<td class="grid-p-searchby">${value.plan != null ? value.plan.title : ''}</td>
-						<td class="nowrap grid-p-searchby" >${value.transaction_id}</td>
-                        <td class="nowrap grid-p-searchby" >${value.amount != null ? formatCurrency(value.amount) : '0.00'}</td>
-                        <td class="nowrap grid-p-searchby" >${formatDate(value.date)}</td>
-						<td class="nowrap grid-p-searchby" >${value.status}</td>
-						<td class="nowrap" data-center>
-							<div class="act_btn">
-								<a class="copy" href="${receiptUrl}" target="_blank" title="View Payment Receipt"></a>
-							</div>
-						</td>
-					</tr>`;
+                        <td class="nowrap grid-p-searchby">${index + 1}</td>
+                        <td class="grid-p-searchby">${trimText(detail?.first_name || "N/A", 20)}</td>
+                        <td class="grid-p-searchby">${value?.plan?.title || "N/A"}</td>
+                        <td class="nowrap grid-p-searchby">${value?.transaction_id || "N/A"}</td>
+                        <td class="nowrap grid-p-searchby">${value?.amount != null ? formatCurrency(value.amount) : "0.00"}</td>
+                        <td class="nowrap grid-p-searchby">${formatDate(value?.date || "")}</td>
+                        <td class="nowrap grid-p-searchby">${value?.status || "N/A"}</td>
+                        <td class="nowrap" data-center>
+                            <div class="act_btn">
+                                <a class="copy" href="${receiptUrl}" target="_blank" title="View Payment Receipt"></a>
+                            </div>
+                        </td>
+                    </tr>`;
         });
     } else {
         html = `<tr>
-					<td colspan="8"><p class="text-center">No record found!</p></td>
-				</tr>`;
+                    <td colspan="8"><p class="text-center">No record found!</p></td>
+                </tr>`;
     }
 
+    // Update payment list table
     $("#payment_list_table").html(html);
 
+    // Toggle sections visibility
     $(".paymentList_section").hide();
     $(".paymentDetail_section").show(1000);
 }
+
 
 
 function backToList() {

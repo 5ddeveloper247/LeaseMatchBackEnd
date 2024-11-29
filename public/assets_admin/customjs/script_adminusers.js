@@ -24,45 +24,54 @@ function loadUsersList() {
 
 
 function loadUsersListResponse(response) {
-
     var usersTableBody = $('#users_table_body');
     usersTableBody.empty();
-    var users_list = response.data.admin_list;
-    var inactive_users = response.data.inactive_users;
-    var active_users = response.data.active_users;
+
+    // Extract data with default fallback to avoid undefined/null errors
+    var users_list = response?.data?.admin_list || [];
+    var inactive_users = response?.data?.inactive_users || 0;
+    var active_users = response?.data?.active_users || 0;
     var total_users = users_list.length;
 
-    $.each(users_list, function (index, value) {
+    // If user list is empty, show a "No Data Found" row
+    if (users_list.length <= 0) {
+        usersTableBody.append(`
+            <tr>
+                <td colspan="7" class="text-center">No Data Found</td>
+            </tr>
+        `);
+    } else {
+        // Populate the table with user data
+        $.each(users_list, function (index, value) {
+            var html = `<tr class="identify">
+                            <td class="nowrap grid-p-searchby">${index + 1}</td>
+                            <td class="grid-p-searchby">${trimText(value?.first_name || "N/A", 20)}</td>
+                            <td class="grid-p-searchby">${value?.email || "N/A"}</td>
+                            <td class="nowrap grid-p-searchby">${value?.phone_number || "N/A"}</td>
+                            <td class="nowrap grid-p-searchby">${formatDate(value?.created_at || "")}</td>
+                            <td data-center>
+                                <div class="switch">
+                                    <input type="checkbox" onclick="changestatus(${value?.id || 0})" name="status" id="status" ${value?.status == '1' ? 'checked' : ''}>
+                                    <em></em>
+                                </div>
+                            </td>
+                            <td class="nowrap" data-center>
+                                <div class="act_btn">
+                                    <button type="button" class="edit pop_btn edit_btn" title="Edit" data-popup="edit-data-popup" data-id="${value?.id || 0}"></button>
+                                    <button type="button" class="del pop_btn delete_btn" title="Delete" data-id="${value?.id || 0}" data-popup="delete-data-popup"></button>
+                                </div>
+                            </td>
+                        </tr>`;
+            usersTableBody.append(html);
+        });
+    }
 
-        var html = `<tr class="identify">
-                        <td class="nowrap grid-p-searchby">${index + 1}</td>
-                        <td class="grid-p-searchby">${trimText(value.first_name, 20)}</td>
-                        <td class="grid-p-searchby">${value.email}</td>
-                        <td class="nowrap grid-p-searchby" >${value.phone_number ? value.phone_number : ''}</td>
-                        <td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
-                        <td data-center>
-                            <div class="switch" >
-                                <input type="checkbox" onclick="changestatus(${value.id})" name="status" id="status" ${value.status == '1' ? 'checked' : ''}>
-                                <em></em>
-                            </div>
-                        </td>
-
-                        <td class="nowrap" data-center>
-                            <div class="act_btn">
-                                <button type="button" class="edit pop_btn edit_btn"title="Edit"  data-popup="edit-data-popup" data-id = "${value.id}"></button>
-                                <button type="button" class="del pop_btn delete_btn" title="Delete" data-id = "${value.id}" data-popup="delete-data-popup"></button>
-                            </div>
-                        </td>
-                    </tr>`;
-        usersTableBody.append(html);
-    });
-
+    // Update user counts
     $('#total_users').text(total_users);
     $('#inactive_users').text(inactive_users);
     $('#active_users').text(active_users);
-
-
 }
+
 
 $(document).on('click', '#saveuser_btn', function (e) {
     e.preventDefault();
@@ -326,7 +335,7 @@ $(document).ready(function () {
 
     loadUsersList();
 
-   
+
 });
 
 $('#searchInListing').on("keyup", function (e) {

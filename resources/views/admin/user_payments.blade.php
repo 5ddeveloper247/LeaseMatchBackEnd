@@ -16,11 +16,11 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li onclick="backToList();" style="cursor:pointer;">User Payments</li>
         </ul>
-        
+
         <div class="top_head mt-5">
             <h4>User Payments</h4>
-            <div class="form_blk">
-                <input type="text" id="searchInListing1" class="text_box" placeholder="Search here" maxlength="50">
+            <div class="form_blk" id="searchInListing1">
+                <input type="text"  class="text_box" placeholder="Search here" maxlength="50">
                 <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
             </div>
         </div>
@@ -35,12 +35,12 @@
                             <th width="40">Phone Number</th>
                             <th width="40" >Total Payments</th>
                             <th width="40" data-center>Action</th>
-                           
+
                         </tr>
                     </thead>
                     <tbody id="payments_table_body">
 
-                   
+
                     </tbody>
                 </table>
             </div>
@@ -127,12 +127,12 @@
                                     </tr>
                                 </thead>
                                 <tbody id="payment_list_table">
-                                    
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <!-- <div class="table_dv">
@@ -176,12 +176,12 @@
                                             <input type="date" name="" id="user_dob" class="form-control text_box" placeholder="">
                                         </div>
                                     </div>
-                                    
-                                    
-                                    
+
+
+
                                 </div>
                             </form>
-                            
+
                         </div>
                         <br>
                         <div class="tbl_blk">
@@ -201,23 +201,23 @@
                                     </tr>
                                 </thead>
                                 <tbody id="payment_list_table">
-                                    
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div> -->
-            
+
         </div>
-        
+
     </div>
 </section>
 
 @endsection
 
 @push('script')
-    
+
 <script src="{{ asset('assets_admin/customjs/script_adminuserpayments.js') }}"></script>
-    
+
 @endpush

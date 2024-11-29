@@ -224,7 +224,7 @@ class LandlordController extends Controller
             // Preprocess fields to remove spaces
             $input = $request->all();
 
-            $fieldsToClean = ['size_square_feet', 'number_of_bedrooms', 'number_of_bathrooms'];
+            $fieldsToClean = ['size_square_feet', 'number_of_bedrooms', 'number_of_bathrooms','monthly_rent','security_deposit','lease_duration'];
 
             foreach ($fieldsToClean as $field) {
                 if (isset($input[$field])) {

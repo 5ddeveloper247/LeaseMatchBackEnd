@@ -114,9 +114,9 @@ function viewDetailResponse(response) {
         $("#user_name").text(data?.user_detail?.first_name || 'N/A');
         $("#user_email").text(data?.user_detail?.email || 'N/A');
         // Safely access nested properties within personal_info
-        $("#user_phone").text(data?.user_detail?.phone_number || 'N/A');
-        $("#user_dob").text(user_detail?.personal_info?.date_of_birth
-            ? formatDate(user_detail?.created_at)
+        $("#user_phone").text(data?.user_detail?.personal_info?.phone_number || 'N/A');
+        $("#user_dob").text(data?.user_detail?.personal_info?.date_of_birth
+            ? formatDate(data.user_detail?.personal_info?.date_of_birth)
             : 'N/A');
     }
     else {

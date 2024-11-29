@@ -12,18 +12,18 @@
     /* Center the image and reduce its size by half */
     #preview.preview-edit {
         display: flex;
-        justify-content: center;
+        justify-content: start;
         /* Horizontally center the image */
         align-items: center;
         /* Vertically center the image */
-        height: 200px;
+        height: 50px;
         /* Set a fixed height for the preview area */
     }
 
-    .preview-img-eidt {
+    .preview-img-edit {
         /* Reduce width to 50% */
-        max-width: 50%;
-        max-height: 50%;
+        max-width: 15%;
+        max-height: 15%;
         /* Reduce height to 50% */
         object-fit: contain;
         /* Keep aspect ratio of the image */
@@ -174,12 +174,15 @@
                                                 <p id="email_edit" class="text_box">
                                             </div>
                                         </div>
+
+
+
                                         <div class="btn_blk form_btn text-center">
                                             <button type="button" class="site_btn long"
                                                 style="background-color: red !important;" id="uploadImage-edit">Upload
                                                 Image</button>
-                                            <input type="file" name="profile" id="profile-img-edit"
-                                                style="display: none" accept="image/*">
+                                            <input type="file" name="profile" id="profile-img-edit" style="display: none"
+                                                accept="image/*">
                                         </div>
                                         <div class="col-sm-12">
                                             <div id="preview-edit" class="preview-edit"></div>
