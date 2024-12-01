@@ -21,7 +21,7 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li>Tenant</li>
         </ul>
-        
+
         <div class="card_row flex_row d-flex justify-content-center align-items-center" >
             <div class="col">
                 <div class="card_blk">
@@ -133,7 +133,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="top_head mt-5">
             <h4></h4>
             <div class="form_blk">
@@ -200,6 +200,7 @@
         </ul>
         <div class="tab-content">
             <div id="Appointment" class="tab-pane fade in active">
+                <button type="button" class="x_btn" onclick="backToList();"></button>
                 <div class="top_head">
                     <h4>Tenant Information</h4>
                 </div>
@@ -705,22 +706,22 @@
 <style scoped>
 
 .form_row h6 {
-    min-height: 4rem; 
+    min-height: 4rem;
     display: flex;
-    align-items: center; 
+    align-items: center;
     margin-bottom: 0.5rem;
-    white-space: normal; 
+    white-space: normal;
 }
 @media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {
-        width: 100%; 
+        width: 100%;
     }
 
     .filter-box .form_row .col-sm-3,
     .filter-box .form_row .col-sm-6 {
-        width: 100%; 
-        margin-bottom: -9px; 
+        width: 100%;
+        margin-bottom: -9px;
     }
     .btn_blk{
         float: left;
@@ -735,7 +736,7 @@
 }
 @media (max-width: 768px) {
     #listing .card_row>.col {
-        
+
         height: 30vh;
     }
 

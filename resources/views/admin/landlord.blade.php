@@ -16,13 +16,13 @@
     @media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {
-        width: 100%; 
+        width: 100%;
     }
 
     .filter-box .form_row .col-sm-3,
     .filter-box .form_row .col-sm-6 {
-        width: 100%; 
-        margin-bottom: -9px; 
+        width: 100%;
+        margin-bottom: -9px;
     }
     .btn_blk{
         float: left;
@@ -43,9 +43,9 @@
             <li><a href="{{url('admin/dashboard')}}">Dashboard</a></li>
             <li>Landlord</li>
         </ul>
-        
+
         <div class="card_row flex_row d-flex justify-content-center align-items-center" >
-            
+
             <div class="col">
                 <div class="card_blk">
                     <div class="icon" id="total_count"></div>
@@ -66,15 +66,15 @@
                     <strong>Inactive</strong>
                 </div>
             </div>
-            
+
             {{--<div class="col">
                 <div class="card_blk">
-                    
+
                 </div>
             </div>
             <div class="col">
                <div class="card_blk" id="">
-                    
+
                 </div>
             </div>--}}
         </div>
@@ -82,13 +82,13 @@
 
             <h4 class="filter-toggle">
                 <i class="fa fa-arrow-circle-right"></i>&nbsp;
-                Advance Search Filter 
+                Advance Search Filter
             </h4>
         </div>
         <div class="_inner filter-box" style="display:none;">
             <!-- <button type="button" class="x_btn" ></button> -->
             <h4></h4>
-            
+
             <form id="filter_form">
                 <div class="form_row row">
                     <div class="col-sm-3">
@@ -173,7 +173,7 @@
                 <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
             </div>
         </div>
-        
+
         <div class="blk">
             <div class="tbl_blk tableFixHead">
                 <table id="users_table" class="table table-responsive">
@@ -187,7 +187,7 @@
                             <th width="40" >Created Date</th>
                             <th width="40" data-center>Status</th>
                             <th width="40" data-center>Action</th>
-                           
+
                         </tr>
                     </thead>
                     <tbody id="landlordListing_html">
@@ -226,6 +226,7 @@
 
 <section id="deliveries" style="display:none;">
     <div class="contain-fluid">
+        <button type="button" class="x_btn" onclick="backToList();"></button>
         <ul class="crumbs">
             <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
             <li>Landlord</li>
@@ -235,7 +236,7 @@
                 <div class="top_head">
                     <h4>Landlord Property Information</h4>
                 </div>
-                
+
                 <div class="blk">
                     <form action="" method="POST">
                         <ul class="head_lst">
@@ -437,7 +438,7 @@
                                         <input type="text" id="rental_history" class="text_box" placeholder="">
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="btn_blk form_btn text-right">
                                 <button type="button" class="site_btn long simple border prev_btn">Back</button>
@@ -452,7 +453,7 @@
                                         <textarea type="text" id="special_note" class="text_box" placeholder=""></textarea>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="" style="margin-top: 20px;">
                                 <h4 class="subheading">Uploaded Photos</h4>
@@ -460,7 +461,7 @@
                                     <div class="col-xs-12">
                                         <div class="upload_lst_blk text_box">
                                             <ul class="img_list flex" id="propertyImages_html">
-                                                
+
                                             </ul>
                                         </div>
                                     </div>
@@ -481,7 +482,7 @@
 @endsection
 
 @push('script')
-    
+
 <script src="{{ asset('assets_admin/customjs/script_adminlandlord.js') }}"></script>
-    
+
 @endpush

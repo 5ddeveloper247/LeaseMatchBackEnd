@@ -54,6 +54,7 @@
 
         <div class="detail_section" style="display:none;">
             <div class="payment-detail">
+                <button type="button" class="x_btn" onclick="backToList();"></button>
                 <div class="top-bar-user top-header-payment-details">
                     <div class="detail-image-top">
                         <img src="{{asset('assets/images/users/user-placeholder.png')}}" alt="">

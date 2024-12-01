@@ -11,13 +11,13 @@
      @media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {
-        width: 100%; 
+        width: 100%;
     }
 
     .filter-box .form_row .col-sm-3,
     .filter-box .form_row .col-sm-6 {
-        width: 100%; 
-        margin-bottom: -9px; 
+        width: 100%;
+        margin-bottom: -9px;
     }
     .btn_blk{
         float: left;
@@ -111,6 +111,7 @@
                         </div>
                     </div>
                     <div class="blk">
+
                         <div class="tbl_blk">
                             <table id="users_table" class="table table-responsive">
                                 <thead>
@@ -167,6 +168,8 @@
         </div>
 
         <div class="tab-content detail_section" id="deliveries"  style="display:none">
+            <button type="button" class="x_btn" onclick="backToList();"></button>
+
             <div id="Appointment" class="tab-pane fade in active">
                 <div class="top_head">
                     <h4>Enquiry Landlord Information</h4>

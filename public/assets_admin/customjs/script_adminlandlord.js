@@ -343,4 +343,14 @@ $('#searchInListing').on("keyup", function (e) {
     } else {
         tr.fadeIn();
     }
+
+
+
+
 });
+
+function backToList() {
+    $("#listing").show();
+    $("#deliveries").hide();
+
+}

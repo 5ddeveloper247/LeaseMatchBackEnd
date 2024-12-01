@@ -112,7 +112,6 @@ function viewDetailResponse(response) {
 
     // Update payment list table
     $("#payment_list_table").html(html);
-
     // Toggle sections visibility
     $(".paymentList_section").hide();
     $(".paymentDetail_section").show(1000);

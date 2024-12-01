@@ -25,6 +25,7 @@
             </div>
         </div>
         <div class="blk paymentList_section">
+
             <div class="tbl_blk">
                 <table id="users_table" class="table table-responsive">
                     <thead>
@@ -47,6 +48,7 @@
         </div>
         <div class="paymentDetail_section" style="display:none;">
             <div class="payment-detail">
+                <button type="button" class="x_btn" onclick="backToList();"></button>
                 <div class="top-bar-user top-header-payment-details">
                     <div class="detail-image-top">
                         <img src="{{asset('assets/images/users/user-placeholder.png')}}" alt="">
@@ -112,6 +114,7 @@
                         </div>
                     </div>
                     <div class="blk">
+
                         <div class="tbl_blk">
                             <table id="users_table" class="table table-responsive">
                                 <thead>
