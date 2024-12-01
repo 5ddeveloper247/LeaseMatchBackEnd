@@ -733,7 +733,7 @@ class AdminController extends Controller
 
         if (!is_null($phone_number)) {
             $query->whereHas('personalInfo', function ($subQuery) use ($phone_number) {
-                $subQuery->where('phone_number', $phone_number);
+                $subQuery->where('phone_number','like', '%' . $phone_number. '%');
             });
         }
 
@@ -1755,4 +1755,18 @@ class AdminController extends Controller
 
         return response()->json(['status' => 200, 'message' => 'Profile updated successfully']);
     }
+
+    public function markAsRead($id)
+{
+    $notification = Notifications::find($id);
+    if ($notification && $notification->to_user_id == Auth::id()) {
+        $notification->read_flag ='1';
+        $notification->save();
+
+        return response()->json(['success' => true,'status'=>200,'message'=>"Operation Successful"]);
+    }
+
+    return response()->json(['success' => false,'status'=>403,'message'=>"Operation failed"], 403);
+}
+
 }

@@ -84,13 +84,15 @@ class CustomerController extends Controller
 
     public function dashboard(Request $request)
     {
-        if (checkUserSubscription() == true) {
-            $data['page'] = 'Dashboard';
 
-            return view('customer/dashboard')->with($data);
-        } else {
-            return redirect()->route('customer.mySubscription');
-        }
+        return redirect()->to('customer/myMatches');
+        // if (checkUserSubscription() == true) {
+        //     $data['page'] = 'Dashboard';
+
+        //     return view('customer/dashboard')->with($data);
+        // } else {
+        //     return redirect()->route('customer.mySubscription');
+        // }
     }
 
     public function my_subscription(Request $request)

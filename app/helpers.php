@@ -112,15 +112,15 @@ if (!function_exists('getLeftMenu')) {
 
     function getLeftMenu()
     {
-        if(Auth::user()->type == 1){
+        if (Auth::user()->type == 1) {
             $menu = Menu::orderBy('seq_no', 'asc')->where('enable', '1')->get();
-        }else{
+        } else {
             // $menuControl = Menu::get();
             $menu = Menu::join('menu_control', 'menu.id', '=', 'menu_control.menu_id')
-            ->where('menu_control.user_id', Auth::user()->id)
-            ->where('menu.enable', '1')
-            ->select('menu.id', 'menu.seq_no', 'menu.name', 'menu.route', 'menu.image', 'menu.created_at', 'menu.updated_at')
-            ->get();
+                ->where('menu_control.user_id', Auth::user()->id)
+                ->where('menu.enable', '1')
+                ->select('menu.id', 'menu.seq_no', 'menu.name', 'menu.route', 'menu.image', 'menu.created_at', 'menu.updated_at')
+                ->get();
         }
 
         return $menu;
@@ -141,15 +141,15 @@ if (!function_exists('checkUserSubscription')) {
     function checkUserSubscription()
     {
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
-        
-        if($currentPlan != null){
-            
-            if(Carbon::now()->format('Y-m-d') > $currentPlan->end_date){
+
+        if ($currentPlan != null) {
+
+            if (Carbon::now()->format('Y-m-d') > $currentPlan->end_date) {
                 return false;
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -160,10 +160,10 @@ if (!function_exists('getStripePk')) {
     function getStripePk()
     {
         $apiSettings = ApiSettings::where('status', '1')->first();
-        
-        if(isset($apiSettings->publishable_key)){
+
+        if (isset($apiSettings->publishable_key)) {
             return $apiSettings->publishable_key;
-        }else{
+        } else {
             return false;
         }
     }
@@ -173,10 +173,10 @@ if (!function_exists('getStripeSk')) {
     function getStripeSk()
     {
         $apiSettings = ApiSettings::where('status', '1')->first();
-        
-        if(isset($apiSettings->secret_key)){
+
+        if (isset($apiSettings->secret_key)) {
             return $apiSettings->secret_key;
-        }else{
+        } else {
             return false;
         }
     }
@@ -198,7 +198,7 @@ if (!function_exists('getReqDocs')) {
     function getReqDocs()
     {
         $reqDocs = RequiredDocuments::orderBy('created_at', 'asc')->where('status', '1')->get();
-        
+
         return $reqDocs;
     }
 }
@@ -208,7 +208,7 @@ if (!function_exists('getNotifCount')) {
     function getNotifCount()
     {
         $notifCount = Notifications::where('to_user_id', Auth::user()->id)->where('read_flag', '0')->count();
-        
+
         return $notifCount;
     }
 }
@@ -217,8 +217,12 @@ if (!function_exists('getAllUnReadNotifs')) {
 
     function getAllUnReadNotifs()
     {
-        $notifications = Notifications::where('to_user_id', Auth::user()->id)->where('read_flag', '0')->with(['fromUser','toUser'])->get();
-        
+        $notifications = Notifications::where('to_user_id', Auth::user()->id)
+            ->with(['fromUser', 'toUser'])
+            ->orderBy('created_at', 'desc') // Sort by latest created records
+            ->limit(15)
+            ->get();
+
         return $notifications;
     }
 }

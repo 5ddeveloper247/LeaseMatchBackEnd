@@ -69,7 +69,7 @@ $('#processApp_btn').click(function (e) {
 
     // PASSING DATA TO FUNCTION
     $('[name]').removeClass('is-invalid');
-    SendAjaxRequestToServer(type, url, data, '', processAppRequestResponse, '', '#processApp_btn');
+    SendAjaxRequestToServer(type, url, data, '', processAppRequestResponse, '', '');
 });
 
 function processAppRequestResponse(response) {
@@ -83,6 +83,7 @@ function processAppRequestResponse(response) {
             $("#process_message").val('');
             $("#processApp_btn").prop('disabled', true);
         } else {
+          
             let errorMessage = 'An error occurred'; // Default error message
             if (response && response.status == 402) {
                 // Payment required or specific error handling

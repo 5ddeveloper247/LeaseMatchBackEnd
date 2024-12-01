@@ -124,11 +124,15 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/searchTenantListing', [AdminController::class, 'search_tenant_listing'])->name('admin.searchTenantListing');
         Route::post('/searchEnquiryListing', [AdminController::class, 'search_enquiry_listing'])->name('admin.searchEnquiryListing');
         Route::post('/account/profile', [AdminController::class, 'admin_account_profile'])->name('admin_account_profile');
+        Route::post('/notifications/mark-as-read/{id}', [AdminController::class, 'markAsRead'])->name('notifications.markAsRead');
+
     });
 });
 
 // customer routes start
 Route::group(['prefix' => 'customer'], function () {
+
+    Route::post('/notifications/mark-as-read/{id}', [AdminController::class, 'markAsRead'])->name('notifications.markAsRead');
 
     Route::get('/', [CustomerController::class, 'login'])->name('/');
     Route::get('/login', [CustomerController::class, 'login'])->name('customer.login');
