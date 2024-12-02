@@ -733,7 +733,7 @@ class AdminController extends Controller
 
         if (!is_null($phone_number)) {
             $query->whereHas('personalInfo', function ($subQuery) use ($phone_number) {
-                $subQuery->where('phone_number','like', '%' . $phone_number. '%');
+                $subQuery->where('phone_number', 'like', '%' . $phone_number . '%');
             });
         }
 
@@ -1411,7 +1411,7 @@ class AdminController extends Controller
             return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
         }
 
-        $query = TenantEnquiryHeader::where('status', '!=', TenantEnquiryHeader::WAITING)->with(['enquiryRequests', 'landlord', 'landlord.propertyDetail', 'landlord.rentalDetail']);
+        $query = TenantEnquiryHeader::where('status', '!=', TenantEnquiryHeader::WAITING)->with(['user', 'enquiryRequests', 'landlord', 'landlord.propertyDetail', 'landlord.rentalDetail']);
 
         if (!is_null($app_request)) {
             $query->whereHas('enquiryRequests', function ($subQuery) use ($app_request) {
@@ -1757,16 +1757,15 @@ class AdminController extends Controller
     }
 
     public function markAsRead($id)
-{
-    $notification = Notifications::find($id);
-    if ($notification && $notification->to_user_id == Auth::id()) {
-        $notification->read_flag ='1';
-        $notification->save();
+    {
+        $notification = Notifications::find($id);
+        if ($notification && $notification->to_user_id == Auth::id()) {
+            $notification->read_flag = '1';
+            $notification->save();
 
-        return response()->json(['success' => true,'status'=>200,'message'=>"Operation Successful"]);
+            return response()->json(['success' => true, 'status' => 200, 'message' => "Operation Successful"]);
+        }
+
+        return response()->json(['success' => false, 'status' => 403, 'message' => "Operation failed"], 403);
     }
-
-    return response()->json(['success' => false,'status'=>403,'message'=>"Operation failed"], 403);
-}
-
 }
