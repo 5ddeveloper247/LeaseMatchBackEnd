@@ -37,13 +37,11 @@ class LandlordController extends Controller
             'security_deposit',
             'lease_duration'
         ];
-
         foreach ($numericFields as $field) {
             if ($request->has($field)) {
                 $request->merge([$field => preg_replace('/\D/', '', $request->input($field))]);
             }
         }
-
         // Define the validation rules
         $validator = Validator::make($request->all(), [
             // Step 1 Fields
@@ -51,7 +49,6 @@ class LandlordController extends Controller
             'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|unique:landlord_personal,email',
             'phone_number' => 'required|numeric|digits_between:7,18',
             'company_name' => 'required|max:100',
-
             // Step 2 Fields
             'street_address' => 'required|max:255',
             'appartment_number' => 'required|max:100',
@@ -60,7 +57,6 @@ class LandlordController extends Controller
             'number_of_units' => 'required|numeric|digits_between:1,10',
             'year_built' => 'required|numeric|digits:4|min:1000|max:' . date('Y'),
             'major_renovation' => $request->filled('major_renovation') ? 'numeric|digits:4|min:1000|max:' . date('Y') : '',
-
             // Step 3 Fields
             'size_square_feet' => 'required|numeric|digits_between:1,10',
             'number_of_bedrooms' => 'required|numeric|digits_between:1,10',
@@ -72,19 +68,16 @@ class LandlordController extends Controller
             'renwal_option' => 'required|string|max:100',
             'list_of_amenities' => 'required|string|max:255',
             'special_feature' => 'required|max:255',
-
             // Step 4 Fields
             'tenant_characteristics' => 'required|max:255',
             'credit_score' => 'required|max:100',
             'income_requirements' => 'required|max:100',
             'rental_history' => 'required|max:100',
-
             // Step 5 Fields (File upload)
             'special_note' => 'required',
             'property_photos' => 'required',
             'property_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:10024',
         ]);
-
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
@@ -92,7 +85,6 @@ class LandlordController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-
         try {
             // If validation passes, handle the incoming request data and save it accordingly
             $personal = new LandlordPersonal();
@@ -102,7 +94,6 @@ class LandlordController extends Controller
             $personal->company_name = $request->input('company_name');
             $personal->status = 0; // 0 inactive , 1 active
             $personal->save();
-
             $property = new LandlordProperty();
             $property->landlord_id = $personal->id;
             $property->street_address = $request->input('street_address');
@@ -113,7 +104,6 @@ class LandlordController extends Controller
             $property->year_built = $request->input('year_built');
             $property->major_renovation = $request->input('major_renovation');
             $property->save();
-
             $rental = new LandlordRental();
             $rental->landlord_id = $personal->id;
             $rental->size_square_feet = $request->input('size_square_feet');
@@ -127,7 +117,6 @@ class LandlordController extends Controller
             $rental->list_of_amenities = $request->input('list_of_amenities');
             $rental->special_feature = $request->input('special_feature');
             $rental->save();
-
             $tenant = new LandlordTenant();
             $tenant->landlord_id = $personal->id;
             $tenant->tenant_characteristics = $request->input('tenant_characteristics');
@@ -135,17 +124,13 @@ class LandlordController extends Controller
             $tenant->income_requirements = $request->input('income_requirements');
             $tenant->rental_history = $request->input('rental_history');
             $tenant->save();
-
             $additional = new LandlordAdditional();
             $additional->landlord_id = $personal->id;
             $additional->special_note = $request->input('special_note');
             $additional->save();
-
             $req_file = 'property_photos';
             $path = '/uploads/property_photos';
-
             if ($request->hasFile($req_file)) {
-
                 if (!File::isDirectory(public_path($path))) {
                     File::makeDirectory(public_path($path), 0777, true);
                 }
@@ -162,18 +147,14 @@ class LandlordController extends Controller
                     $propertyImages->save();
                 }
             }
-
             $mailData['name'] = $personal->full_name;
             $mailData['email'] = $personal->email;
             $mailData['phone_number'] = $personal->phone_number;
             $mailData['property_type'] = $property->property_type;
-
             $body = view('emails.landlord_created', $mailData);
             $userEmailsSend[] = $personal->email; //'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
             sendMail($personal->first_name, $userEmailsSend, 'LEASE MATCH', 'Landlord Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
-
-
             return response()->json([
                 'success' => true,
                 'message' => 'Added successfully'
@@ -188,6 +169,7 @@ class LandlordController extends Controller
             ], 500);
         }
     }
+
 
     public function validateForm(Request $request)
     {
