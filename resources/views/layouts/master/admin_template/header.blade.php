@@ -65,7 +65,7 @@ use Carbon\Carbon;
                                             <span class="coloured-small-text">{{
                                                 Carbon::parse(@$value->created_at)->format('d M Y - h:i A') }}</span>
                                         </p>
-                                       
+
                                         @if($value->read_flag ==0)
                                         <button class="btn btn-sm btn-primary mark-as-read" data-id="{{ $value->id }}">
                                             Mark as Read

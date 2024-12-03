@@ -10,7 +10,7 @@ $(function() {
 $('input[type="number"],input[type="email"]').on('keydown', function(e) {
     if($(this).attr("maxlength")){
         var maxLength = $(this).attr("maxlength");
-    
+
         var controlKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete'];
         if (controlKeys.includes(e.key)) {
             return;
@@ -56,7 +56,7 @@ $(document).ready(function(){
         setTimeout(function(){
             $('#uiBlocker').hide();
         },200);
-        
+
     });
 });
 
@@ -105,7 +105,7 @@ function SendAjaxRequestToServer(
 }
 
 function trimText(textString, length=50) {
-    
+
     return textString.length > length ? textString.substring(0, length) + '...' : textString;
 }
 
@@ -152,7 +152,8 @@ function readAllNotificationsResponse(response) {
         toastr.success(response.message, '', {
             timeOut: 3000
         });
-    }   
+        window.location.reload();
+    }
 }
 
 
@@ -164,9 +165,9 @@ $('textarea').on('keyup', function() {
 });
 
 $(document).on('click', '.filter-toggle', function (e) {
-	
+
 	$(this).find('i').toggleClass('fa-arrow-circle-right');
 	$(this).find('i').toggleClass('fa-arrow-circle-down');
-	
+
 	$(this).closest('.top_head').next('.filter-box').slideToggle('slow');
 });

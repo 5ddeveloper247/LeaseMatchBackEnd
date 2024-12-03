@@ -125,7 +125,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/searchEnquiryListing', [AdminController::class, 'search_enquiry_listing'])->name('admin.searchEnquiryListing');
         Route::post('/account/profile', [AdminController::class, 'admin_account_profile'])->name('admin_account_profile');
         Route::post('/notifications/mark-as-read/{id}', [AdminController::class, 'markAsRead'])->name('notifications.markAsRead');
-
     });
 });
 

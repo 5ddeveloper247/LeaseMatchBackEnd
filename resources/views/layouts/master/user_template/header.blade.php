@@ -33,10 +33,10 @@ use Carbon\Carbon;
                     <div class="Notifications-dropdown">
                         <div id="All" class="tab-pane fade in active">
                             <div class="d-flex align-items-center justify-content-between see-all-div">
-                                @if($notifCount > 0)
+
                                 <h5>Earlier</h5>
-                                <a class="pointer read_all_notif_admin">Read All</a>
-                                @endif
+                                <a class="pointer read_all_notif_user">Read All</a>
+
                             </div>
                             <div class="content-scrollbar">
                                 <?php
@@ -146,7 +146,7 @@ use Carbon\Carbon;
         }
     }
 </style>
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.mark-as-read').forEach(button => {
         button.addEventListener('click', function () {
@@ -188,4 +188,3 @@ use Carbon\Carbon;
 });
 
 </script>
-

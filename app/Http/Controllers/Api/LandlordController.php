@@ -232,7 +232,6 @@ class LandlordController extends Controller
             $input = $request->all();
 
             $fieldsToClean = ['size_square_feet', 'number_of_bedrooms', 'number_of_bathrooms', 'monthly_rent', 'security_deposit', 'lease_duration'];
-
             foreach ($fieldsToClean as $field) {
                 if (isset($input[$field])) {
                     // Remove all spaces and ensure the value is clean
@@ -292,7 +291,6 @@ class LandlordController extends Controller
         }
 
         try {
-
             return response()->json([
                 'success' => true,
                 'message' => 'validated successfully'
