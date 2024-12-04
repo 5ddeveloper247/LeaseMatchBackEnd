@@ -186,6 +186,7 @@
                             <th width="40">Apartment Number</th>
                             <th width="40" >Created Date</th>
                             <th width="40" data-center>Status</th>
+                            <th width="40" data-center>LandLord Status</th>
                             <th width="40" data-center>Action</th>
 
                         </tr>
