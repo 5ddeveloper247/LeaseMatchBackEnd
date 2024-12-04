@@ -561,7 +561,6 @@ class AdminController extends Controller
         $rental_type = $request->search_rentalType;
         $renewal_option = $request->search_renewalOption;
         $status = $request->search_status;
-
         // check atleast one filter check
         if (
             is_null($fullname) && is_null($company_name) && is_null($prop_type) && is_null($num_bedrooms) &&
@@ -571,7 +570,7 @@ class AdminController extends Controller
         }
 
         // // make query for get listing
-        $query = LandlordPersonal::where('enquiry_status', '1')->with(['propertyDetail', 'rentalDetail']);
+        $query = LandlordPersonal::with(['propertyDetail', 'rentalDetail']);
 
         if (!is_null($fullname)) {
             $query->where('full_name', 'like', '%' . $fullname . '%');
@@ -580,7 +579,6 @@ class AdminController extends Controller
         if (!is_null($company_name)) {
             $query->where('company_name', 'like', '%' . $company_name . '%');
         }
-
         if (!is_null($status)) {
             $query->where('status', $status);
         }

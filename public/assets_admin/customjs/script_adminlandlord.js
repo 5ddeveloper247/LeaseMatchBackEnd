@@ -31,6 +31,16 @@ function makeLandlordListing(landlord_list) {
         if (Array.isArray(landlord_list) && landlord_list.length > 0) {
             $.each(landlord_list, function (index, value) {
                 // Ensure value and property_detail exist before accessing them
+                var landlordStatus;
+                if (value.enquiry_status == '1') {
+                    landlordStatus = 'Available';
+                }
+                else if (value.enquiry_status == '2') {
+                    landlordStatus = 'Blocked';
+                }
+                else if (value.enquiry_status == '3') {
+                    landlordStatus = 'Booked';
+                }
                 if (value && value.property_detail) {
                     html += `<tr class="identify">
                                 <td class="nowrap grid-p-searchby">${index + 1}</td>
@@ -45,6 +55,7 @@ function makeLandlordListing(landlord_list) {
                                         <em></em>
                                     </div>
                                 </td>
+                                <td class="nowrap grid-p-searchby">${landlordStatus || 'N/A'}</td>
                                 <td class="nowrap" data-center>
                                     <div class="act_btn">
                                         <button type="button" class="eye view_landlord" title="View Landlord Detail" data-id="${value.id}"></button>
@@ -56,7 +67,8 @@ function makeLandlordListing(landlord_list) {
                     console.error('Missing property details for landlord:', value);
                 }
             });
-        } else {
+        }
+        else {
             html = `<tr>
                         <td colspan="8"><p class="text-center">No record found!</p></td>
                     </tr>`;
