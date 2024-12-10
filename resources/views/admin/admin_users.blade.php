@@ -212,11 +212,12 @@
 
                                     <div class="btn_blk form_btn text-center">
 
-                                        <button type="button" class="site_btn long saveuser_btn"
-                                            id="edituser_btn">Update</button>
+
                                         <button type="button" class="site_btn long"
                                             style="background-color:red !important;"
                                             id="closeupdatedmodalbtn">Close</button>
+                                            <button type="button" class="site_btn long saveuser_btn"
+                                            id="edituser_btn">Update</button>
                                     </div>
                             </fieldset>
 
