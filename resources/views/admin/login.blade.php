@@ -43,7 +43,6 @@
 </style>
 
 <body data-page="logon">
-
     <main>
         <section id="logon">
             <div class="side"

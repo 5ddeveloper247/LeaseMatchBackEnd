@@ -88,7 +88,7 @@ use Carbon\Carbon;
                             @if (Auth::user()->profile_picture !==null)
                             <img src="{{url('/').'/public'.Auth::user()->profile_picture}}" alt="">
                             @else
-                            <img src="{{asset('assets/images/users/5.jpg')}}" alt="">
+                            <img src="{{asset('assets/images/users/5.png')}}" alt="">
                             @endif
                         </div>
                         <div class="name" title="{{Auth::user()->first_name}}">{{trimText(Auth::user()->first_name,
