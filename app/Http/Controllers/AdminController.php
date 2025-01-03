@@ -51,6 +51,7 @@ use App\Models\TenantEnquiryHeader;
 use App\Models\TenantEnquiryRequests;
 use App\Models\TenantEnquiryDocument;
 
+use App\Models\Inquiry;
 
 
 class AdminController extends Controller
@@ -263,6 +264,12 @@ class AdminController extends Controller
     {
         $data['page'] = 'Enquiry Requests';
         return view('admin/enquiry_requests')->with($data);
+    }
+
+    public function commercial_enquiry()
+    {
+        $data['page'] = 'Commercial Enquiry';
+        return view('admin/commercial_enquiry')->with($data);
     }
 
 
@@ -1765,5 +1772,63 @@ class AdminController extends Controller
         }
 
         return response()->json(['success' => false, 'status' => 403, 'message' => "Operation failed"], 403);
+    }
+
+    public function get_commercial_enquiries_data(Request $request)
+    {
+
+        $data['enquiries'] = Inquiry::get();
+        
+        return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
+    }
+
+    public function get_commercial_enquiries_detail(Request $request)
+    {
+        $enquiry_id = $request->id;
+        $data['enquiry_detail'] = Inquiry::where('id', $enquiry_id)->first();
+
+        return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+    public function search_commercial_enquiry_listing(Request $request)
+    {
+
+        $full_name = $request->search_full_name;
+        $business_name = $request->search_business_name;
+        $job_title = $request->search_job_title;
+        $email = $request->search_email;
+        $phone_number = $request->search_phone_number;
+
+        // check atleast one filter check
+        if (is_null($full_name) && is_null($business_name) && is_null($job_title) && is_null($email) && is_null($phone_number)) {
+            return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
+        }
+
+        $query = Inquiry::query();
+
+        if (!is_null($full_name)) {
+            $query->where('full_name', 'like', '%' . $full_name . '%');
+        }
+
+        if (!is_null($business_name)) {
+            $query->where('business_name', 'like', '%' . $business_name . '%');
+        }
+
+        if (!is_null($job_title)) {
+            $query->where('job_title', 'like', '%' . $job_title . '%');
+        }
+
+        if (!is_null($email)) {
+            $query->where('email', 'like', '%' . $email . '%');
+        }
+
+        if (!is_null($phone_number)) {
+            $query->where('phone_number', 'like', '%' . $phone_number . '%');
+        }
+        
+        // Execute the query and get the results
+        $data['enquiries'] = $query->get();
+
+        return response()->json(['status' => 200, 'data' => $data]);
     }
 }

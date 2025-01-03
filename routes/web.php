@@ -56,6 +56,7 @@ Route::group(['prefix' => 'admin'], function () {
             // Route::get('/enquiry_process', [AdminController::class, 'enquiryProcess'])->name('admin.enquiry_process');
             Route::get('/required_documents', [AdminController::class, 'required_documents'])->name('admin.required_documents');
             Route::get('/enquiry_requests', [AdminController::class, 'enquiry_requests'])->name('admin.enquiry_requests');
+            Route::get('/commercial_enquiry', [AdminController::class, 'commercial_enquiry'])->name('admin.commercial_enquiry');
         });
 
         /************** AJAX ROUTES ******************/
@@ -125,6 +126,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/searchEnquiryListing', [AdminController::class, 'search_enquiry_listing'])->name('admin.searchEnquiryListing');
         Route::post('/account/profile', [AdminController::class, 'admin_account_profile'])->name('admin_account_profile');
         Route::post('/notifications/mark-as-read/{id}', [AdminController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+        Route::post('/getCommercialEnquiriesPageData', [AdminController::class, 'get_commercial_enquiries_data'])->name('admin.getCommercialEnquiriesPageData');
+        Route::post('/getCommercialEnquiryDetail', [AdminController::class, 'get_commercial_enquiries_detail'])->name('admin.getCommercialEnquiryDetail');
+        Route::post('/searchCommercialEnquiryListing', [AdminController::class, 'search_commercial_enquiry_listing'])->name('admin.searchCommercialEnquiryListing');
     });
 });
 
