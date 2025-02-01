@@ -150,8 +150,9 @@ function getCommercialEnquiryDetailResponse(response) {
         }
 
         // first tab active code
-        $('.head_lst li').removeClass('current').first().addClass('current');
-        $('fieldset').hide().first().show();
+        // $('.head_lst li').removeClass('current').first().addClass('current');
+        // $(".head_lst > li:nth-child(1)").addClass("current");
+        // $('fieldset').hide().first().show();
 
         // Show detail section with animation
         $(".listing_section").hide();
@@ -183,6 +184,7 @@ $(window).on("load", function () {
         li = li.next('li');
         li.prev().removeClass("current");
         li.addClass("current");
+        console.log('21');
     });
     $(document).on("click", ".prev_btn", function () {
         li.removeClass("current");
