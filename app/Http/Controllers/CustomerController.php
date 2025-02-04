@@ -12,9 +12,9 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Pricing_plan;
+use App\Models\UserSubscription;
 use App\Models\Menu;
 use App\Models\MenuControl;
-use App\Models\UserSubscription;
 use App\Models\Api\UserPersonalInfo;
 use App\Models\TenantEnquiryHeader;
 use App\Models\TenantEnquiryDocument;
@@ -24,12 +24,6 @@ use Illuminate\Support\Facades\Validator;
 
 // landlord models
 use App\Models\Api\LandlordPersonal;
-use App\Models\Api\LandlordProperty;
-use App\Models\Api\LandlordRental;
-use App\Models\Api\LandlordTenant;
-use App\Models\Api\LandlordAdditional;
-use App\Models\Api\LandlordPropertyImages;
-
 use App\Models\PropertyMatches;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -58,18 +52,21 @@ class CustomerController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-
             $user = Auth::user();
             if ($user->status == 1) {
                 $request->session()->put('user', $user);
                 // Authentication passed...
-                return redirect()->intended('/customer/myMatches'); //dashboard
+                if (checkUserSubscription() == true) {
+                    return redirect()->intended('/customer/myMatches'); //dashboard
+                } else {
+                    $request->session()->flash('error', 'No active subscription found. Please subscribe to a plan to continue.');
+                    return redirect('/customer/guest/subscriptions');
+                }
             } else {
                 $request->session()->flash('error', 'The user is not active, please contact admin.');
                 return redirect('customer/login');
             }
         }
-
         $request->session()->flash('error', 'The provided credentials do not match our records.');
         return redirect('customer/login');
     }
@@ -86,13 +83,6 @@ class CustomerController extends Controller
     {
 
         return redirect()->to('customer/myMatches');
-        // if (checkUserSubscription() == true) {
-        //     $data['page'] = 'Dashboard';
-
-        //     return view('customer/dashboard')->with($data);
-        // } else {
-        //     return redirect()->route('customer.mySubscription');
-        // }
     }
 
     public function my_subscription(Request $request)

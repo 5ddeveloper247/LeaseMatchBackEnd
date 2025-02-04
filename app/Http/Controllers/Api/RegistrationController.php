@@ -385,7 +385,7 @@ class RegistrationController extends Controller
                     // Rental Assistance
                     'rental_voucher' => 'required|max:10',
                     'voucher_type' => 'required|max:100',
-                    'certification_detail' => 'required|max:255',
+                    'certification_detail' => 'nullable|max:255',
                     'certification_expiry' => 'required|date_format:Y-m-d|after:today',
                 ]);
             } else {
@@ -393,7 +393,7 @@ class RegistrationController extends Controller
                     // Rental Assistance
                     'rental_voucher' => 'required|max:10',
                     'voucher_type' => 'max:100',
-                    'certification_detail' => 'max:255',
+                    'certification_detail' => 'nullable|max:255',
                     // 'certification_expiry' => 'after:today',
                 ]);
             }
@@ -468,7 +468,7 @@ class RegistrationController extends Controller
                 // Additional Notes
                 'general_note' => 'nullable|string|max:255',
                 'work_with_broker' => 'required|string|max:10',
-                'documents' => 'required',
+                'documents' => 'nullable',
                 'documents.*' => 'image|mimes:jpeg,png,jpg|max:10024',
             ]);
         }

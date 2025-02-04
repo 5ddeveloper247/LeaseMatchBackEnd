@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\PricingController;
 use App\Http\Controllers\Api\ContactController;
-
+use App\Http\Controllers\TestimonialController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,9 +30,9 @@ Route::prefix('5d/v1')->group(function () {
 
     Route::post('registration/store', [RegistrationController::class, 'storeRegistration'])->name('registration.storeRegistration');
     Route::post('registration/validate', [RegistrationController::class, 'validateForm'])->name('registration.validateForm');
-
     Route::get('pricing/getAllPricingList', [PricingController::class, 'getAllPricings'])->name('pricing.getAllPricingList');
     Route::post('contact/send', [ContactController::class, 'storeContactUs'])->name('contact.send');
     Route::post('inquiry/validate', [InquiryController::class, 'inquiryValidate'])->name('lanlord.commercialValidate');
     Route::post('inquiry/store', [InquiryController::class, 'inquiryStore'])->name('lanlord.inquiryStore');
+    Route::get('siteTestimonials', [TestimonialController::class, 'siteTestimonials'])->name('siteTestimonials');
 });

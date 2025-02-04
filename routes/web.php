@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LandlordController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\guestController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +59,8 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/required_documents', [AdminController::class, 'required_documents'])->name('admin.required_documents');
             Route::get('/enquiry_requests', [AdminController::class, 'enquiry_requests'])->name('admin.enquiry_requests');
             Route::get('/commercial_enquiry', [AdminController::class, 'commercial_enquiry'])->name('admin.commercial_enquiry');
+            Route::get('/testimonial', [AdminController::class, 'testimonialIndex'])->name('admin.testimonial');
+            Route::post('/testimonial/status', [AdminController::class, 'testimonialStatus'])->name('testimonial.status');
         });
 
         /************** AJAX ROUTES ******************/
@@ -68,7 +72,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/changestatus', [AdminController::class, 'change_status'])->name('admin.changestatus');
         Route::post('/getuserdata', [AdminController::class, 'get_user_data'])->name('admin.getuserdata');
         Route::post('/updateUser', [AdminController::class, 'update_user'])->name('admin.updateUser');
-        Route::post('/addUser', [AdminController::class, 'add_user'])->name('admin.addUser');
+        Route::post('/addUser', [AdminController::class, 'add_user'])->name(name: 'admin.addUser');
+        Route::post('/updateTestimonial', [AdminController::class, 'updateTestimonial'])->name(name: 'admin./updateTestimonial');
+        Route::post('/testimonial/getdata', [AdminController::class, 'testimonialData'])->name('admin.testimonialData');
+        Route::post('/testimonial/add', [AdminController::class, 'addTestimonial'])->name('admin.addTestimonial');
+        Route::get('/getTestimonialList', [AdminController::class, 'getTestimonialList'])->name('admin.getTestimonialList');
+        Route::post('/testimonial/delete', [AdminController::class, 'deleteTestimonial'])->name('admin.deleteTestimonial');
 
 
         Route::post('/getLandlordPageData', [AdminController::class, 'get_landlord_data'])->name('admin.getLandlordPageData');
@@ -148,6 +157,7 @@ Route::group(['prefix' => 'customer'], function () {
     Route::post('/forgetpasswordemailvalidate', [CustomerController::class, 'forgot_password_validate_email'])->name('customer.forgetpasswordemailvalidate');
     Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
     Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
+    Route::get('/guest/subscriptions', [guestController::class, 'guestSubscriptions'])->name('guest.guestSubscriptions');
 
     Route::group(['middleware' => ['UserAuth']], function () {
 

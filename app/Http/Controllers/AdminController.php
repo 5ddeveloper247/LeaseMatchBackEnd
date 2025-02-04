@@ -50,6 +50,7 @@ use App\Models\PropertyMatches;
 use App\Models\TenantEnquiryHeader;
 use App\Models\TenantEnquiryRequests;
 use App\Models\TenantEnquiryDocument;
+use App\Models\Testimonial;
 
 use App\Models\Inquiry;
 
@@ -1778,7 +1779,7 @@ class AdminController extends Controller
     {
 
         $data['enquiries'] = Inquiry::get();
-        
+
         return response()->json(['status' => 200, 'message' => '', 'data' => $data]);
     }
 
@@ -1825,10 +1826,155 @@ class AdminController extends Controller
         if (!is_null($phone_number)) {
             $query->where('phone_number', 'like', '%' . $phone_number . '%');
         }
-        
+
         // Execute the query and get the results
         $data['enquiries'] = $query->get();
 
         return response()->json(['status' => 200, 'data' => $data]);
+    }
+
+
+    public function testimonialIndex(Request $request)
+    {
+        $data['testimonials'] = Testimonial::all();
+        $data['page'] = 'Testimonials';
+        return view('admin.testimonial.index', $data);
+    }
+
+
+    public function addTestimonial(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'title' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'rating' => 'required|numeric|between:1,5',
+            'profile' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+        $testimonial = new Testimonial();
+        $name = $request->name;
+        $title = $request->title;
+        $description = $request->description;
+        $address = $request->address;
+        $rating = $request->rating;
+
+        $testimonial->name = $name;
+        $testimonial->title = $title;
+        $testimonial->description = $description;
+        $testimonial->address = $address;
+        $testimonial->rating = $rating;
+        if ($request->has('status')) {
+            $testimonial->status = $request->status == "on" ? 1 : 0; // Update the status field in the model
+
+        } else {
+            $testimonial->status = 0; // Default status is 1 if no status is provided
+        }
+        $savedFilePaths = '';
+        $req_file = 'profile';
+        $path = '/uploads/user/profile';
+
+        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0777, true);
+            }
+
+            $uploadedFile = $request->file($req_file); // No need for double dollar sign
+            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $date_append = Str::random(32);
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
+
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $testimonial->path = $savedFilePaths; // Update the profile field in the model
+        }
+        $testimonial->save();
+
+        return response()->json(['status' => 200, 'message' => 'Testimonial added successfully', 'testimonial' => $testimonial]);
+    }
+
+    public function testimonialData(Request $request)
+    {
+        $id = $request->id;
+        $testimonial = Testimonial::find($id);
+        return response()->json(['status' => 200, 'data' => $testimonial]);
+    }
+
+    public function getTestimonialList(Request $request)
+    {
+        $testimonial = Testimonial::all();
+        $active = Testimonial::where('status', 1)->count();
+        $inactive = Testimonial::where('status', 0)->count();
+        return response()->json(['status' => 200, 'data' => $testimonial, 'active' => $active, 'inactive' => $inactive]);
+    }
+
+
+    public function updateTestimonial(Request $request)
+    {
+        $request->validate([
+            'name_edit' => 'required',
+            'title_edit' => 'required',
+            'description_edit' => 'required',
+            'address_edit' => 'required',
+            'rating_edit' => 'required|numeric|between:1,5',
+            'profile_edit' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'edit_id' => 'required'
+        ]);
+        $testimonial = Testimonial::where('id', $request->edit_id)->first();
+        $name = $request->name_edit;
+        $title = $request->title_edit;
+        $description = $request->description_edit;
+        $address = $request->address_edit;
+        $rating = $request->rating_edit;
+
+        $testimonial->name = $name;
+        $testimonial->title = $title;
+        $testimonial->description = $description;
+        $testimonial->address = $address;
+        $testimonial->rating = $rating;
+        if ($request->has('status_edit')) {
+            $testimonial->status = $request->status == "on" ? 1 : 0; // Update the status field in the model
+
+        } else {
+            $testimonial->status = 0; // Default status is 1 if no status is provided
+        }
+        $savedFilePaths = '';
+
+        $req_file = 'profile_edit';
+        $path = '/uploads/user/profile';
+
+        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0777, true);
+            }
+
+            $uploadedFile = $request->file($req_file); // No need for double dollar sign
+            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $date_append = Str::random(32);
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $testimonial->path = $savedFilePaths; // Update the profile field in the model
+        }
+        $testimonial->save();
+        return response()->json(['status' => 200, 'message' => 'Testimonial updated successfully', 'testimonial' => $testimonial]);
+    }
+
+
+    public function deleteTestimonial(Request $request)
+    {
+        $id = $request->del_id;
+        $testimonial = Testimonial::find($id);
+        $testimonial->delete();
+        return response()->json(['status' => 200, 'message' => 'Testimonial deleted successfully']);
+    }
+
+
+    public function testimonialStatus(Request $request)
+    {
+        $id = $request->id;
+        $status = $request->status;
+        $testimonial = Testimonial::find($id);
+        $testimonial->status = $testimonial->status == 1 ? 0 : 1;
+        $testimonial->save();
+        return response()->json(['status' => 200, 'message' => 'Testimonial status updated successfully']);
     }
 }
