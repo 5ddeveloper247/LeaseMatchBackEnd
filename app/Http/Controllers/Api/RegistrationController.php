@@ -79,7 +79,8 @@ class RegistrationController extends Controller
             // Rental Assistance
             'rental_voucher' => 'required|max:10',
             'voucher_type' => 'required_if:rental_voucher,Yes|max:100',
-            'certification_detail' => 'required_if:rental_voucher,Yes|max:255',
+            'certification_detail' => 'nullable|max:255',
+            // 'certification_detail' => 'required_if:rental_voucher,Yes|max:255',
             // 'certification_expiry' => 'required|date_format:Y-m-d',
 
             // Current/Previous Living Situation

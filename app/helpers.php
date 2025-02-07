@@ -102,7 +102,7 @@ if (!function_exists('sendMail')) {
             return true;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            echo "An error occurred while sending the email: " . $e->getMessage();
+            // echo "An error occurred while sending the email: " . $e->getMessage();
             return false;
         }
     }
