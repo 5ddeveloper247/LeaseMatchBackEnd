@@ -49,7 +49,8 @@ class CustomerController extends Controller
             'type' => $type,
             'plan' => $plan
         ];
-        Session::put('trialData', $trialData);
+        $request->session()->put('trialData', $trialData);
+        // Session::put('trialData', $trialData);
 
         $data['page'] = 'Login';
         return view('customer/login')->with($data);
@@ -66,7 +67,9 @@ class CustomerController extends Controller
             $user = Auth::user();
             if ($user->status == 1) {
                 $request->session()->put('user', $user);
-                if (Session::has('trialData')) {
+
+                $trialData = Session::get('trialData');
+                if ($trialData['plan'] !== null && $trialData['type'] !== null) {
                     $checkFreeTrialExist = UserSubscriptionFreeTrial::where('user_id', $user->id)->first();
                     if ($checkFreeTrialExist) {
                         Session::forget('trialData');
