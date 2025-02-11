@@ -1884,7 +1884,7 @@ class AdminController extends Controller
             $date_append = Str::random(32);
             $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
 
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $savedFilePaths = '/public/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
             $testimonial->path = $savedFilePaths; // Update the profile field in the model
         }
         $testimonial->save();
@@ -1951,7 +1951,7 @@ class AdminController extends Controller
             $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
             $date_append = Str::random(32);
             $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $savedFilePaths = '/public/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
             $testimonial->path = $savedFilePaths; // Update the profile field in the model
         }
         $testimonial->save();
