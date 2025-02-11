@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('stripe_subscription_id', 255)->nullable();
             $table->string('status', 50)->nullable();
             $table->text('response')->nullable();
+            $table->text('reason')->nullable()->comment("free_tiral, or any other reason");
             $table->date('date')->nullable();
             $table->timestamps();
         });

@@ -34,14 +34,13 @@ class PaymentController extends Controller
         $plan_detail = Pricing_plan::findOrFail($request->plan_id);
 
         Stripe::setApiKey(getStripeSk());//env('STRIPE_SECRET')
-
         // Create Stripe customer if not already exists
         if (!$user->stripe_customer_id) {
             $customer = Customer::create([
                 'email' => $user->email,
                 'source' => $request->stripeToken,
             ]);
-            
+
             $user->stripe_customer_id = $customer->id;
             $user->save();
         } else {
@@ -68,14 +67,14 @@ class PaymentController extends Controller
         $payment->response = json_encode($charge, true);
         $payment->date = Carbon::now()->format('Y-m-d');
         $payment->save();
-        
+
         if($charge->status == 'succeeded'){
-            
+
             $duration_days = 30;
             $start_date = Carbon::now()->format('Y-m-d');
             $date = Carbon::createFromFormat('Y-m-d', $start_date);
             $end_date = $date->addDays($duration_days)->format('Y-m-d');
-            
+
             // if already buy plan then set to end date and then add new entry
             $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
             if($currentPlan){
@@ -109,7 +108,7 @@ class PaymentController extends Controller
             $mailData['plan_name'] = $plan_detail->title;
             $mailData['plan_start'] = $start_date;
             $mailData['plan_end'] = $end_date;
-            
+
             $body = view('emails.buy_plan_mail_tenant', $mailData);
             $userEmailsSend[] = $user->email;//'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
@@ -121,12 +120,12 @@ class PaymentController extends Controller
                 // to username, to email, from username, subject, body html
                 sendMail('Admin', $userEmailsSend, 'LEASE MATCH', 'Subscription Purchase', $body);
             }
-            
+
             Session::flash('success', 'Payment Successful');
         }else{
             Session::flash('error', 'Payment Failed');
         }
-        
+
         return redirect()->route('customer.mySubscription');
         // return redirect()->route('subscribe.success');
     }

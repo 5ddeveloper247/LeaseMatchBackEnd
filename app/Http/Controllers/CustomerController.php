@@ -21,11 +21,13 @@ use App\Models\TenantEnquiryDocument;
 use App\Models\TenantEnquiryRequests;
 use App\Models\Notifications;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\UserSubscriptionFreeTrial;
 // landlord models
 use App\Models\Api\LandlordPersonal;
 use App\Models\PropertyMatches;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Session;
+
 
 class CustomerController extends Controller
 {
@@ -40,6 +42,15 @@ class CustomerController extends Controller
 
     public function login(Request $request)
     {
+        $type = $request->has('type') ? $request->query('type') : null;
+        $plan = $request->has('plan') ? $request->query('plan') : null;
+
+        $trialData = [  // Ensure consistent variable name
+            'type' => $type,
+            'plan' => $plan
+        ];
+        Session::put('trialData', $trialData);
+
         $data['page'] = 'Login';
         return view('customer/login')->with($data);
     }
@@ -55,14 +66,31 @@ class CustomerController extends Controller
             $user = Auth::user();
             if ($user->status == 1) {
                 $request->session()->put('user', $user);
-                // Authentication passed...
-                if (checkUserSubscription() == true) {
-                    return redirect()->intended('/customer/myMatches'); //dashboard
+                if (Session::has('trialData')) {
+                    $checkFreeTrialExist = UserSubscriptionFreeTrial::where('user_id', $user->id)->first();
+                    if ($checkFreeTrialExist) {
+                        Session::forget('trialData');
+                        if (checkUserSubscription() == true) {
+                            $request->session()->flash('success', 'You have active subscription');
+                            return redirect()->intended('/customer/mySubscription'); //dashboard
+                        } else {
+                            $request->session()->flash('error', 'No active subscription found. Please subscribe to a plan to continue.');
+                            return redirect('/customer/guest/subscriptions');
+                        }
+                    } else {
+                        return view('customer.guest.payment_form');
+                    }
                 } else {
-                    $request->session()->flash('error', 'No active subscription found. Please subscribe to a plan to continue.');
-                    return redirect('/customer/guest/subscriptions');
+                    Session::forget('trialData');
+                    if (checkUserSubscription() == true) {
+                        return redirect()->intended('/customer/mySubscription'); //dashboard
+                    } else {
+                        $request->session()->flash('error', 'No active subscription found. Please subscribe to a plan to continue.');
+                        return redirect('/customer/guest/subscriptions');
+                    }
                 }
             } else {
+                Session::forget('trialData');
                 $request->session()->flash('error', 'The user is not active, please contact admin.');
                 return redirect('customer/login');
             }

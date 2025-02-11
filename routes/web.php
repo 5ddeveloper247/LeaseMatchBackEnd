@@ -158,6 +158,7 @@ Route::group(['prefix' => 'customer'], function () {
     Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
     Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
     Route::get('/guest/subscriptions', [guestController::class, 'guestSubscriptions'])->name('guest.guestSubscriptions');
+    Route::post('/guest/card/process', [guestController::class, 'guestCardProcess'])->name('guest.card.process');
 
     Route::group(['middleware' => ['UserAuth']], function () {
 

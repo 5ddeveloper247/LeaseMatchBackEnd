@@ -80,5 +80,19 @@
 @push('script')
 
 <script src="{{ asset('assets_customer/customjs/script_mymatches.js') }}"></script>
+<script>
+    $(document).ready(function () {
+            @if (Session::has('success'))
+                setTimeout(function(){
+                    toastr.success("{{ Session::get('success') }}", '', {timeOut: 5000});
+                }, 1000);
+            @endif
+            @if (Session::has('error'))
+                setTimeout(function(){
+                    toastr.error("{{ Session::get('error') }}", '', {timeOut: 5000});
+                }, 1000);
+            @endif
+        });
+</script>
 
 @endpush
