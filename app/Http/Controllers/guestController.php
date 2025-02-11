@@ -13,7 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Crypt;
 
 
 
@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Session;
 class guestController extends Controller
 {
     public function guestSubscriptions(Request $request)
-    { 
+    {
         $data['page'] = 'Subscription';
         $data['plans'] = Pricing_plan::all();
 
@@ -49,10 +49,10 @@ class guestController extends Controller
         }
         CustomerCardProcess::create([
             'customer_id' => $data['user_id'],
-            'card_number' => $data['card_number'],
-            'cvv' => $data['card_cvc'],
-            'expiry' => $data['card_expiry'],
-            'zip' => $data['card_zip'],
+            'card_number' => Crypt::encryptString($data['card_number']),
+            'cvv' => Crypt::encryptString($data['card_cvc']),
+            'expiry' => Crypt::encryptString($data['card_expiry']),
+            'zip' => Crypt::encryptString($data['card_zip']),
             'status' => '1',
         ]);
 
