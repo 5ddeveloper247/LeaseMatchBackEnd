@@ -113,13 +113,16 @@
 
                                     </div>
                                     <div class="row">
-                                        <div class="btn_blk form_btn">
-                                            <button type="submit" class="site_btn block">Login</button>
+                                        <div class="btn_blk form_btn" style="margin-bottom:10px; ">
+                                            <button type="submit" class="site_btn block ">Login</button>
                                         </div>
+                                        <div class="d-flex justify-content-center "> OR</div>
+
                                         <div class="btn_blk form_btn">
                                             <button type="button" class="site_btn block"><a class="site_btn block"
-                                                    href="https://www.leasematch.nyc/" style="text-decoration: none">Go
-                                                    To Website</a></button>
+                                                    href="https://www.leasematch.nyc/"
+                                                    style="text-decoration: none">Register Now
+                                                </a></button>
                                         </div>
                                     </div>
                                 </div>

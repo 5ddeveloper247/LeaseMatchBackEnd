@@ -20,6 +20,7 @@ return new class extends Migration
             $table->smallInteger('directly_contact_flag')->nullable()->comment('0=>disable, 1=>enable')->default(0);
             $table->smallInteger('process_application_flag')->nullable()->comment('0=>disable, 1=>enable')->default(0);
             $table->smallInteger('necessary_doc_flag')->nullable()->comment('0=>disable, 1=>enable')->default(0);
+            $table->smallInteger('free_trial')->nullable()->comment('0=>disable, 1=>enable')->default(0);
             $table->timestamps();
         });
     }

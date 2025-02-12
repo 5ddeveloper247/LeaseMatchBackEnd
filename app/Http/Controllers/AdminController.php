@@ -330,6 +330,11 @@ class AdminController extends Controller
         } else {
             $plan->necessary_doc_flag = 0;
         }
+        if (isset($request->freeTrial) && $request->freeTrial == 'on') {
+            $plan->free_trial = 1;
+        } else {
+            $plan->free_trial = 0;
+        }
 
         $plan->created_at = date('Y-m-d H:i:s');
         // Save the changes
