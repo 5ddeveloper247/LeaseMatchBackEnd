@@ -195,9 +195,10 @@
 
                                     </div>
                                     <div class="form-check form-switch mt-2" style="margin-top:5px;">
-                                        <input class="form-check-input m-2" name="status_edit" id="status_edit"
-                                            type="checkbox" role="switch">
-                                        <label class="form-check-label" for="flexSwitchCheckChecked">Status</label>
+                                       
+                                        <input class="" name="status_edit" id="status_edit" style="position: absolute;"
+                                            type="checkbox" role="switch"> <span style="margin-left: 25px;">Enabled</span>
+                                        
                                     </div>
                                     <div class="btn_blk form_btn text-center">
                                         <button type="button" class="site_btn long"
@@ -284,10 +285,8 @@
                                             <div id="preview" class="preview"></div>
                                         </div>
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="status"
-                                                name="status">
-                                            <label class="form-check-label" for="flexSwitchCheckChecked">
-                                                Status</label>
+                                            <input class="" type="checkbox" role="switch" id="status" style="position: absolute;"
+                                                name="status"><span style="margin-left: 25px;">Enabled</span>
                                         </div>
 
                                     </div>

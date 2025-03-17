@@ -51,7 +51,7 @@
                             style="background-image: url('{{ asset('assets/images/logo-light.png') }}'),  url('{{ asset('assets/images/logo-light.png') }}');"></a>
                     </div>
                     <h1>Please Login to continue</h1>
-                    <p>A platform with efficient integration of many features and so much more</p>
+                    <p>Welcome to LeaseMatch.NYC, your premier digital and personal housing assistant</p>
                 </div>
             </div>
             <div class="contain">
