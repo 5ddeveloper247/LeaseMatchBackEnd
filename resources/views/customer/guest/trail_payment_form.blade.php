@@ -205,8 +205,7 @@
                                             <div class="col-sm-2">
                                                 <div class="btn_blk">
                                                     <button type="submit" class="site_btn md auto"
-                                                        id="submitNow_btn">Submit
-                                                        Now</button>
+                                                        id="submitNow_btn">Save Info</button>
                                                 </div>
                                             </div>
                                         </div>

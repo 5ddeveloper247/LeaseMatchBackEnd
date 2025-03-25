@@ -125,11 +125,13 @@
                                     <div class="btn_blk">
                                         {{-- <a href="javascript:;">{{ $key==0?
                                             "Buy Plan":"Comming Soon" }} </a> --}}
-                                        <a href="javascript:;" @if($key == 0) onclick="buyPlan({{@$plan->id}});" @endif>{{ $key==0 ? "Buy Plan" : "Coming Soon" }}</a>
+                                        {{-- <a href="javascript:;" @if($key == 0) onclick="buyPlan({{@$plan->id}});" @endif>{{ $key==0 ? "Buy Plan" : "Coming Soon" }}</a> --}}
                                         {{-- is_trial == false then show free trail it--}}
                                         @if($is_trial == false && $key==0)
                                         {{-- text Free Trial --}}
                                         <a href="{{ route('guest.trail.payment.form', ['plan_id' => @$plan->id]) }}">Free Trial</a>
+                                        @else
+                                        <a href="javascript:;" @if($key == 0) onclick="buyPlan({{@$plan->id}});" @endif>{{ $key==0 ? "Buy Plan" : "Coming Soon" }}</a>
                                         @endif
 
                                         {{-- <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">{{ $key==0?
