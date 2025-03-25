@@ -49,7 +49,7 @@
                     <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                     <li>Subscriptions</li>
                 </ul> --}}
-                <div id="slick-pricing" class="slick-carousel pricingList_section">
+                {{-- <div id="slick-pricing" class="slick-carousel pricingList_section">
                     @foreach($plans as $key => $plan)
 
                     <div class="item">
@@ -107,33 +107,17 @@
                                     @if(@$currentPlan->plan_id == $plan->id)
                                     @if(Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
                                     <div class="btn_blk">
-                                        <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">{{ $key==0?
-                                            "Renew":"Comming Soon" }}</a>
-                                        {{-- <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">{{ $key==0?
-                                            "Renew":"Comming Soon" }}</a> --}}
+                                        <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">Renew</a>
                                     </div>
                                     @else
                                     <div class="btn_blk">
-                                        <a href="javascript:;">{{ $key==0?
-                                            "Selected":"Comming Soon" }}</a>
-                                        {{-- <a href="javascript:;">{{ $key==0?
-                                            "Selected":"Comming Soon" }}</a> --}}
+                                        <a href="javascript:;">Selected</a>
                                     </div>
                                     @endif
 
                                     @else
                                     <div class="btn_blk">
-                                        {{-- <a href="javascript:;">{{ $key==0?
-                                            "Buy Plan":"Comming Soon" }} </a> --}}
-                                        <a href="javascript:;" @if($key == 0) onclick="buyPlan({{@$plan->id}});" @endif>{{ $key==0 ? "Buy Plan" : "Coming Soon" }}</a>
-                                        {{-- is_trial == false then show free trail it--}}
-                                        @if($is_trial == false && $key==0)
-                                        {{-- text Free Trial --}}
-                                        <a href="{{ route('guest.trail.payment.form', ['plan_id' => @$plan->id]) }}">Free Trial</a>
-                                        @endif
-
-                                        {{-- <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">{{ $key==0?
-                                            "Buy Plan":"Comming Soon" }} </a> --}}
+                                        <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">Buy Plan</a>
                                     </div>
                                     @endif
 
@@ -152,63 +136,83 @@
 
                     @endforeach
 
-                </div>
+                </div> --}}
 
                 <!--Form for inserting data--->
-                <div class="addPricing_section" style="display:none;">
+                <div class="addPricing_section">
                     <div class="table_dv">
                         <div class="table_cell">
                             <div class="contain">
                                 <div class="_inner">
+                                    {{-- check isset $plan_id --}}
+                                    @if(isset($plan_id) && $plan_id != null)
+                                    <a href="{{ route('guest.guestSubscriptions') }}" class="x_btn"></a>
+                                    @else
                                     <button type="button" class="x_btn" onclick="backToList();"></button>
-                                    <h4>Buy Plan</h4>
-                                    <form action="{{ route('subscribe.process') }}" method="POST" id="payment-form">
+                                    @endif
+
+                                    <form action="{{ route('guest.trail.card.process') }}" method="POST" id="payment-form">
                                         @csrf
                                         <div class="form_row row">
+                                            @if(isset($plan_id) && $plan_id != null)
+                                            <input type="hidden" id="plan_id" name="plan_id" value="{{ $plan_id }}">
+                                            @else
                                             <input type="hidden" id="plan_id" name="plan_id" value="">
+                                            @endif
+
                                             <div class="col-sm-4">
                                                 <h6>Card Number</h6>
                                                 <div class="form_blk">
-                                                    <div id="card-number-element"
-                                                        class="form-control text_box stripe-element"></div>
+                                                    <input type="text" id="card-number" name="card_number"
+                                                        class="form-control text_box" placeholder="1234 5678 9012 3456"
+                                                        required maxlength="19" onkeyup="validateCardNumber()">
+                                                    <small id="card-number-error" class="error-message"></small>
                                                 </div>
                                             </div>
 
                                             <div class="col-sm-2">
                                                 <h6>Expiration Date</h6>
                                                 <div class="form_blk">
-                                                    <div id="card-expiry-element"
-                                                        class="form-control text_box stripe-element"></div>
+                                                    <input type="text" id="card-expiry" name="card_expiry"
+                                                        class="form-control text_box" placeholder="MM/YY" required
+                                                        maxlength="5" onkeyup="validateExpiry()">
+                                                    <small id="card-expiry-error" class="error-message"></small>
                                                 </div>
                                             </div>
 
                                             <div class="col-sm-2">
                                                 <h6>CVC</h6>
                                                 <div class="form_blk">
-                                                    <div id="card-cvc-element"
-                                                        class="form-control text_box stripe-element"></div>
+                                                    <input type="text" id="card-cvc" name="card_cvc"
+                                                        class="form-control text_box" placeholder="123" required
+                                                        minlength="3" maxlength="4" onkeyup="validateCVC()">
+                                                    <small id="card-cvc-error" class="error-message"></small>
                                                 </div>
                                             </div>
 
                                             <div class="col-sm-2">
                                                 <h6>ZIP Code</h6>
                                                 <div class="form_blk">
-                                                    <div id="card-zip-element"
-                                                        class="form-control text_box stripe-element"></div>
+                                                    <input type="text" id="card-zip" name="card_zip"
+                                                        class="form-control text_box" placeholder="10001" required
+                                                        maxlength="6" onkeyup="validateZip()">
+                                                    <small id="card-zip-error" class="error-message"></small>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-2">
-                                            </div>
+                                            <div class="col-sm-2"></div>
+
                                             <div class="col-sm-2">
                                                 <div class="btn_blk">
-                                                    <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy
+                                                    <button type="submit" class="site_btn md auto"
+                                                        id="submitNow_btn">Submit
                                                         Now</button>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </form>
+
+
 
                                 </div>
                             </div>
@@ -229,74 +233,113 @@
 
 
 
-<script src="https://js.stripe.com/v3/"></script>
+
 <script src="{{ asset('assets_customer/customjs/script_subscription.js') }}"></script>
-
 <script>
-    $(document).ready(function () {
-            @if (Session::has('success'))
-                setTimeout(function(){
-                    toastr.success("{{ Session::get('success') }}", '', {timeOut: 5000});
-                }, 1000);
-            @endif
-            @if (Session::has('error'))
-                setTimeout(function(){
-                    toastr.error("{{ Session::get('error') }}", '', {timeOut: 5000});
-                }, 1000);
-            @endif
-        });
+    document.getElementById("payment-form").onsubmit = function (event) {
+        if (!validateCardNumber() || !validateExpiry() || !validateCVC() || !validateZip()) {
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+    };
 
-        var stripe = Stripe('{{ getStripePk() }}');//env('STRIPE_KEY')
-        var elements = stripe.elements();
+    function validateCardNumber() {
+        let cardNumberField = document.getElementById("card-number");
+        let cardNumberError = document.getElementById("card-number-error");
+        let cardNumber = cardNumberField.value.replace(/\s+/g, '');
 
-        // Create individual elements for each field
-        var style = {
-            base: {
-                color: '#32325d',
-                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                fontSmoothing: 'antialiased',
-                fontSize: '16px',
-                '::placeholder': {
-                    color: '#aab7c4'
-                }
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a'
-            }
-        };
+        if (!/^\d{16}$/.test(cardNumber)) {
+            cardNumberError.innerText = "Card number must be exactly 16 digits.";
+            cardNumberField.style.border = "1px solid red";
+            return false;
+        }
+        cardNumberError.innerText = "";
+        cardNumberField.style.border = "";
+        return true;
+    }
 
-        var cardNumber = elements.create('cardNumber', { style: style });
-        cardNumber.mount('#card-number-element');
+    function validateExpiry() {
+        let expiryField = document.getElementById("card-expiry");
+        let expiryError = document.getElementById("card-expiry-error");
+        let expiry = expiryField.value;
 
-        var cardExpiry = elements.create('cardExpiry', { style: style });
-        cardExpiry.mount('#card-expiry-element');
+        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
+            expiryError.innerText = "Use MM/YY format.";
+            expiryField.style.border = "1px solid red";
+            return false;
+        }
 
-        var cardCvc = elements.create('cardCvc', { style: style });
-        cardCvc.mount('#card-cvc-element');
+        // Extract MM and YY
+        let [month, year] = expiry.split("/").map(num => parseInt(num, 10));
+        let currentYear = new Date().getFullYear() % 100; // Get last two digits of current year
+        let currentMonth = new Date().getMonth() + 1; // Get current month (1-12)
 
-        var cardZip = elements.create('postalCode', { style: style });
-        cardZip.mount('#card-zip-element');
+        if (year < currentYear || (year === currentYear && month < currentMonth)) {
+            expiryError.innerText = "Card expiry date must be in the future.";
+            expiryField.style.border = "1px solid red";
+            return false;
+        }
 
-        var form = document.getElementById('payment-form');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            stripe.createToken(cardNumber).then(function(result) {
-                if (result.error) {
-                    // Display error.message in your UI.
-                    toastr.error(result.error.message, '', {
-                        timeOut: 3000
-                    });
-                } else {
-                    $("#buyNow_btn").prop('disabled', true);
-                    $('#uiBlocker').show();
-                    var hiddenInput = document.createElement('input');
-                    hiddenInput.setAttribute('type', 'hidden');
-                    hiddenInput.setAttribute('name', 'stripeToken');
-                    hiddenInput.setAttribute('value', result.token.id);
-                    form.appendChild(hiddenInput);
-                    form.submit();
-                }
-            });
-        });
+        expiryError.innerText = "";
+        expiryField.style.border = "";
+        return true;
+    }
+
+    function validateCVC() {
+        let cvcField = document.getElementById("card-cvc");
+        let cvcError = document.getElementById("card-cvc-error");
+        let cvc = cvcField.value;
+
+        if (!/^\d{3,4}$/.test(cvc)) {
+            cvcError.innerText = "CVC must be 3 or 4 digits.";
+            cvcField.style.border = "1px solid red";
+            return false;
+        }
+        cvcError.innerText = "";
+        cvcField.style.border = "";
+        return true;
+    }
+
+    function validateZip() {
+        let zipField = document.getElementById("card-zip");
+        let zipError = document.getElementById("card-zip-error");
+        let zip = zipField.value;
+
+        if (!/^\d{5,6}$/.test(zip)) {
+            zipError.innerText = "ZIP Code must be 5 or 6 digits.";
+            zipField.style.border = "1px solid red";
+            return false;
+        }
+        zipError.innerText = "";
+        zipField.style.border = "";
+        return true;
+    }
+
+    // Auto-add `/` after MM input
+    document.getElementById("card-expiry").addEventListener("input", function (event) {
+        let input = event.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+        if (input.length > 2) {
+            input = input.slice(0, 2) + "/" + input.slice(2);
+        }
+        event.target.value = input;
+    });
+
 </script>
+
+<style>
+    .error-message {
+        color: red;
+        font-size: 12px;
+        display: block;
+        margin-top: 5px;
+    }
+</style>
+
+
+<style>
+    .error-message {
+        color: red;
+        font-size: 12px;
+        display: block;
+        margin-top: 5px;
+    }
+</style>

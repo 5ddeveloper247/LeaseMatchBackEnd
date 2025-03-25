@@ -354,7 +354,7 @@ class RegistrationController extends Controller
                 //personal Information
                 'name' => 'required|string|max:100',
                 'date_of_birth' => 'required|date_format:Y-m-d|before:today',
-                'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                'email' => 'required|email|unique:users,email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'phone_number' => 'required|numeric|digits_between:7,18',
             ]);
         }

@@ -159,6 +159,11 @@ Route::group(['prefix' => 'customer'], function () {
     Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
     Route::get('/guest/subscriptions', [guestController::class, 'guestSubscriptions'])->name('guest.guestSubscriptions');
     Route::post('/guest/card/process', [guestController::class, 'guestCardProcess'])->name('guest.card.process');
+    // guestTrailCardProcess
+    Route::post('/guest/trail/card/process', [guestController::class, 'guestTrailCardProcess'])->name('guest.trail.card.process');
+    // guesTrailtPaymentForm
+    // Route::get('/guest/payment/form', [guestController::class, 'guesTrailtPaymentForm'])->name('guest.guestPaymentForm');
+    Route::get('/guest/trail/payment/form/{plan_id}', [guestController::class, 'guestTrailPaymentForm'])->name('guest.trail.payment.form');
 
     Route::group(['middleware' => ['UserAuth']], function () {
 

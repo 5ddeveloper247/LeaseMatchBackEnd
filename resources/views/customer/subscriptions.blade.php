@@ -69,6 +69,7 @@
 
                             </ul>
                             @if(@$currentPlan->plan_id == $plan->id)
+                            
                             @if(Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
                             <div class="btn_blk">
                                 <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">{{ $key==0?
@@ -87,8 +88,7 @@
 
                             @else
                             <div class="btn_blk">
-                                <a href="javascript:;">{{ $key==0?
-                                    "Buy Plan":"Comming Soon" }} </a>
+                                <a href="javascript:;" @if($key == 0) onclick="buyPlan({{@$plan->id}});" @endif>{{ $key==0 ? "Buy Plan" : "Coming Soon" }}</a>
                                 {{-- <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">{{ $key==0?
                                     "Buy Plan":"Comming Soon" }} </a> --}}
                             </div>

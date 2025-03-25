@@ -62,14 +62,15 @@ class CustomerController extends Controller
             'email' => 'required|exists:users,email',
         ]);
         $credentials = $request->only('email', 'password');
-
+        // dd($credentials);
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if ($user->status == 1) {
                 $request->session()->put('user', $user);
 
                 $trialData = Session::get('trialData');
-                if ($trialData['plan'] !== null && $trialData['type'] !== null) {
+                // dd($trialData);
+                if ($trialData && $trialData['plan'] !== null && $trialData['type'] !== null) {
                     $checkFreeTrialExist = UserSubscriptionFreeTrial::where('user_id', $user->id)->first();
                     if ($checkFreeTrialExist) {
                         Session::forget('trialData');
@@ -123,6 +124,7 @@ class CustomerController extends Controller
 
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
+        // dd($data);
 
         return view('customer/subscriptions')->with($data);
     }
