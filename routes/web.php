@@ -193,3 +193,10 @@ Route::group(['prefix' => 'customer'], function () {
         Route::post('/account/profile', [CustomerController::class, 'customer_account_profile'])->name('customer_account_profile');
     });
 });
+// phpinfo
+Route::get('/phpinfo', function () {
+    return phpinfo();
+});
+Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
