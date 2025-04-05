@@ -217,7 +217,7 @@
 
                                             @if (Auth::user()->profile_picture !== null)
                                                 <img class="avatar border-gray"
-                                                    src="{{ url('/') . '' . Auth::user()->profile_picture }}" alt="...">
+                                                    src="{{ url('/') . '/public' . Auth::user()->profile_picture }}" alt="...">
                                             @else
                                                 <img class="avatar border-gray"
                                                     src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
