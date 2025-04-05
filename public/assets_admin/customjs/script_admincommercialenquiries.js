@@ -93,6 +93,7 @@ function viewEnquiryDetail(enquiry_id) {
     let form = '';
     let data = new FormData();
     data.append('id', enquiry_id);
+   
 
     // PASSING DATA TO FUNCTION
     SendAjaxRequestToServer(type, url, data, '', getCommercialEnquiryDetailResponse, '', '.view_enquiry_detail');

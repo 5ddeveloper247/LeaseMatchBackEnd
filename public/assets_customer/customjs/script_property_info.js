@@ -116,19 +116,25 @@ function getSpecificTenantResponse(response) {
 
 			
 			var tenant_docs = details.user_docs;
-			var docs_html = '';
-			if(tenant_docs.length > 0){
-				$.each(tenant_docs, function (index, value) {
-					docs_html += `<li id="">
-										<div class="thumb">
-											<img src="${value.doc_url}" alt="">
-										</div>
-									</li>`;
-						
-				});
-			}
+            var docs_html = "";
+            if (tenant_docs && tenant_docs.length > 0) {
+                $.each(tenant_docs, function (index, value) {
+                    docs_html += `<li id="">
+                        <div class="thumb">
+                            <img src="${value.doc_url}" alt="">
+                        </div>
+                    </li>`;
+                });
+            } else {
+                // Display "No attachments" message when no documents are available
+                docs_html = `<li class="no-attachments">
+                    <div class="no-docs-message">
+                        No attachments
+                    </div>
+                </li>`;
+            }
 
-			$("#tenantDocuments_html").html(docs_html);
+            $("#tenantDocuments_html").html(docs_html);
 		}
 
 		

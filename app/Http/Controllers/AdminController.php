@@ -814,6 +814,13 @@ class AdminController extends Controller
     public function delete_tenant(Request $request)
     {
         $user_id = $request->id;
+        
+
+        $checkInPropertyMatches = PropertyMatches::where('user_id', $user_id)->first();
+        if ($checkInPropertyMatches) {
+            return response()->json(['status' => 402, 'message' => 'Cannot delete this tenant as it is linked with property match.']);
+        }
+    
         $docs = UserDocuments::where('id', $user_id)->get();
 
         $user = User::where('id', $user_id)->where('type', 3)->first();

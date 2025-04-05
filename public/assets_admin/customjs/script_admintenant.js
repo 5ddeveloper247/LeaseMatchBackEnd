@@ -1,20 +1,27 @@
 function getTenantPageData() {
-    let type = 'POST';
-    let url = '/admin/getTenantPageData';
-    let message = '';
-    let form = '';
-    let data = '';
+    let type = "POST";
+    let url = "/admin/getTenantPageData";
+    let message = "";
+    let form = "";
+    let data = "";
     // PASSING DATA TO FUNCTION
-    SendAjaxRequestToServer(type, url, data, '', getTenantPageDataResponse, '', 'submit_button');
+    SendAjaxRequestToServer(
+        type,
+        url,
+        data,
+        "",
+        getTenantPageDataResponse,
+        "",
+        "submit_button"
+    );
 }
 
 function getTenantPageDataResponse(response) {
-
     var data = response.data;
-    var tenant_list = data['tenant_list'];
-    var total_count = data['total'];
-    var total_inactive = data['total_inactive'];
-    var total_active = data['total_active'];
+    var tenant_list = data["tenant_list"];
+    var total_count = data["total"];
+    var total_inactive = data["total_inactive"];
+    var total_active = data["total_active"];
 
     $("#total_count").text(total_count);
     $("#total_inactive").text(total_inactive);
@@ -24,8 +31,7 @@ function getTenantPageDataResponse(response) {
 }
 
 function makeTenantListing(tenant_list) {
-
-    var html = '';
+    var html = "";
 
     if (tenant_list.length > 0) {
         $.each(tenant_list, function (index, value) {
@@ -33,20 +39,34 @@ function makeTenantListing(tenant_list) {
 						<td class="nowrap grid-p-searchby">${index + 1}</td>
 						<td class="grid-p-searchby">${trimText(value.first_name, 20)}</td>
 						<td class="grid-p-searchby">${value.email}</td>
-						<td class="nowrap grid-p-searchby" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
-						<td class="nowrap grid-p-searchby" >${value.personal_info != null ? formatDate(value.personal_info.date_of_birth) : ''}</td>
+						<td class="nowrap grid-p-searchby" >${
+                            value.personal_info != null
+                                ? value.personal_info.phone_number
+                                : ""
+                        }</td>
+						<td class="nowrap grid-p-searchby" >${
+                            value.personal_info != null
+                                ? formatDate(value.personal_info.date_of_birth)
+                                : ""
+                        }</td>
 						<td class="nowrap grid-p-searchby">${formatDate(value.created_at)}</td>
 						<td data-center>
 							<div class="switch" >
-								<input type="checkbox" onclick="changestatus(${value.id})" ${value.status == '1' ? 'checked' : ''}>
+								<input type="checkbox" onclick="changestatus(${value.id})" ${
+                value.status == "1" ? "checked" : ""
+            }>
 								<em></em>
 							</div>
 						</td>
 
 						<td class="nowrap" data-center>
 							<div class="act_btn">
-								<button type="button" class="eye view_tenant" title="View Tenant Detail" data-id="${value.id}"></button>
-								<button type="button" class="del delete_tenant_confirm" title="Delete Tenant" data-id="${value.id}"></button>
+								<button type="button" class="eye view_tenant" title="View Tenant Detail" data-id="${
+                                    value.id
+                                }"></button>
+								<button type="button" class="del delete_tenant_confirm" title="Delete Tenant" data-id="${
+                                    value.id
+                                }"></button>
 							</div>
 						</td>
 					</tr>`;
@@ -60,130 +80,168 @@ function makeTenantListing(tenant_list) {
 }
 
 function changestatus(tenant_id) {
-    let type = 'POST';
-    let url = '/admin/changeStatusTenant';
-    let message = '';
-    let form = '';
+    let type = "POST";
+    let url = "/admin/changeStatusTenant";
+    let message = "";
+    let form = "";
     let data = new FormData();
-    data.append('id', tenant_id);
+    data.append("id", tenant_id);
     // PASSING DATA TO FUNCTION
-    SendAjaxRequestToServer(type, url, data, '', changeStatusResponse, '', 'submit_button');
+    SendAjaxRequestToServer(
+        type,
+        url,
+        data,
+        "",
+        changeStatusResponse,
+        "",
+        "submit_button"
+    );
 }
 
 function changeStatusResponse(response) {
-    if (response.status == 200 || response.status == '200') {
-
-        toastr.success(response.message, '', {
-            timeOut: 3000
+    if (response.status == 200 || response.status == "200") {
+        toastr.success(response.message, "", {
+            timeOut: 3000,
         });
 
         getTenantPageData();
     } else {
-
-        toastr.error(response.message, '', {
-            timeOut: 3000
+        toastr.error(response.message, "", {
+            timeOut: 3000,
         });
     }
 }
 
+$(document).on("click", ".delete_tenant_confirm", function (e) {
+    var tenant_id = $(this).attr("data-id");
 
-$(document).on('click', '.delete_tenant_confirm', function (e) {
-    var tenant_id = $(this).attr('data-id');
-
-    $(".delete_tenant_confirmed").attr('data-id', tenant_id);
+    $(".delete_tenant_confirmed").attr("data-id", tenant_id);
 
     $("html").addClass("flow");
     $("#confirm_popup").fadeIn();
-
 });
-$(document).on('click', '.close_confirm', function (e) {
-    $(".delete_tenant_confirmed").attr('data-id', '');
+$(document).on("click", ".close_confirm", function (e) {
+    $(".delete_tenant_confirmed").attr("data-id", "");
     $("html").removeClass("flow");
     $("#confirm_popup").fadeOut();
 });
 
-$(document).on('click', '.delete_tenant_confirmed', function (e) {
-
-    var tenant_id = $(this).attr('data-id');
+$(document).on("click", ".delete_tenant_confirmed", function (e) {
+    var tenant_id = $(this).attr("data-id");
     e.preventDefault();
-    let type = 'POST';
-    let url = '/admin/deleteTenant';
-    let message = '';
-    let form = '';
+    let type = "POST";
+    let url = "/admin/deleteTenant";
+    let message = "";
+    let form = "";
     let data = new FormData();
-    data.append('id', tenant_id);
+    data.append("id", tenant_id);
 
     // PASSING DATA TO FUNCTION
-    SendAjaxRequestToServer(type, url, data, '', deleteTenantResponse, '', '.delete_tenant_confirmed');
+    SendAjaxRequestToServer(
+        type,
+        url,
+        data,
+        "",
+        deleteTenantResponse,
+        "",
+        ".delete_tenant_confirmed"
+    );
 });
 function deleteTenantResponse(response) {
-    // SHOWING MESSAGE ACCORDING TO RESPONSE
-    if (response.status == 200 || response.status == '200') {
-        toastr.success(response.message, '', {
-            timeOut: 3000
+    if (response.status == 200 || response.status == "200") {
+        toastr.success(response.message, "", {
+            timeOut: 3000,
         });
 
-        $(".delete_tenant_confirmed").attr('data-id', '');
+        $(".delete_tenant_confirmed").attr("data-id", "");
         $("html").removeClass("flow");
         $("#confirm_popup").fadeOut();
 
         getTenantPageData();
+    } else {
+        if (response.status == 402 || response.status == "402") {
+            toastr.error(response.message, "", {
+                timeOut: 3000,
+            });
+        } else {
+            let errorMessage =
+                response.message ||
+                "An error occurred while deleting the tenant";
+            toastr.error(errorMessage, "", {
+                timeOut: 3000,
+            });
+        }
+
+        $(".delete_tenant_confirmed").attr("data-id", "");
+        $("html").removeClass("flow");
+        $("#confirm_popup").fadeOut();
     }
 }
 
-$(document).on('click', '#search_filter_submit', function (e) {
-
+$(document).on("click", "#search_filter_submit", function (e) {
     e.preventDefault();
-    let type = 'POST';
-    let url = '/admin/searchTenantListing';
-    let message = '';
+    let type = "POST";
+    let url = "/admin/searchTenantListing";
+    let message = "";
     let form = $("#filter_form");
     let data = new FormData(form[0]);
 
     // PASSING DATA TO FUNCTION
-    SendAjaxRequestToServer(type, url, data, '', searchTenantListingResponse, '', '#search_filter_submit');
+    SendAjaxRequestToServer(
+        type,
+        url,
+        data,
+        "",
+        searchTenantListingResponse,
+        "",
+        "#search_filter_submit"
+    );
 });
 function searchTenantListingResponse(response) {
     // SHOWING MESSAGE ACCORDING TO RESPONSE
 
-    if (response.status == 200 || response.status == '200') {
+    if (response.status == 200 || response.status == "200") {
         var data = response.data;
         var tenant_list = data.tenant_list;
 
         makeTenantListing(tenant_list);
     } else {
-        toastr.error(response.message, '', {
-            timeOut: 3000
+        toastr.error(response.message, "", {
+            timeOut: 3000,
         });
     }
 }
-$(document).on('click', '#reset_filter_btn', function (e) {
-
-    let form = $('#filter_form');
+$(document).on("click", "#reset_filter_btn", function (e) {
+    let form = $("#filter_form");
     form.trigger("reset");
     getTenantPageData();
 });
 
-$(document).on('click', '.view_tenant', function (e) {
-    var tenant_id = $(this).attr('data-id');
+$(document).on("click", ".view_tenant", function (e) {
+    var tenant_id = $(this).attr("data-id");
     e.preventDefault();
-    let type = 'POST';
-    let url = '/admin/getSpecificTenantDetail';
-    let message = '';
-    let form = '';
+    let type = "POST";
+    let url = "/admin/getSpecificTenantDetail";
+    let message = "";
+    let form = "";
     let data = new FormData();
-    data.append('id', tenant_id);
+    data.append("id", tenant_id);
 
     // PASSING DATA TO FUNCTION
-    SendAjaxRequestToServer(type, url, data, '', getSpecificTenantResponse, '', '.view_landlord');
-
+    SendAjaxRequestToServer(
+        type,
+        url,
+        data,
+        "",
+        getSpecificTenantResponse,
+        "",
+        ".view_landlord"
+    );
 });
 
 function getSpecificTenantResponse(response) {
-
     // SHOWING MESSAGE ACCORDING TO RESPONSE
-    if (response.status == 200 || response.status == '200') {
-
+    if (response.status == 200 || response.status == "200") {
         var data = response.data;
         var details = data.details;
 
@@ -191,7 +249,6 @@ function getSpecificTenantResponse(response) {
         $("#deliveries").show();
 
         if (details != null) {
-
             var personalInfo = details.personal_info;
             var residentialInfo = details.residential_info;
             var financialInfo = details.financial_info;
@@ -205,7 +262,6 @@ function getSpecificTenantResponse(response) {
             var referencesInfo = details.references;
             var additionalNote = details.additional_note;
 
-
             $("#user_name").val(details.first_name);
             $("#user_email").val(details.email);
 
@@ -217,10 +273,18 @@ function getSpecificTenantResponse(response) {
             }
 
             if (residentialInfo != null) {
-                $("#preferred_location").val(residentialInfo.preferred_location);
-                $("#preferred_property_type").val(residentialInfo.preferred_property_type);
-                $("#min_bedrooms_needed").val(residentialInfo.min_bedrooms_needed);
-                $("#min_bathrooms_needed").val(residentialInfo.min_bathrooms_needed);
+                $("#preferred_location").val(
+                    residentialInfo.preferred_location
+                );
+                $("#preferred_property_type").val(
+                    residentialInfo.preferred_property_type
+                );
+                $("#min_bedrooms_needed").val(
+                    residentialInfo.min_bedrooms_needed
+                );
+                $("#min_bathrooms_needed").val(
+                    residentialInfo.min_bathrooms_needed
+                );
             }
 
             if (financialInfo != null) {
@@ -241,7 +305,9 @@ function getSpecificTenantResponse(response) {
             if (livingInfo != null) {
                 $("#current_address").val(livingInfo.current_address);
                 $("#moving_reason").val(livingInfo.moving_reason);
-                $("#prev_landlord_contact").val(livingInfo.prev_landlord_contact);
+                $("#prev_landlord_contact").val(
+                    livingInfo.prev_landlord_contact
+                );
                 $("#lease_violation").val(livingInfo.lease_violation);
             }
 
@@ -261,13 +327,19 @@ function getSpecificTenantResponse(response) {
             if (accomodationInfo != null) {
                 $("#disability").val(accomodationInfo.disability);
                 $("#disability_type").val(accomodationInfo.disability_type);
-                $("#special_accomodation").val(accomodationInfo.special_accomodation);
+                $("#special_accomodation").val(
+                    accomodationInfo.special_accomodation
+                );
             }
 
             if (additionalInfo != null) {
                 $("#max_rent_to_pay").val(additionalInfo.max_rent_to_pay);
-                $("#preffered_move_in_date").val(additionalInfo.preffered_move_in_date);
-                $("#lease_length_preference").val(additionalInfo.lease_length_preference);
+                $("#preffered_move_in_date").val(
+                    additionalInfo.preffered_move_in_date
+                );
+                $("#lease_length_preference").val(
+                    additionalInfo.lease_length_preference
+                );
             }
 
             if (legalInfo != null) {
@@ -277,8 +349,12 @@ function getSpecificTenantResponse(response) {
 
             if (referencesInfo != null) {
                 $("#reference_name").val(referencesInfo.reference_name);
-                $("#reference_relationship").val(referencesInfo.reference_relationship);
-                $("#contact_information").val(referencesInfo.contact_information);
+                $("#reference_relationship").val(
+                    referencesInfo.reference_relationship
+                );
+                $("#contact_information").val(
+                    referencesInfo.contact_information
+                );
             }
 
             if (additionalNote != null) {
@@ -286,42 +362,40 @@ function getSpecificTenantResponse(response) {
                 $("#work_with_broker").val(additionalNote.work_with_broker);
             }
 
-
-
             var tenant_docs = details.user_docs;
-            var docs_html = '';
-            if (tenant_docs.length > 0) {
+            var docs_html = "";
+            if (tenant_docs && tenant_docs.length > 0) {
                 $.each(tenant_docs, function (index, value) {
                     docs_html += `<li id="">
-										<div class="thumb">
-											<img src="${value.doc_url}" alt="">
-										</div>
-									</li>`;
-
+                        <div class="thumb">
+                            <img src="${value.doc_url}" alt="">
+                        </div>
+                    </li>`;
                 });
+            } else {
+                // Display "No attachments" message when no documents are available
+                docs_html = `<li class="no-attachments">
+                    <div class="no-docs-message">
+                        No attachments
+                    </div>
+                </li>`;
             }
 
             $("#tenantDocuments_html").html(docs_html);
         }
-
-
-
     }
 }
 
-
-
-
-
 $(document).ready(function () {
-
     getTenantPageData();
 
-    $("#deliveries input, #deliveries select, #deliveries textarea").prop('disabled', true);
+    $("#deliveries input, #deliveries select, #deliveries textarea").prop(
+        "disabled",
+        true
+    );
 });
 
-$(document).on('click', '.backToListing', function (e) {
-
+$(document).on("click", ".backToListing", function (e) {
     $("fieldset").css("display", "none");
     $(".head_lst > li").removeClass("current");
 
@@ -334,9 +408,9 @@ $(document).on('click', '.backToListing', function (e) {
 
 $(window).on("load", function () {
     $(".head_lst > li:nth-child(1)").addClass("current");
-    li = $('.head_lst > li:first');
+    li = $(".head_lst > li:first");
     $(document).on("click", ".next_btn", function () {
-        li = li.next('li');
+        li = li.next("li");
         li.prev().removeClass("current");
         li.addClass("current");
     });
@@ -349,16 +423,21 @@ $(window).on("load", function () {
         $(".damage_btn .site_btn").removeClass("active");
         $(this).addClass("active");
     });
-})
+});
 
-$('#searchInListing').on("keyup", function (e) {
-    var tr = $('.identify');
+$("#searchInListing").on("keyup", function (e) {
+    var tr = $(".identify");
 
-    if ($(this).val().length >= 1) {//character limit in search box.
+    if ($(this).val().length >= 1) {
+        //character limit in search box.
         var noElem = true;
         var val = $.trim(this.value).toLowerCase();
         el = tr.filter(function () {
-            return $(this).find('.grid-p-searchby').text().toLowerCase().match(val);
+            return $(this)
+                .find(".grid-p-searchby")
+                .text()
+                .toLowerCase()
+                .match(val);
         });
         if (el.length >= 1) {
             noElem = false;
@@ -370,10 +449,7 @@ $('#searchInListing').on("keyup", function (e) {
     }
 });
 
-
-
 function backToList() {
-
     $("#listing").show();
     $("#deliveries").hide();
 }

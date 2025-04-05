@@ -712,6 +712,8 @@
     margin-bottom: 0.5rem;
     white-space: normal;
 }
+
+
 @media (max-width: 460px) {
     .filter-box .form_blk .form-control,
     .filter-box .form_blk .text_box {

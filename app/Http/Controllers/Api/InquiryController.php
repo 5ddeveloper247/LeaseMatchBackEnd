@@ -12,6 +12,7 @@ class InquiryController extends Controller
 
     public function inquiryValidate(Request $request)
     {
+        
         // Validate commercial inquiry data
         if ($request->step == 1) {
             $request->validate([
@@ -30,10 +31,12 @@ class InquiryController extends Controller
                 'email' => 'required|email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             ]);
         }
-
+        
         if ($request->step == 3) {
+            
             $request->validate([
-                'typeOfSpace' => 'required'
+                'typeOfSpace' => 'required|string', 
+                'otherTypeOfSpace' => $request->typeOfSpace == 'Other' ? 'required|string|max:255' : 'nullable|string|max:255',
             ]);
         }
 
