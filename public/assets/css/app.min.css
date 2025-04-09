@@ -897,7 +897,7 @@ textarea {
     -ms-flex-flow: wrap;
     flex-flow: wrap;
     gap: 1rem;
-    margin-top: 2.8rem !important;
+    margin-top: 2rem !important;
 }
 
 .btn_blk.form_btn {
@@ -5858,7 +5858,7 @@ footer .social_logos>li>a>img {
 
 .plan_blk .txt .btn_blk a,
 .plan_blk .txt .btn_blk button {
-    background: none;
+    /* background: none;
     background-image: url("../images/btn_bg.svg");
     background-position: center;
     background-repeat: no-repeat;
@@ -5868,7 +5868,22 @@ footer .social_logos>li>a>img {
     font-weight: 500;
     padding: 0.6rem 3rem;
     text-transform: uppercase;
-    border: 0
+    border: 0 */
+    background: linear-gradient(90deg, rgba(38, 38, 38, 1) 0%, rgba(88, 88, 88, 1) 100%);
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 0.8rem 1rem;
+    text-transform: uppercase;
+    border: 0;
+    font-size: 13px;
+				&:hover {
+					color: $color;
+				}
+			
 }
 
 .plan_blk .txt .btn_blk a:hover,

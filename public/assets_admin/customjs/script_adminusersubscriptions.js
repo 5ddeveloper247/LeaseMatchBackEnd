@@ -9,40 +9,36 @@ function getSubscriptionsPageData() {
 }
 
 function getPaymentsPageDataResponse(response) {
-
     var data = response.data;
     var subscriptions_user_list = data['subscriptions_user_list'];
-
-
     makeUserSubscriptionsListing(subscriptions_user_list);
 }
 
 function makeUserSubscriptionsListing(subscriptions_list) {
-
     var html = '';
 
     if (subscriptions_list.length > 0) {
         $.each(subscriptions_list, function (index, value) {
-            html += `<tr class="identify1">
-						<td class="nowrap grid-p-searchby1">${index + 1}</td>
-						<td class="grid-p-searchby1">${trimText(value.first_name, 20)}</td>
-						<td class="grid-p-searchby1">${value.email}</td>
-						<td class="grid-p-searchby1">${value.active_plan != null ? value.active_plan.plan.title : 'No Active Plan'}</td>
-						<td class="nowrap grid-p-searchby1" >${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
-						<td class="nowrap grid-p-searchby1 text-center" >${value.user_subscriptions_count}</td>
-						<td class="nowrap" data-center>
-							<div class="act_btn">
-								<button type="button" class="eye view_subscriptions_detail" title="View All Payments" data-id="${value.id}"></button>
-							</div>
-						</td>
-					</tr>`;
-
+            html += `<tr>
+                        <td class="nowrap">${index + 1}</td>
+                        <td>${trimText(value.first_name, 20)}</td>
+                        <td>${value.email}</td>
+                        <td>${value.active_plan != null ? value.active_plan.plan.title : 'No Active Plan'}</td>
+                        <td class="nowrap">${value.personal_info != null ? value.personal_info.phone_number : ''}</td>
+                        <td class="nowrap text-center">${value.user_subscriptions_count}</td>
+                        <td class="nowrap" data-center>
+                            <div class="act_btn">
+                                <button type="button" class="eye view_subscriptions_detail" title="View All Payments" data-id="${value.id}"></button>
+                            </div>
+                        </td>
+                    </tr>`;
         });
     } else {
         html = `<tr>
-					<td colspan="8"><p class="text-center">No record found!</p></td>
-				</tr>`;
+                    <td colspan="8"><p class="text-center">No record found!</p></td>
+                </tr>`;
     }
+    
     $("#subscription_table_body").html(html);
 }
 
@@ -90,6 +86,7 @@ function viewDetailResponse(response) {
 						<td class="nowrap grid-p-searchby" >${value.duration_days}</td>
                         <td class="nowrap grid-p-searchby" >${formatDate(value.start_date)}</td>
 						<td class="nowrap grid-p-searchby" >${formatDate(value.end_date)}</td>
+                        <td class="nowrap grid-p-searchby" >${value.cancelled_at !== null ? formatDate(value.cancelled_at) : 'N/A'}</td>
 					</tr>`;
         });
     } else {

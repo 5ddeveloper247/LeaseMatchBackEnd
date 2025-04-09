@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_payment_methods', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
-            $table->string('holder_name')->nullable();
+            // $table->string('holder_name')->nullable();
             $table->string('card_number')->nullable();
             $table->string('holder_name')->nullable();
             $table->timestamps();

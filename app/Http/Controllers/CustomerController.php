@@ -119,12 +119,13 @@ class CustomerController extends Controller
 
     public function my_subscription(Request $request)
     {
+        
         $data['page'] = 'Subscription';
         $data['plans'] = Pricing_plan::get();
 
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
-        // dd($data);
+        //dd($data);
 
         return view('customer/subscriptions')->with($data);
     }

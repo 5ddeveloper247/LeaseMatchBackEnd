@@ -932,7 +932,10 @@ class AdminController extends Controller
     {
         $currentDate = Carbon::now()->format('Y-m-d');
         $data['subscriptions_user_list'] = User::where('type', 3)
-            ->withCount(['userSubscriptions'])
+            // ->withCount(['userSubscriptions'])
+            ->withCount(['userSubscriptions' => function ($query) {
+                $query->where('status', 'active');
+            }])
             ->with(['personalInfo', 'activePlan.plan', 'activePlan' => function ($query) use ($currentDate) {
                 $query->where('start_date', '<=', $currentDate)
                     ->where('end_date', '>=', $currentDate);
@@ -1945,10 +1948,9 @@ class AdminController extends Controller
         $testimonial->address = $address;
         $testimonial->rating = $rating;
         if ($request->has('status_edit')) {
-            $testimonial->status = $request->status == "on" ? 1 : 0; // Update the status field in the model
-
+            $testimonial->status = $request->status_edit == "on" ? 1 : 0;
         } else {
-            $testimonial->status = 0; // Default status is 1 if no status is provided
+            $testimonial->status = 0;
         }
         $savedFilePaths = '';
 

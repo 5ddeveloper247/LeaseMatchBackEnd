@@ -6,9 +6,11 @@ use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LandlordController;
 use App\Http\Controllers\Api\RegistrationController;
+use App\Http\Controllers\CancelSubscriptionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\guestController;
-
+use App\Http\Controllers\MailController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,6 +181,7 @@ Route::group(['prefix' => 'customer'], function () {
         Route::post('/subscribe', [PaymentController::class, 'processSubscription'])->name('subscribe.process');
         Route::get('/subscription-success', [PaymentController::class, 'subscriptionSuccess'])->name('subscribe.success');
         Route::get('/subscription-error', [PaymentController::class, 'subscriptionError'])->name('subscribe.error');
+        Route::post('/cancelSubscription', [CancelSubscriptionController::class, 'cancelSubscription'])->name('subscribe.cancel');
 
         /************** AJAX ROUTES ******************/
         Route::get('/getSpecificTenantDetail', [CustomerController::class, 'get_specific_tenant'])->name('customer.getSpecificTenantDetail');
@@ -199,4 +202,11 @@ Route::get('/phpinfo', function () {
 });
 Route::get('/csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);
+});
+
+Route::get('/send-welcome-email', [MailController::class, 'sendWelcomeEmail']);
+
+Route::get('/run-cron', function (){
+    Artisan::call('subscriptions:update-expired');
+    
 });

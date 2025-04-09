@@ -127,6 +127,7 @@
                                         <th>Duration Days</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
+                                        <th>Cancellation Date</th>
                                     </tr>
                                 </thead>
                                 <tbody id="subscriptions_list_table">
@@ -134,6 +135,8 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        
                     </div>
 
                 </div>
