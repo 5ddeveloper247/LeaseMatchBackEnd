@@ -16,7 +16,7 @@ class TestimonialController extends Controller
     // Use map to add base_url to the path for each testimonial
     $testimonials = $testimonials->map(function ($testimonial) use ($base_url) {
         // Prepend base_url to the path
-        $testimonial->path = $base_url . $testimonial->path;
+        $testimonial->path = $base_url . '/public'.$testimonial->path;
         return $testimonial;
     });
 

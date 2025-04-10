@@ -1806,6 +1806,7 @@ class AdminController extends Controller
     {
         $id = $request->id;
         $testimonial = Testimonial::find($id);
+        $testimonial->path = '/public'.$testimonial->path;
         return response()->json(['status' => 200, 'data' => $testimonial]);
     }
 
