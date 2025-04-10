@@ -69,37 +69,6 @@ class AdminController extends Controller
     public function get_dashboard_page_data(Request $request)
     {
 
-        // $data['total_admins'] = User::where('type', '2')->count();
-        // $data['total_landlords'] = LandlordPersonal::count();
-        // $data['total_tenants'] = User::where('type', '3')->count();
-        // $data['total_active_sub'] = UserSubscription::where('start_date', '<=', Carbon::now())
-        //                                             ->where('end_date', '>=', Carbon::now())
-        //                                             ->distinct('user_id')->count('user_id');
-        // $data['total_payment'] = UserPayments::sum('amount');
-
-        // $data['total_landlord_active'] = LandlordPersonal::where('status', '1')->count();
-        // $data['total_landlord_inactive'] = LandlordPersonal::where('status', '0')->count();
-        // $data['total_landlord_available'] = LandlordPersonal::where('enquiry_status', '1')->count();
-        // $data['total_landlord_blocked'] = LandlordPersonal::where('enquiry_status', '2')->count();
-        // $data['total_landlord_booked'] = LandlordPersonal::where('enquiry_status', '3')->count();
-
-        // $data['total_tenant_active'] = User::where('type', '3')->where('status', '1')->count();
-        // $data['total_tenant_inactive'] = User::where('type', '3')->where('status', '0')->count();
-        // $data['total_request_waiting'] = TenantEnquiryHeader::whereIn('status', ['9'])->count();
-        // $data['total_request_inprocess'] = TenantEnquiryHeader::whereIn('status', ['1','2','3','4','5','7'])->count();
-        // $data['total_request_approved'] = TenantEnquiryHeader::whereIn('status', ['6'])->count();
-
-        // $data['total_assigned_properties'] = LandlordPersonal::whereIn('id', function ($query) {
-        //                                         $query->select('landlord_id')
-        //                                             ->from('property_matches');
-        //                                     })->count();
-
-        // $data['total_unassigned_properties'] = LandlordPersonal::whereNotIn('id', function ($query) {
-        //                                         $query->select('landlord_id')
-        //                                             ->from('property_matches');
-        //                                     })->count();
-
-
         $endDate = Carbon::today();
         $startDate = $endDate->copy()->subDays(14);
 
@@ -371,17 +340,17 @@ class AdminController extends Controller
         $req_file = 'profile';
         $path = '/uploads/user/profile';
 
-        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+        if ($request->hasFile($req_file)) { 
             if (!File::isDirectory(public_path($path))) {
                 File::makeDirectory(public_path($path), 0777, true);
             }
 
-            $uploadedFile = $request->file($req_file); // No need for double dollar sign
-            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $uploadedFile = $request->file($req_file); 
+            $file_extension = $uploadedFile->getClientOriginalExtension(); 
             $date_append = Str::random(32);
-            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); 
 
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; 
         }
 
         //Log::info('File saved path: ' . $savedFilePaths); // More informative log
@@ -518,17 +487,17 @@ class AdminController extends Controller
         $req_file = 'profile';
         $path = '/uploads/user/profile';
 
-        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+        if ($request->hasFile($req_file)) { 
             if (!File::isDirectory(public_path($path))) {
                 File::makeDirectory(public_path($path), 0777, true);
             }
 
-            $uploadedFile = $request->file($req_file); // No need for double dollar sign
-            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $uploadedFile = $request->file($req_file); 
+            $file_extension = $uploadedFile->getClientOriginalExtension(); 
             $date_append = Str::random(32);
-            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); 
 
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; 
         }
 
         $user = User::where('id', $request->user_id)->first();
@@ -913,7 +882,7 @@ class AdminController extends Controller
         $data['payment_user_list'] = User::where('type', 3)
             ->withCount(['userPayments'])
             ->with(['personalInfo'])
-            ->having('user_payments_count', '>', 0) // Exclude users with 0 payments
+            ->having('user_payments_count', '>', 0) 
             ->get();
 
         return response()->json(['status' => 200, 'data' => $data]);
@@ -932,7 +901,7 @@ class AdminController extends Controller
     {
         $currentDate = Carbon::now()->format('Y-m-d');
         $data['subscriptions_user_list'] = User::where('type', 3)
-            // ->withCount(['userSubscriptions'])
+            
             ->withCount(['userSubscriptions' => function ($query) {
                 $query->where('status', 'active');
             }])
@@ -940,7 +909,7 @@ class AdminController extends Controller
                 $query->where('start_date', '<=', $currentDate)
                     ->where('end_date', '>=', $currentDate);
             }])
-            ->having('user_subscriptions_count', '>', 0) // Exclude users with 0 subscriptions
+            ->having('user_subscriptions_count', '>', 0) 
             ->get();
 
 
@@ -1164,36 +1133,7 @@ class AdminController extends Controller
         }
     }
 
-    // public function get_matches_list_user(Request $request)
-    // {
-    //     $user_id = $request->id;
-    //     $user_detail = User::where('id', $user_id)->where('type', 3)->with(['personalInfo', 'residentialInfo', 'householdInfo', 'activePlan.plan'])->first();
-    //     // dd($user_detail);
-    //     $propertyAssignMatchLimit = isset($user_detail->activePlan->plan->number_of_matches) ? $user_detail->activePlan->plan->number_of_matches : 0;
-    //     $preferredPropertyType = $user_detail->residentialInfo->preferred_property_type;
-    //     $prefferedHouseholdSize = $user_detail->householdInfo->household_size;
-    //     $prefferedBedroomNeeded = $user_detail->residentialInfo->min_bedrooms_needed;
-    //     $prefferedBathroomNeeded = $user_detail->residentialInfo->min_bathrooms_needed;
-
-    //     $data['user_detail'] = $user_detail;
-    //     $data['assigned_match_listing'] = PropertyMatches::where('user_id', $user_id)->with(['landlordPersonal', 'landlordPersonal.propertyDetail', 'landlordPersonal.rentalDetail'])->get();
-
-    //     $data['landlord_listing'] = LandlordPersonal::where('status', '1')
-    //         ->where('enquiry_status', '1')
-    //         ->with(['propertyDetail', 'rentalDetail'])
-    //         ->whereHas('propertyDetail', function ($query) use ($preferredPropertyType) {
-    //             $query->where('property_type', $preferredPropertyType);
-    //         })
-    //         ->whereHas('rentalDetail', function ($query) use ($prefferedBedroomNeeded, $prefferedBathroomNeeded, $prefferedHouseholdSize) {
-    //             $query->where('size_square_feet', '>=', $prefferedHouseholdSize);
-    //             $query->where('number_of_bedrooms', '>=', $prefferedBedroomNeeded);
-    //             $query->where('number_of_bathrooms', '>=', $prefferedBathroomNeeded);
-    //         })
-    //         ->limit($propertyAssignMatchLimit)->get();
-
-    //     return response()->json(['status' => 200, 'data' => $data]);
-    // }
-
+    
 
     public function get_matches_list_user(Request $request)
     {
@@ -1294,48 +1234,7 @@ class AdminController extends Controller
         return response()->json(['status' => 200, 'message' => 'Added successfully!', 'data' => $data]);
     }
 
-    // public function search_landlord_assign_listing(Request $request)
-    // {
-
-    //     $user_id = $request->user_id;
-    //     $landlord_username = $request->landlord_username;
-    //     $landlord_email = $request->landlord_email;
-    //     $property_type = $request->property_type;
-    //     $rental_type = $request->rental_type;
-
-    //     // check atleast one filter check
-    //     if (is_null($landlord_username) && is_null($landlord_email) && is_null($property_type) && is_null($rental_type)) {
-    //         return response()->json(['status' => 402, 'message' => 'Choose atleast one filter first!']);
-    //     }
-
-    //     // make query for get listing
-    //     $query = LandlordPersonal::where('status', '1')->where('enquiry_status', '1')->with(['propertyDetail', 'rentalDetail']);
-
-    //     if (!is_null($landlord_username)) {
-    //         $query->where('full_name', 'like', '%' . $landlord_username . '%');
-    //     }
-
-    //     if (!is_null($landlord_email)) {
-    //         $query->where('email', 'like', '%' . $landlord_email . '%');
-    //     }
-
-    //     if (!is_null($property_type)) {
-    //         $query->whereHas('propertyDetail', function ($subQuery) use ($property_type) {
-    //             $subQuery->where('property_type', $property_type);
-    //         });
-    //     }
-
-    //     if (!is_null($rental_type)) {
-    //         $query->whereHas('rentalDetail', function ($subQuery) use ($rental_type) {
-    //             $subQuery->where('rental_type', $rental_type);
-    //         });
-    //     }
-
-    //     // Execute the query and get the results
-    //     $data['landlord_listing'] = $query->get();
-
-    //     return response()->json(['status' => 200, 'data' => $data]);
-    // }
+    
 
     public function search_landlord_assign_listing(Request $request)
     {
@@ -1385,11 +1284,6 @@ class AdminController extends Controller
 
         return response()->json(['status' => 200, 'data' => $data]);
     }
-
-
-
-
-
 
     public function remove_assigned_property_user(Request $request)
     {
@@ -1957,17 +1851,17 @@ class AdminController extends Controller
         $req_file = 'profile_edit';
         $path = '/uploads/user/profile';
 
-        if ($request->hasFile($req_file)) { // Use $req_file instead of hardcoding 'profile'
+        if ($request->hasFile($req_file)) { 
             if (!File::isDirectory(public_path($path))) {
                 File::makeDirectory(public_path($path), 0777, true);
             }
 
-            $uploadedFile = $request->file($req_file); // No need for double dollar sign
-            $file_extension = $uploadedFile->getClientOriginalExtension(); // Use single dollar sign
+            $uploadedFile = $request->file($req_file); 
+            $file_extension = $uploadedFile->getClientOriginalExtension(); 
             $date_append = Str::random(32);
-            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
-            $testimonial->path = $savedFilePaths; // Update the profile field in the model
+            $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); 
+            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; 
+            $testimonial->path = $savedFilePaths; 
         }
         $testimonial->save();
         return response()->json(['status' => 200, 'message' => 'Testimonial updated successfully', 'testimonial' => $testimonial]);

@@ -12,28 +12,46 @@ use Illuminate\Queue\SerializesModels;
 class SubscriptionExpiryMail extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $user;
-    
-    public function __construct($user)
+    public $packageName;
+    public $renewalDate;
+    public $nextBillingDate;
+    public $amount;
+    public $newExpiryDate;
+    public $supportEmail;
+
+    public function __construct($user, $packageName, $renewalDate, $nextBillingDate, $amount, $newExpiryDate)
     {
-        //
-        // dd('ok');
         $this->user = $user;
+        $this->packageName = $packageName;
+        $this->renewalDate = $renewalDate;
+        $this->nextBillingDate = $nextBillingDate;
+        $this->amount = $amount;
+        $this->newExpiryDate = $newExpiryDate;
+        $this->supportEmail = env('SUPPORT_EMAIL', 'info@leasematch.nyc');
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Subscription is About to Expire – Action Required',
+            subject: 'Your Subscription Has Been Renewed Successfully',
         );
     }
 
     public function content(): Content
     {
-        // dd('ok');
         return new Content(
             view: 'emails.subscription_expiry',
-            with: ['user' => $this->user],
+            with: [
+                'user' => $this->user,
+                'packageName' => $this->packageName,
+                'renewalDate' => $this->renewalDate,
+                'nextBillingDate' => $this->nextBillingDate,
+                'amount' => $this->amount,
+                'newExpiryDate' => $this->newExpiryDate,
+                'supportEmail' => $this->supportEmail,
+            ],
         );
     }
 

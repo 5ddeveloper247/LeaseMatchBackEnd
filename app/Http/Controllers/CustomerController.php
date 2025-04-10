@@ -209,16 +209,6 @@ class CustomerController extends Controller
         return view('customer/forgot_password');
     }
 
-
-
-
-
-
-
-
-
-
-
     public function forgot_password_validate_email(Request $request)
     {
 

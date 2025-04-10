@@ -290,7 +290,7 @@ class RegistrationController extends Controller
             $Notification = new Notifications();
             $Notification->module_code =  'TENANT REGISTRATION';
             $Notification->from_user_id =  $User->id;
-            $Notification->to_user_id =  '1'; // for admin notification
+            $Notification->to_user_id =  '1'; 
             $Notification->subject =  "Tenant Registration";
             $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
             $Notification->read_flag =  '0';
