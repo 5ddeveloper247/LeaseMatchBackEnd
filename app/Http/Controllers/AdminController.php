@@ -743,6 +743,7 @@ class AdminController extends Controller
     {
         $user_id = $request->id;
         $user = User::where('id', $user_id)->where('type', 3)->first();
+        $userInfo = UserPersonalInfo::where('user_id', $user_id)->first();
         if ($user) {
             if ($user->status == 0) {
                 $user->status = 1;
@@ -767,7 +768,7 @@ class AdminController extends Controller
 
                 $mailData['name'] = $user->first_name . " " . $user->last_name;
                 $mailData['email'] = $user->email;
-                $mailData['phone_number'] = $user->phone_number;
+                $mailData['phone_number'] = $userInfo->phone_number ?? $user->phone_number ?? 'N/A';
                 $body = view('emails.tenant_active', $mailData);
                 $userEmailsSend[] = $user->email; //'hamza@5dsolutions.ae';//
                 // to username, to email, from username, subject, body html
