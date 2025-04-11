@@ -80,6 +80,7 @@ class UpdateExpiredSubscriptions extends Command
                 $user = User::find($subscription->user_id);
             
                 try {
+                    $supportEmail = env('SUPPORT_EMAIL', 'info@leasematch.nyc');
                     $base_url = route('customer.mySubscription');
                     $supportEmailLink = '<a href="mailto:' . $supportEmail . '">' . $supportEmail . '</a>';
             
