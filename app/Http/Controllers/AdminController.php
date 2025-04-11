@@ -1760,7 +1760,7 @@ class AdminController extends Controller
             'description' => 'required',
             'address' => 'required',
             'rating' => 'required|numeric|between:1,5',
-            'profile' => 'nullable|image|mimes:jpeg,png,jpg|max:10240'
+            'profile' => 'required|image|mimes:jpeg,png,jpg|max:10240'
         ]);
 
         $testimonial = new Testimonial();
