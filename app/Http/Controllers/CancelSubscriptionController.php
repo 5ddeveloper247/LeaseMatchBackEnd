@@ -49,6 +49,17 @@ class CancelSubscriptionController extends Controller
                     'message' => 'This subscription is already cancelled or expired'
                 ]);
             }
+            if(is_null($subscription->stripe_subscription_id)){
+                $subscription->status = 'free-expired';
+                $subscription->end_date = Carbon::now()->subDay()->format('Y-m-d H:i:s');  // Set end date to today
+                $subscription->cancelled_at = Carbon::now()->format('Y-m-d H:i:s');
+                $subscription->cancellation_reason = $request->cancellation_reason;
+                $subscription->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Subscription cancellation request submitted successfully.'
+                ]);
+            }
             // Call the method to cancel the subscription
             $cancelResult = $this->cancelStripeSubscription($user, $subscription, $request->cancellation_reason);
 

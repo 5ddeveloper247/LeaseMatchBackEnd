@@ -102,7 +102,8 @@ class guestController extends Controller
         $payment->transaction_id = null;
         $payment->stripe_customer_id = $user->id;
         $payment->stripe_subscription_id = null;
-        $payment->status = 0;
+        // $payment->status = 0;
+        $payment->status = 'free';
         $payment->response = json_encode(["type" => "free_trial", "reason" => "Customer Trial Payment"], true);
         $payment->reason = "free trial payment";
         $payment->date = Carbon::now()->format('Y-m-d');
@@ -124,6 +125,7 @@ class guestController extends Controller
         $userSubscription->start_date = $start_date;
         $userSubscription->end_date = $end_date;
         $userSubscription->duration_days = $duration_days;
+        $userSubscription->status = "free";
         $userSubscription->save();
         $payment->user_subscription_id = $userSubscription->id;
         $payment->save();
@@ -178,7 +180,8 @@ class guestController extends Controller
         $payment->transaction_id = null;
         $payment->stripe_customer_id = $user->id;
         $payment->stripe_subscription_id = null;
-        $payment->status = 0;
+        // $payment->status = 0;
+        $payment->status = 'free';
         $payment->response = json_encode(["type" => "free_trial", "reason" => "Customer Trial Payment"], true);
         $payment->reason = "free trial payment";
         $payment->date = Carbon::now()->format('Y-m-d');
@@ -200,6 +203,7 @@ class guestController extends Controller
         $userSubscription->start_date = $start_date;
         $userSubscription->end_date = $end_date;
         $userSubscription->duration_days = $duration_days;
+        $userSubscription->status = "free";
         $userSubscription->save();
         $payment->user_subscription_id = $userSubscription->id;
         $payment->save();

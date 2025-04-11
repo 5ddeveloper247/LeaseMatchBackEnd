@@ -903,8 +903,8 @@ class AdminController extends Controller
         $currentDate = Carbon::now()->format('Y-m-d');
         $data['subscriptions_user_list'] = User::where('type', 3)
             
-            ->withCount(['userSubscriptions' => function ($query) {
-                $query->where('status', 'active');
+            ->withCount(['userSubscriptions' => function ($query) { 
+                $query->whereIn('status', ['active','free']);
             }])
             ->with(['personalInfo', 'activePlan.plan', 'activePlan' => function ($query) use ($currentDate) {
                 $query->where('start_date', '<=', $currentDate)

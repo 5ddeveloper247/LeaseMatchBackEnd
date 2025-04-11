@@ -96,10 +96,12 @@ function viewDetailResponse(response) {
                         <td class="nowrap grid-p-searchby">${value?.transaction_id || "N/A"}</td>
                         <td class="nowrap grid-p-searchby">${value?.amount != null ? formatCurrency(value.amount) : "0.00"}</td>
                         <td class="nowrap grid-p-searchby">${formatDate(value?.date || "")}</td>
-                        <td class="nowrap grid-p-searchby">${value?.status || "N/A"}</td>
+                        <td class="nowrap grid-p-searchby" style="text-transform: capitalize;">${value?.status === "0" || value?.status === 0 || value?.status === "free" ? "Free" : (value?.status === "active")? "succeeded" : (value?.status || "N/A")}</td>
                         <td class="nowrap" data-center>
                             <div class="act_btn">
-                                <a class="copy" href="${receiptUrl}" target="_blank" title="View Payment Receipt"></a>
+                            ${(value?.status !== "0" && value?.status !== 0 && value?.status !== "free") ? 
+                                `<a class="copy" href="${receiptUrl}" target="_blank" title="View Payment Receipt"></a>` : 
+                                ''}
                             </div>
                         </td>
                     </tr>`;
