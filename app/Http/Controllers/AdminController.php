@@ -904,7 +904,7 @@ class AdminController extends Controller
         $data['subscriptions_user_list'] = User::where('type', 3)
             
             ->withCount(['userSubscriptions' => function ($query) { 
-                $query->whereIn('status', ['active','free']);
+                // $query->whereIn('status', ['active','free','can']);
             }])
             ->with(['personalInfo', 'activePlan.plan', 'activePlan' => function ($query) use ($currentDate) {
                 $query->where('start_date', '<=', $currentDate)

@@ -87,7 +87,8 @@ function viewDetailResponse(response) {
     if (payment_list.length > 0) {
         $.each(payment_list, function (index, value) {
             var payment = value?.response ? JSON.parse(value.response) : {};
-            var receiptUrl = payment?.receipt_url || "#";
+            console.log("payment", payment)
+            var receiptUrl = payment?.latest_invoice?.hosted_invoice_url || payment?.receipt_url || "#";
 
             html += `<tr class="identify">
                         <td class="nowrap grid-p-searchby">${index + 1}</td>

@@ -217,6 +217,24 @@
     </div>
 </section>
 
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="invoiceModalLabel">Invoice Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Customer:</strong> <span id="customerName"></span></p>
+          <p><strong>Invoice Date:</strong> <span id="invoiceDate"></span></p>
+          <p><strong>Total:</strong> $<span id="totalAmount"></span></p>
+          <h6>Items:</h6>
+          <ul id="invoiceItems"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('script')
