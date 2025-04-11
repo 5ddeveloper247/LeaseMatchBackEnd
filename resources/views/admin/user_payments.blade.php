@@ -5,7 +5,7 @@
 
 @section('content')
 <style>
-    #users_table{
+    #users_table, #users_table_one{
         font-size:x-small;
     }
 </style>
@@ -19,15 +19,15 @@
 
         <div class="top_head mt-5">
             <h4>User Payments</h4>
-            <div class="form_blk" id="searchInListing1">
-                <input type="text"  class="text_box" placeholder="Search here" maxlength="50">
-                <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
+            <div class="form_blk">
+                <input type="text" id="searchInListing1"  class="text_box" placeholder="Search here" maxlength="50">
+                {{-- <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button> --}}
             </div>
         </div>
         <div class="blk paymentList_section">
 
             <div class="tbl_blk">
-                <table id="users_table" class="table table-responsive">
+                <table id="users_table_one" class="table table-responsive">
                     <thead>
                         <tr>
                             <th width="10">#</th>

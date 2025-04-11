@@ -19,7 +19,7 @@
         <div class="top_head mt-5">
             <h4>User Subscriptions</h4>
             <div class="form_blk searchContainer">
-                <input type="text" id="searchInListing1" class="text_box" placeholder="Search here" maxlength="50">
+                <input type="text" id="searchInListingOne" class="text_box" placeholder="Search here" maxlength="50">
                 <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
             </div>
         </div>
@@ -111,7 +111,7 @@
                     <div class="top_head mt-5">
                         <h4>All Subscriptions</h4>
                         <div class="form_blk">
-                            <input type="text" name="" id="searchInListing" class="text_box" placeholder="Search here">
+                            <input type="text" name="" id="searchInListing" class="text_box searchInListing" placeholder="Search here">
                             <button type="button"><img src="{{asset('assets/images/icon-search.svg')}}" alt=""></button>
                         </div>
                     </div>
@@ -128,6 +128,7 @@
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Cancellation Date</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="subscriptions_list_table">

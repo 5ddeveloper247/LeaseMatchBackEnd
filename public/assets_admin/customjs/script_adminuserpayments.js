@@ -152,23 +152,35 @@ $('#searchInListing').on("keyup", function (e) {
     }
 });
 
-$('#searchInListing1').on("keyup", function (e) {
-    var tr = $('.identify1');
-
-    if ($(this).val().length >= 1) {//character limit in search box.
-        var noElem = true;
-        var val = $.trim(this.value).toLowerCase();
-        el = tr.filter(function () {
-            return $(this).find('.grid-p-searchby1').text().toLowerCase().match(val);
+$('#searchInListing1').on("keyup", function(e) {
+    
+    var searchText = $(this).val().toLowerCase();
+    console.log('Search text 11:', searchText);
+    
+    // Get all table rows (excluding header)
+    var rows = $('#users_table_one tbody tr');
+    console.log('Total rows found:', rows.length);
+    
+    if (searchText.length > 0) {
+        // For each row
+        rows.each(function() {
+            var rowText = $(this).text().toLowerCase();
+            var shouldShow = rowText.includes(searchText);
+            
+            // Try using CSS directly instead of jQuery methods
+            if (shouldShow) {
+                $(this).css('display', '');
+            } else {
+                $(this).css('display', 'none');
+            }
         });
-        if (el.length >= 1) {
-            noElem = false;
-        }
-        tr.not(el).hide();
-        el.fadeIn();
     } else {
-        tr.fadeIn();
+        // If search is empty, show all rows
+        rows.css('display', '');
     }
 });
+
+
+
 
 

@@ -87,6 +87,7 @@ function viewDetailResponse(response) {
                         <td class="nowrap grid-p-searchby" >${formatDate(value.start_date)}</td>
 						<td class="nowrap grid-p-searchby" >${formatDate(value.end_date)}</td>
                         <td class="nowrap grid-p-searchby" >${value.cancelled_at !== null ? formatDate(value.cancelled_at) : 'N/A'}</td>
+                        <td class="nowrap grid-p-searchby" style="text-transform: capitalize;">${value.status || 'N/A'}</td>
 					</tr>`;
         });
     } else {
@@ -150,6 +151,32 @@ $('#searchInListing1').on("keyup", function (e) {
         el.fadeIn();
     } else {
         tr.fadeIn();
+    }
+});
+$('#searchInListingOne').on("keyup", function() {
+    var searchText = $(this).val().toLowerCase();
+    console.log('Search text:', searchText);
+    
+    // Get all table rows (excluding header)
+    var rows = $('#users_table tbody tr');
+    console.log('Total rows found:', rows.length);
+    
+    if (searchText.length > 0) {
+        // For each row
+        rows.each(function() {
+            var rowText = $(this).text().toLowerCase();
+            var shouldShow = rowText.includes(searchText);
+            
+            // Try using CSS directly instead of jQuery methods
+            if (shouldShow) {
+                $(this).css('display', '');
+            } else {
+                $(this).css('display', 'none');
+            }
+        });
+    } else {
+        // If search is empty, show all rows
+        rows.css('display', '');
     }
 });
 
