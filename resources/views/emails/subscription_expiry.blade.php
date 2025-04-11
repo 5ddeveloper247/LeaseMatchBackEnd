@@ -23,9 +23,12 @@
     </p>
 
     <p>
-        If you have any questions or didn’t intend to renew, you can manage your subscription or contact us at 
+        If you have any questions or didn’t intend to renew, you can manage your
+        <a href="{{ route('customer.mySubscription') }}" target="_blank">subscription</a> 
+        or contact us at 
         <a href="mailto:{{ $supportEmail }}">{{ $supportEmail }}</a>.
     </p>
+    
 
     <p>
         Thanks for staying with us!<br>

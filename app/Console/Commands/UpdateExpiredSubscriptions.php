@@ -73,61 +73,72 @@ class UpdateExpiredSubscriptions extends Command
             ->where('status', 'free')
             ->get();
 
-        foreach ($expiredFreeSubscriptions as $subscription) {
-            $subscription->status = 'free-expired';
-            $subscription->save();
-
-            $user = User::find($subscription->user_id);
-            try {
-                $body = '
-                    <html>
-                    <head>
-                        <style>
-                            body {
-                                font-family: Arial, sans-serif;
-                                color: #333;
-                                background-color: #f9f9f9;
-                                padding: 20px;
-                            }
-                            .container {
-                                background-color: #ffffff;
-                                border: 1px solid #ddd;
-                                padding: 20px;
-                                max-width: 600px;
-                                margin: auto;
-                                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                            }
-                            .footer {
-                                margin-top: 20px;
-                                font-size: 12px;
-                                color: #999;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <h2>Free Trial Expired</h2>
-                            <p>Dear ' . $user->first_name . ',</p>
-                            <p>We hope you enjoyed exploring Lease Match. Your free trial period has now expired.</p>
-                            <p>To continue using all the features, please consider upgrading your subscription.</p>
-                            <p>If you have any questions or need help, feel free to reach out to our support team.</p>
-                            <p>Thank you,<br>Lease Match Team</p>
-
-                            <div class="footer">
-                                &copy; ' . date("Y") . ' Lease Match. All rights reserved.
+            foreach ($expiredFreeSubscriptions as $subscription) {
+                $subscription->status = 'free-expired';
+                $subscription->save();
+            
+                $user = User::find($subscription->user_id);
+            
+                try {
+                    $base_url = route('customer.mySubscription');
+                    $supportEmailLink = '<a href="mailto:' . $supportEmail . '">' . $supportEmail . '</a>';
+            
+                    $body = '
+                        <html>
+                        <head>
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    color: #333;
+                                    background-color: #f9f9f9;
+                                    padding: 20px;
+                                }
+                                .container {
+                                    background-color: #ffffff;
+                                    border: 1px solid #ddd;
+                                    padding: 20px;
+                                    max-width: 600px;
+                                    margin: auto;
+                                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                                }
+                                .footer {
+                                    margin-top: 20px;
+                                    font-size: 12px;
+                                    color: #999;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="container">
+                                <h2>Free Trial Expired</h2>
+                                <p>Dear ' . $user->first_name . ',</p>
+                                <p>We hope you enjoyed exploring Lease Match. Your free trial period has now expired.</p>
+                                <p>
+                                    To continue using all the features, please consider 
+                                    <a href="' . $base_url . '" target="_blank">upgrading</a> your subscription.
+                                </p>
+                                <p>
+                                    If you have any questions or need help, feel free to reach out to our support team 
+                                    ' . $supportEmailLink . '.
+                                </p>
+                                <p>Thank you,<br>Lease Match Team</p>
+                                
+                                <div class="footer">
+                                    &copy; ' . date("Y") . ' Lease Match. All rights reserved.
+                                </div>
                             </div>
-                        </div>
-                    </body>
-                    </html>';
-                sendMail($user->first_name, $user->email, 'LEASE MATCH', 'Free Trial Expired', $body);
-                Log::info('Subscription expired email sent to user: ' . $user->id);
-            } catch (\Exception $e) {
-                Log::error('Failed to send subscription expired email: ' . $e->getMessage());
-            }
-
-            $this->info("Subscription for user ID {$subscription->user_id} has been set to expired.");
-        }
-
+                        </body>
+                        </html>';
+            
+                    sendMail($user->first_name, $user->email, 'LEASE MATCH', 'Free Trial Expired', $body);
+                    Log::info('Subscription expired email sent to user: ' . $user->id);
+            
+                } catch (\Exception $e) {
+                    Log::error('Failed to send subscription expired email: ' . $e->getMessage());
+                }
+            
+                $this->info("Subscription for user ID {$subscription->user_id} has been set to expired.");
+            }            
 
         $this->info('Expired subscriptions have been updated.');
     }
