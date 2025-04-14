@@ -5,7 +5,7 @@
 
 <head>
     <title>Lease Match</title>
-    <link rel="icon" href="{{asset('assets/images/favicon.png')}}">
+    <link rel="icon" href="{{ asset('assets/images/favicon.png') }}">
 
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -27,7 +27,7 @@
 
 </head>
 <script>
-    var base_url = "{{url('/')}}";
+    var base_url = "{{ url('/') }}";
 </script>
 
 <body data-page="account">
@@ -50,11 +50,11 @@
                     <li>Subscriptions</li>
                 </ul> --}}
                 {{-- <div id="slick-pricing" class="slick-carousel pricingList_section">
-                    @foreach($plans as $key => $plan)
+                    @foreach ($plans as $key => $plan)
 
                     <div class="item">
                         <div class="plan_blk">
-                            @if($key == 0)
+                            @if ($key == 0)
                             <img src="{{asset('assets/images/plan_01.svg')}}" alt="">
                             @elseif($key == 1)
                             <img src="{{asset('assets/images/plan_02.svg')}}" alt="">
@@ -67,7 +67,7 @@
                                     <h4>{{$plan->title != null ? $plan->title : 'Tier '.$key+1}}</h4>
                                     <span>30 Days</span>
                                 </div>
-                                @if($plan->initial_price != null)
+                                @if ($plan->initial_price != null)
                                 <div class="tagline text-center" style="font-size: 1.2rem;">Flat initial fee of model -
                                     £{{$plan->initial_price}} this is the fee for all initial memberships.</div>
                                 @else
@@ -76,26 +76,26 @@
 
                                 <div class="txt">
                                     <ul>
-                                        @if($plan->number_of_matches != null)
+                                        @if ($plan->number_of_matches != null)
                                         <li>Number of matches as per the Tier {{$key+1}} - {{$plan->number_of_matches}}
                                             properties.</li>
                                         @else
                                         <li>Number of matches as per the Tier {{$key+1}} - N/A properties.</li>
                                         @endif
 
-                                        @if($plan->directly_contact_flag == 1)
+                                        @if ($plan->directly_contact_flag == 1)
                                         <li>Tenant allowed to directly contact with rental/landlord.</li>
                                         @else
                                         <li>Tenant not allowed to directly contact with rental/landlord.</li>
                                         @endif
 
-                                        @if($plan->process_application_flag == 1)
+                                        @if ($plan->process_application_flag == 1)
                                         <li>Ask lease match to process application on their behalf.</li>
                                         @else
                                         <li>Not allowed to process application on their behalf.</li>
                                         @endif
 
-                                        @if($plan->necessary_doc_flag == 1)
+                                        @if ($plan->necessary_doc_flag == 1)
                                         <li>They will be informed as to exactly what documents need to be uploaded to
                                             process the as an applicant.</li>
                                         @else
@@ -104,8 +104,8 @@
 
 
                                     </ul>
-                                    @if(@$currentPlan->plan_id == $plan->id)
-                                    @if(Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
+                                    @if (@$currentPlan->plan_id == $plan->id)
+                                    @if (Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
                                     <div class="btn_blk">
                                         <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">Renew</a>
                                     </div>
@@ -139,85 +139,118 @@
                 </div> --}}
 
                 <!--Form for inserting data--->
-                <div class="addPricing_section">
-                    <div class="table_dv">
-                        <div class="table_cell">
-                            <div class="contain">
-                                <div class="_inner">
-                                    {{-- check isset $plan_id --}}
-                                    @if(isset($plan_id) && $plan_id != null)
-                                    <a href="{{ route('guest.guestSubscriptions') }}" class="x_btn"></a>
-                                    @else
-                                    <button type="button" class="x_btn" onclick="backToList();"></button>
-                                    @endif
+                <div class="container my-5">
+                    <div class="row g-4" style="background-color: #fff; border-radius: 8px; padding: 4rem; display: flex; align-items: center !important">
+                        <!-- Left Side: Static Payment Details -->
+                        <div class="col-lg-5">
+                            <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
+                                <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740" style="width: 200px" alt="">
+                                <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
+                                <ul class="list-unstyled">
+                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong> Premium Plan</li>
+                                    <li style="margin-bottom: .6rem"><strong>Price:</strong> $49.99 / month</li>
+                                    <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
+                                    <ul class="mb-0">
+                                        <li>✔️ Unlimited Access</li>
+                                        <li>✔️ 24/7 Support</li>
+                                        <li>✔️ Priority Features</li>
+                                    </ul>
+                                </ul>
+                                <hr>
+                                <p class="text-muted small mb-0">Your card will be charged after your 7-day free trial
+                                    ends.</p>
+                            </div>
+                        </div>
 
-                                    <form action="{{ route('guest.trail.card.process') }}" method="POST" id="payment-form">
-                                        @csrf
-                                        <div class="form_row row">
-                                            @if(isset($plan_id) && $plan_id != null)
-                                            <input type="hidden" id="plan_id" name="plan_id" value="{{ $plan_id }}">
-                                            @else
-                                            <input type="hidden" id="plan_id" name="plan_id" value="">
-                                            @endif
+                        <!-- Right Side: Your Existing Form (unchanged IDs and classes) -->
+                        <div class="col-lg-7" style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
+                            <div class="addPricing_section" style="background-color: #ffffffb0">
+                                <div class="table_dv">
+                                    <div class="table_cell">
+                                        <div class="contain">
+                                            <div class="_inner">
+                                                @if (isset($plan_id) && $plan_id != null)
+                                                    <a href="{{ route('guest.guestSubscriptions') }}"
+                                                        class="x_btn" style="top: -2rem !important; right: -4rem !important"></a>
+                                                @else
+                                                    <button type="button" class="x_btn"
+                                                        onclick="backToList();"></button>
+                                                @endif
 
-                                            <div class="col-sm-4">
-                                                <h6>Card Number</h6>
-                                                <div class="form_blk">
-                                                    <input type="text" id="card-number" name="card_number"
-                                                        class="form-control text_box" placeholder="1234 5678 9012 3456"
-                                                        required maxlength="19" onkeyup="validateCardNumber()">
-                                                    <small id="card-number-error" class="error-message"></small>
-                                                </div>
-                                            </div>
+                                                <form action="{{ route('guest.trail.card.process') }}" method="POST"
+                                                    id="payment-form">
+                                                    @csrf
+                                                    <input type="hidden" id="plan_id" name="plan_id"
+                                                        value="{{ $plan_id ?? '' }}">
 
-                                            <div class="col-sm-2">
-                                                <h6>Expiration Date</h6>
-                                                <div class="form_blk">
-                                                    <input type="text" id="card-expiry" name="card_expiry"
-                                                        class="form-control text_box" placeholder="MM/YY" required
-                                                        maxlength="5" onkeyup="validateExpiry()">
-                                                    <small id="card-expiry-error" class="error-message"></small>
-                                                </div>
-                                            </div>
+                                                    <div class="form_row row">
+                                                        <div class="col-sm-12">
+                                                            <h6>Card Number</h6>
+                                                            <div class="form_blk">
+                                                                <input type="text" id="card-number"
+                                                                    name="card_number" class="form-control text_box"
+                                                                    placeholder="1234 5678 9012 3456" required
+                                                                    maxlength="19" onkeyup="validateCardNumber()">
+                                                                <small id="card-number-error"
+                                                                    class="error-message"></small>
+                                                            </div>
+                                                        </div>
 
-                                            <div class="col-sm-2">
-                                                <h6>CVC</h6>
-                                                <div class="form_blk">
-                                                    <input type="text" id="card-cvc" name="card_cvc"
-                                                        class="form-control text_box" placeholder="123" required
-                                                        minlength="3" maxlength="4" onkeyup="validateCVC()">
-                                                    <small id="card-cvc-error" class="error-message"></small>
-                                                </div>
-                                            </div>
+                                                        <div class="col-sm-4">
+                                                            <h6>Expiration Date</h6>
+                                                            <div class="form_blk">
+                                                                <input type="text" id="card-expiry"
+                                                                    name="card_expiry" class="form-control text_box"
+                                                                    placeholder="MM/YY" required maxlength="5"
+                                                                    onkeyup="validateExpiry()">
+                                                                <small id="card-expiry-error"
+                                                                    class="error-message"></small>
+                                                            </div>
+                                                        </div>
 
-                                            <div class="col-sm-2">
-                                                <h6>ZIP Code</h6>
-                                                <div class="form_blk">
-                                                    <input type="text" id="card-zip" name="card_zip"
-                                                        class="form-control text_box" placeholder="10001" required
-                                                        maxlength="6" onkeyup="validateZip()">
-                                                    <small id="card-zip-error" class="error-message"></small>
-                                                </div>
-                                            </div>
+                                                        <div class="col-sm-4">
+                                                            <h6>CVC</h6>
+                                                            <div class="form_blk">
+                                                                <input type="text" id="card-cvc" name="card_cvc"
+                                                                    class="form-control text_box" placeholder="123"
+                                                                    required minlength="3" maxlength="4"
+                                                                    onkeyup="validateCVC()">
+                                                                <small id="card-cvc-error"
+                                                                    class="error-message"></small>
+                                                            </div>
+                                                        </div>
 
-                                            <div class="col-sm-2"></div>
+                                                        <div class="col-sm-4">
+                                                            <h6>ZIP Code</h6>
+                                                            <div class="form_blk">
+                                                                <input type="text" id="card-zip" name="card_zip"
+                                                                    class="form-control text_box" placeholder="10001"
+                                                                    required maxlength="6" onkeyup="validateZip()">
+                                                                <small id="card-zip-error"
+                                                                    class="error-message"></small>
+                                                            </div>
+                                                        </div>
 
-                                            <div class="col-sm-2">
-                                                <div class="btn_blk">
-                                                    <button type="submit" class="site_btn md auto"
-                                                        id="submitNow_btn">Save Info</button>
-                                                </div>
+                                                        {{-- <div class="col-sm-2"></div> --}}
+
+                                                        <div class="col-sm-2">
+                                                            <div class="btn_blk">
+                                                                <button type="submit" class="site_btn md auto"
+                                                                    id="submitNow_btn">Save Info</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
                                             </div>
                                         </div>
-                                    </form>
-
-
-
+                                    </div>
                                 </div>
-                            </div>
+                            </div> <!-- /.addPricing_section -->
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -235,7 +268,7 @@
 
 <script src="{{ asset('assets_customer/customjs/script_subscription.js') }}"></script>
 <script>
-    document.getElementById("payment-form").onsubmit = function (event) {
+    document.getElementById("payment-form").onsubmit = function(event) {
         if (!validateCardNumber() || !validateExpiry() || !validateCVC() || !validateZip()) {
             event.preventDefault(); // Prevent form submission if validation fails
         }
@@ -314,14 +347,13 @@
     }
 
     // Auto-add `/` after MM input
-    document.getElementById("card-expiry").addEventListener("input", function (event) {
+    document.getElementById("card-expiry").addEventListener("input", function(event) {
         let input = event.target.value.replace(/\D/g, ""); // Remove non-numeric characters
         if (input.length > 2) {
             input = input.slice(0, 2) + "/" + input.slice(2);
         }
         event.target.value = input;
     });
-
 </script>
 
 <style>
