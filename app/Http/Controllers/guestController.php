@@ -216,6 +216,11 @@ class guestController extends Controller
         $Notification->read_flag =  '0';
         $Notification->created_by =  Auth::user()->id;
         $Notification->save();
+        // dd('Payment Success');
+        // set user on session
+        $request->session()->put('user', Auth::user());
+
+        // Log::info('User logged in: ' . Auth::user()->id);
         return redirect()->intended('/customer/mySubscription'); //dashboard
     }
 }

@@ -50,6 +50,56 @@ class CustomerController extends Controller
             'plan' => $plan
         ];
         $request->session()->put('trialData', $trialData);
+        // auto login
+        // check if request contains query string with these params then auto login customer http://127.0.0.1:8000/customer/login?email=user13@example.com&password=QWRtaW4xMjMj&user_id=32
+        if ($request->has('email') && $request->has('password') && $request->has('user_id')) {
+            $plainId = $request->query('plainId');
+            $email = $request->query('email');
+            $password = base64_decode($request->query('password'));
+            $user_id = $request->query('user_id');
+            // dd($email, $password, $user_id);
+
+            // Check if the user exists
+            $user = User::where('id', $user_id)->where('email', $email)->first();
+            // dd($user);
+            if ($user && Hash::check($password, $user->password)) {
+                Auth::login($user);
+                // set user session 
+                $request->session()->put('user', $user);
+                if ($user->status == 1) {
+                    $trialData = Session::get('trialData');
+                    // dd($trialData);
+                    if ($trialData && $trialData['plan'] !== null && $trialData['type'] !== null) {
+                        $checkFreeTrialExist = UserSubscriptionFreeTrial::where('user_id', $user->id)->first();
+                        if ($checkFreeTrialExist) {
+                            Session::forget('trialData');
+                            if (checkUserSubscription() == true) {
+                                return redirect()->intended('/customer/mySubscription');
+                            } else {
+                                return redirect('/customer/guest/subscriptions')->with('error', 'No active subscription found. Please subscribe to a plan to continue.');
+                            }
+                        } else {
+                            return view('customer.guest.payment_form');
+                        }
+                    } else {
+                        Session::forget('trialData');
+                        if (checkUserSubscription() == true) {
+                            return redirect()->intended('/customer/mySubscription');
+                        } else {
+                            if($plainId > 0){
+                                return redirect('customer/guest/trail/payment/form/' . $plainId); // Updated to redirect to the payment form with plan_id
+                            }
+    
+                            return redirect('/customer/guest/subscriptions')->with('error', 'No active subscription found. Please subscribe to a plan to continue.');
+                        }
+                    }
+                } else {
+                    Session::forget('trialData');
+                    return redirect('customer/login')->with('error', 'The user is not active, please contact admin.');
+                }
+            }
+        }
+        // end auto login
         // Session::put('trialData', $trialData);
 
         $data['page'] = 'Login';
@@ -119,13 +169,13 @@ class CustomerController extends Controller
 
     public function my_subscription(Request $request)
     {
-        
+
         $data['page'] = 'Subscription';
         $data['plans'] = Pricing_plan::get();
 
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
-        //dd($data);
+        // dd($data);
 
         return view('customer/subscriptions')->with($data);
     }

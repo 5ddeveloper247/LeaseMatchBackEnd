@@ -27,14 +27,14 @@ use App\Models\Api\UserReferences;
 use App\Models\Api\AdditionalNotes;
 use App\Models\Api\UserDocuments;
 use App\Rules\PreviousDate;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 class RegistrationController extends Controller
 {
 
     public function storeRegistration(Request $request)
     {
         $input = $request->all();
-
+        // dd($input);
         // Sanitize all numeric fields
         $numericFields = [
             'phone_number', // Step 1
@@ -155,8 +155,15 @@ class RegistrationController extends Controller
             $User->first_name = $request->input('user_name');
             $User->email = $request->input('user_email');
             $User->password = bcrypt($password);
-            $User->status = '0';
+            $User->status = '1';
             $User->save();
+            // automatically login
+            // Auth::login($User);
+            // $redictUrl to redirect to the dashboard http://127.0.0.1:8000/customer/login
+            $redictUrl = route('customer.login');
+            // Set the user as the currently authenticated user
+            // $request->session()->put('user', $User);
+            // Set the user as the currently authenticated user
 
             //personal Information
             $UserPersonal = new UserPersonalInfo();
@@ -304,10 +311,20 @@ class RegistrationController extends Controller
             $userEmailsSend[] = $User->email; //'hamza@5dsolutions.ae';//
             // to username, to email, from username, subject, body html
             sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
-
+            // create a session for the user
+            // $request->session()->put('user', $User);
             return response()->json([
                 'success' => true,
-                'message' => 'User created successfully'
+                'message' => 'User created successfully',
+                'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')). "&user_id=" . $User->id,
+                'data' => [
+                    'user_id' => $User->id,
+                    'user_name' => $User->first_name,
+                    'user_email' => $User->email,
+                    'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')). "&user_id=" . $User->id,
+                    'password' => $request->input('password'),
+                    'created_at' => $User->created_at,
+                ]
             ], 200);
         } catch (\Exception $e) {
             // Log the error for debugging purposes
@@ -315,7 +332,7 @@ class RegistrationController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
-                'error' => $e
+                'error' => $e->getMessage()
             ], 500);
         }
     }
