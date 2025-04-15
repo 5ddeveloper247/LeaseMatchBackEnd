@@ -147,8 +147,8 @@
                                 <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740" style="width: 200px" alt="">
                                 <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
                                 <ul class="list-unstyled">
-                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong> Premium Plan</li>
-                                    <li style="margin-bottom: .6rem"><strong>Price:</strong> $49.99 / month</li>
+                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{$plan_detail->title ?? 'N/A'}}</li>
+                                    <li style="margin-bottom: .6rem"><strong>Price:</strong> £{{$plan_detail->monthly_price ?? '0.00'}} / month</li>
                                     <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
                                     <ul class="mb-0">
                                         <li>✔️ Unlimited Access</li>
@@ -157,7 +157,7 @@
                                     </ul>
                                 </ul>
                                 <hr>
-                                <p class="text-muted small mb-0">Your card will be charged after your 7-day free trial
+                                <p class="text-muted small mb-0">Your card will be charged after your 30-day free trial
                                     ends.</p>
                             </div>
                         </div>

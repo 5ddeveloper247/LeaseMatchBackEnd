@@ -39,6 +39,11 @@ class guestController extends Controller
         $data['is_trial'] = $is_trial;
         $data['plan_id'] = $plan_id;
         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
+        $plan_detail = Pricing_plan::findOrFail($plan_id);
+        $data['plan_detail'] = $plan_detail;
+        // dd(
+        //     $data['plan_detail']
+        // );
         return view('customer/guest/trail_payment_form', with($data));
     }
     public function guestSubscriptions(Request $request)
