@@ -115,67 +115,98 @@
 
             </div>
 
-            <!--Form for inserting data--->
-            <div class="addPricing_section" style="display:none;">
-                <div class="table_dv">
-                    <div class="table_cell">
-                        <div class="contain">
-                            <div class="_inner">
-                                <button type="button" class="x_btn" onclick="backToList();"></button>
-                                <h4>Buy Plan</h4>
-                                <form action="{{ route('subscribe.process') }}" method="POST" id="payment-form">
-                                    @csrf
-                                    <div class="form_row row">
-                                        <input type="hidden" id="plan_id" name="plan_id" value="">
-                                        <div class="col-sm-4">
-                                            <h6>Card Number</h6>
-                                            <div class="form_blk">
-                                                <div id="card-number-element" class="form-control text_box stripe-element">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-2">
-                                            <h6>Expiration Date</h6>
-                                            <div class="form_blk">
-                                                <div id="card-expiry-element" class="form-control text_box stripe-element">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-2">
-                                            <h6>CVC</h6>
-                                            <div class="form_blk">
-                                                <div id="card-cvc-element" class="form-control text_box stripe-element">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-2">
-                                            <h6>ZIP Code</h6>
-                                            <div class="form_blk">
-                                                <div id="card-zip-element" class="form-control text_box stripe-element">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-2">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <div class="btn_blk">
-                                                <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy
-                                                    Now</button>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
+            <div class="row " style="background-color: #fff; border-radius: 8px; padding: 4rem; display: flex; align-items: center !important">
+                <div class="col-lg-5">
+                    <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
+                        <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740"
+                            style="width: 200px" alt="">
+                        <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
+                        <ul class="list-unstyled">
+                            <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{ $plan_detail->title ?? 'N/A' }}</li>
+                            <li style="margin-bottom: .6rem"><strong>Price:</strong>
+                                £{{ $plan_detail->monthly_price ?? '0.00' }} / month</li>
+                            <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
+                            <ul class="mb-0">
+                                <li>✔️ Unlimited Access</li>
+                                <li>✔️ 24/7 Support</li>
+                                <li>✔️ Priority Features</li>
+                            </ul>
+                        </ul>
+                        <hr>
+                        <p class="text-muted small mb-0">Your card will be charged after your 30-day free trial
+                            ends.</p>
                     </div>
                 </div>
+
+                <div class="col-lg-7"
+                    style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
+                    <div class="addPricing_section p-5" style="display:none; background-color: #ffffffb0">
+                        <div class="table_dv">
+                            <div class="table_cell">
+                                <div class="contain">
+                                    <div class="_inner">
+                                        <button type="button" class="x_btn" onclick="backToList();"></button>
+                                        <h4>Buy Plan</h4>
+                                        <form action="{{ route('subscribe.process') }}" method="POST" id="payment-form">
+                                            @csrf
+                                            <div class="form_row row">
+                                                <input type="hidden" id="plan_id" name="plan_id" value="">
+                                                <div class="col-sm-12">
+                                                    <h6>Card Number</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-number-element"
+                                                            class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-sm-4">
+                                                    <h6>Expiration Date</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-expiry-element"
+                                                            class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-sm-4">
+                                                    <h6>CVC</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-cvc-element" class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-sm-4">
+                                                    <h6>ZIP Code</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-zip-element" class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-sm-2">
+                                                    <div class="btn_blk">
+                                                        <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy
+                                                            Now</button>
+        
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+                                        </form>
+        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- /.addPricing_section -->
+                </div>
+            </div>
+
+            <!--Form for inserting data--->
+            <div class="addPricing_section" style="display:none;">
+                
             </div>
 
             <!-- my code -->

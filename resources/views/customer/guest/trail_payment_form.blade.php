@@ -141,7 +141,6 @@
                 <!--Form for inserting data--->
                 <div class="container my-5">
                     <div class="row g-4" style="background-color: #fff; border-radius: 8px; padding: 4rem; display: flex; align-items: center !important">
-                        <!-- Left Side: Static Payment Details -->
                         <div class="col-lg-5">
                             <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
                                 <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740" style="width: 200px" alt="">
@@ -162,7 +161,6 @@
                             </div>
                         </div>
 
-                        <!-- Right Side: Your Existing Form (unchanged IDs and classes) -->
                         <div class="col-lg-7" style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
                             <div class="addPricing_section" style="background-color: #ffffffb0">
                                 <div class="table_dv">
