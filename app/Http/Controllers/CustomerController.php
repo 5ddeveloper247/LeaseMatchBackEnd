@@ -86,10 +86,10 @@ class CustomerController extends Controller
                         if (checkUserSubscription() == true) {
                             return redirect()->intended('/customer/mySubscription');
                         } else {
-                            if($plainId > 0){
+                            if ($plainId > 0) {
                                 return redirect('customer/guest/trail/payment/form/' . $plainId); // Updated to redirect to the payment form with plan_id
                             }
-    
+
                             return redirect('/customer/guest/subscriptions')->with('error', 'No active subscription found. Please subscribe to a plan to continue.');
                         }
                     }
@@ -169,13 +169,20 @@ class CustomerController extends Controller
 
     public function my_subscription(Request $request)
     {
-
         $data['page'] = 'Subscription';
         $data['plans'] = Pricing_plan::get();
 
-        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
-        // dd($data);
+
+       
+        if (isset($request->plan_id)) {
+            $data['plan_detail'] = Pricing_plan::find($request->plan_id);
+        } elseif (!empty($currentPlan)) {
+            $data['plan_detail'] = Pricing_plan::find($currentPlan->plan_id);
+        }
 
         return view('customer/subscriptions')->with($data);
     }
