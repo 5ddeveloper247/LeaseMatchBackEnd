@@ -115,7 +115,7 @@
 
             </div>
 
-            <div class="row " style="background-color: #fff; border-radius: 8px; padding: 4rem; display: flex; align-items: center !important">
+            <div class="row addPricing_section " style="display:none; background-color: #fff; border-radius: 8px; padding: 4rem; ">
                 <div class="col-lg-5">
                     <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
                         <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740"
@@ -140,7 +140,7 @@
 
                 <div class="col-lg-7"
                     style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
-                    <div class="addPricing_section p-5" style="display:none; background-color: #ffffffb0">
+                    <div class=" p-5" style=" background-color: #ffffffb0">
                         <div class="table_dv">
                             <div class="table_cell">
                                 <div class="contain">
@@ -202,11 +202,6 @@
                         </div>
                     </div> <!-- /.addPricing_section -->
                 </div>
-            </div>
-
-            <!--Form for inserting data--->
-            <div class="addPricing_section" style="display:none;">
-                
             </div>
 
             <!-- my code -->
