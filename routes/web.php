@@ -159,11 +159,13 @@ Route::group(['prefix' => 'customer'], function () {
     Route::post('/forgetpasswordemailvalidate', [CustomerController::class, 'forgot_password_validate_email'])->name('customer.forgetpasswordemailvalidate');
     Route::post('/verifyotp', [CustomerController::class, 'verify_otp'])->name('customer.verifyotp');
     Route::post('/resetpassword', [CustomerController::class, 'reset_password'])->name('customer.resetpassword');
+    Route::post('/guest/trial/card/process', [guestController::class, 'guestTrailCardProcess'])->name('guest.trial.card.process');
     Route::get('/guest/subscriptions', [guestController::class, 'guestSubscriptions'])->name('guest.guestSubscriptions');
     Route::post('/guest/card/process', [guestController::class, 'guestCardProcess'])->name('guest.card.process');
-    // guestTrailCardProcess
-    Route::post('/guest/trail/card/process', [guestController::class, 'guestTrailCardProcess'])->name('guest.trail.card.process');
+    Route::post('/guest/stripe/payment/car/store', [guestController::class, 'stripeCardStore'])->name('guest.stripe.payment_card.store');
+    
     // guesTrailtPaymentForm
+    // guestTrailCardProcess
     // Route::get('/guest/payment/form', [guestController::class, 'guesTrailtPaymentForm'])->name('guest.guestPaymentForm');
     Route::get('/guest/trail/payment/form/{plan_id}', [guestController::class, 'guestTrailPaymentForm'])->name('guest.trail.payment.form');
 

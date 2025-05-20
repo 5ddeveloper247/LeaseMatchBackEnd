@@ -45,98 +45,7 @@
 
         <section id="plan">
             <div class="contain-fluid">
-                {{-- <ul class="crumbs">
-                    <li><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-                    <li>Subscriptions</li>
-                </ul> --}}
-                {{-- <div id="slick-pricing" class="slick-carousel pricingList_section">
-                    @foreach ($plans as $key => $plan)
-
-                    <div class="item">
-                        <div class="plan_blk">
-                            @if ($key == 0)
-                            <img src="{{asset('assets/images/plan_01.svg')}}" alt="">
-                            @elseif($key == 1)
-                            <img src="{{asset('assets/images/plan_02.svg')}}" alt="">
-                            @elseif($key == 2)
-                            <img src="{{asset('assets/images/plan_03.svg')}}" alt="">
-                            @endif
-
-                            <div class="in_blk">
-                                <div class="title">
-                                    <h4>{{$plan->title != null ? $plan->title : 'Tier '.$key+1}}</h4>
-                                    <span>30 Days</span>
-                                </div>
-                                @if ($plan->initial_price != null)
-                                <div class="tagline text-center" style="font-size: 1.2rem;">Flat initial fee of model -
-                                    £{{$plan->initial_price}} this is the fee for all initial memberships.</div>
-                                @else
-                                <div class="tagline text-center" style="font-size: 1.2rem;">N/A</div>
-                                @endif
-
-                                <div class="txt">
-                                    <ul>
-                                        @if ($plan->number_of_matches != null)
-                                        <li>Number of matches as per the Tier {{$key+1}} - {{$plan->number_of_matches}}
-                                            properties.</li>
-                                        @else
-                                        <li>Number of matches as per the Tier {{$key+1}} - N/A properties.</li>
-                                        @endif
-
-                                        @if ($plan->directly_contact_flag == 1)
-                                        <li>Tenant allowed to directly contact with rental/landlord.</li>
-                                        @else
-                                        <li>Tenant not allowed to directly contact with rental/landlord.</li>
-                                        @endif
-
-                                        @if ($plan->process_application_flag == 1)
-                                        <li>Ask lease match to process application on their behalf.</li>
-                                        @else
-                                        <li>Not allowed to process application on their behalf.</li>
-                                        @endif
-
-                                        @if ($plan->necessary_doc_flag == 1)
-                                        <li>They will be informed as to exactly what documents need to be uploaded to
-                                            process the as an applicant.</li>
-                                        @else
-                                        <li>They will able to upload document.</li>
-                                        @endif
-
-
-                                    </ul>
-                                    @if (@$currentPlan->plan_id == $plan->id)
-                                    @if (Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
-                                    <div class="btn_blk">
-                                        <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">Renew</a>
-                                    </div>
-                                    @else
-                                    <div class="btn_blk">
-                                        <a href="javascript:;">Selected</a>
-                                    </div>
-                                    @endif
-
-                                    @else
-                                    <div class="btn_blk">
-                                        <a href="javascript:;" onclick="buyPlan({{@$plan->id}});">Buy Plan</a>
-                                    </div>
-                                    @endif
-
-                                </div>
-                                <div class="off">
-                                    <!-- 50% off if price is under £1000 -->
-                                </div>
-                                <div class="price_blk">
-                                    <div class="price">£{{$plan->monthly_price != null ? $plan->monthly_price : '0.00'}}
-                                    </div>
-                                    <span>30 Days</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-
-                </div> --}}
+              
 
                 <!--Form for inserting data--->
                 <div class="container my-5">
@@ -146,11 +55,11 @@
                                 <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740" style="width: 200px" alt="">
                                 <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
                                 <ul class="list-unstyled">
-                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{$plan_detail->title ?? 'N/A'}}</li>
-                                    <li style="margin-bottom: .6rem"><strong>Price:</strong> £{{$plan_detail->monthly_price ?? '0.00'}} / month</li>
+                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{$data['plan_detail']->title ?? 'N/A'}}</li>
+                                    <li style="margin-bottom: .6rem"><strong>Price:</strong> £{{$data['plan_detail']->monthly_price ?? '0.00'}} / month</li>
                                     <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
                                     <ul class="mb-0">
-                                        <li>✔️ Unlimited Access</li>
+                                        <li>✔️ Number of matches: {{$data['plan_detail']->number_of_matches}}</li>
                                         <li>✔️ 24/7 Support</li>
                                         <li>✔️ Priority Features</li>
                                     </ul>
@@ -175,71 +84,19 @@
                                                         onclick="backToList();"></button>
                                                 @endif
 
-                                                <form action="{{ route('guest.trail.card.process') }}" method="POST"
-                                                    id="payment-form">
-                                                    @csrf
-                                                    <input type="hidden" id="plan_id" name="plan_id"
-                                                        value="{{ $plan_id ?? '' }}">
+                                              
+                                                <!-- Payment form -->
+                                                            <form id="payment-form" method="POST" action="{{route('guest.stripe.payment_card.store')}}">
+                                                                @csrf
 
-                                                    <div class="form_row row">
-                                                        <div class="col-sm-12">
-                                                            <h6>Card Number</h6>
-                                                            <div class="form_blk">
-                                                                <input type="text" id="card-number"
-                                                                    name="card_number" class="form-control text_box"
-                                                                    placeholder="1234 5678 9012 3456" required
-                                                                    maxlength="19" onkeyup="validateCardNumber()">
-                                                                <small id="card-number-error"
-                                                                    class="error-message"></small>
-                                                            </div>
-                                                        </div>
+                                                                <!-- Stripe will inject the card UI here -->
+                                                                <div id="card-element"></div>
 
-                                                        <div class="col-sm-4">
-                                                            <h6>Expiration Date</h6>
-                                                            <div class="form_blk">
-                                                                <input type="text" id="card-expiry"
-                                                                    name="card_expiry" class="form-control text_box"
-                                                                    placeholder="MM/YY" required maxlength="5"
-                                                                    onkeyup="validateExpiry()">
-                                                                <small id="card-expiry-error"
-                                                                    class="error-message"></small>
-                                                            </div>
-                                                        </div>
+                                                                <!-- Display card errors here -->
+                                                                <div id="card-errors" role="alert" style="color: red;"></div>
 
-                                                        <div class="col-sm-4">
-                                                            <h6>CVC</h6>
-                                                            <div class="form_blk">
-                                                                <input type="text" id="card-cvc" name="card_cvc"
-                                                                    class="form-control text_box" placeholder="123"
-                                                                    required minlength="3" maxlength="4"
-                                                                    onkeyup="validateCVC()">
-                                                                <small id="card-cvc-error"
-                                                                    class="error-message"></small>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-sm-4">
-                                                            <h6>ZIP Code</h6>
-                                                            <div class="form_blk">
-                                                                <input type="text" id="card-zip" name="card_zip"
-                                                                    class="form-control text_box" placeholder="10001"
-                                                                    required maxlength="6" onkeyup="validateZip()">
-                                                                <small id="card-zip-error"
-                                                                    class="error-message"></small>
-                                                            </div>
-                                                        </div>
-
-                                                        {{-- <div class="col-sm-2"></div> --}}
-
-                                                        <div class="col-sm-2">
-                                                            <div class="btn_blk">
-                                                                <button type="submit" class="site_btn md auto"
-                                                                    id="submitNow_btn">Save Info</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-
+                                                                <button type="submit">Submit Payment</button>
+                                                            </form>
                                             </div>
                                         </div>
                                     </div>
@@ -265,7 +122,84 @@
 
 
 <script src="{{ asset('assets_customer/customjs/script_subscription.js') }}"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <script>
+    const stripe = Stripe("{{ env('STRIPE_KEY') }}");
+    const elements = stripe.elements();
+    const card = elements.create("card");
+    card.mount("#card-element");
+
+    card.on("change", function(event) {
+        const displayError = document.getElementById("card-errors");
+        displayError.textContent = event.error ? event.error.message : "";
+    });
+
+    const form = document.getElementById("payment-form");
+    const clientSecret = "{{ $clientSecret }}";
+
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const { error, setupIntent } = await stripe.confirmCardSetup(clientSecret, {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    name: "{{ auth()->user()->name ?? '' }}",
+                    email: "{{ auth()->user()->email ?? '' }}"
+                }
+            }
+        });
+
+      if (error) {
+    let errorMessage = error.message;
+
+    // Stripe returns a generic message in this specific case
+        if (error.code === 'setup_intent_unexpected_state') {
+            errorMessage = "You cannot confirm this SetupIntent because it has already succeeded.";
+        }
+
+        document.getElementById("card-errors").textContent = errorMessage;
+        toastr.error(`❌ ${errorMessage}`);
+        console.error("Stripe error:", error);
+        }        else {
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
+                    },
+                    body: JSON.stringify({
+                        payment_method: setupIntent.payment_method
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    toastr.info("🎉 Card details saved successfully for future use.");
+                    toastr.info("✅ You've been subscribed to a free 30-day trial.");
+                    setTimeout(() => {
+                        toastr.warning("Redirecting....");
+                    },3000); 
+                    setTimeout(() => {
+                        window.location.href="/customer/mySubscription";
+                    }, 6000);
+                } else {
+                    toastr.error(`❌ ${result?.error?.message || "Failed to save card details. Please try again."}`);
+                    toastr.error("ℹ️ Please contact support if the issue persists.");
+                    // console.error("Error storing payment method:", result);
+                }
+            } catch (e) {
+                toastr.error("⚠️ Unexpected error while saving card details.");
+                // console.error("Exception:", e);
+            }
+        }
+        });
+</script>
+
+
+{{-- <script>
     document.getElementById("payment-form").onsubmit = function(event) {
         if (!validateCardNumber() || !validateExpiry() || !validateCVC() || !validateZip()) {
             event.preventDefault(); // Prevent form submission if validation fails
@@ -352,7 +286,7 @@
         }
         event.target.value = input;
     });
-</script>
+</script> --}}
 
 <style>
     .error-message {

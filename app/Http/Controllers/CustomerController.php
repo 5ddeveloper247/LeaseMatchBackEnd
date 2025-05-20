@@ -59,7 +59,7 @@ class CustomerController extends Controller
             $user_id = $request->query('user_id');
             // dd($email, $password, $user_id);
 
-            // Check if the user exists
+            // Check if the user exists 
             $user = User::where('id', $user_id)->where('email', $email)->first();
             // dd($user);
             if ($user && Hash::check($password, $user->password)) {
