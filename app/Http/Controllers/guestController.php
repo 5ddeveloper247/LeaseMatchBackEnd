@@ -103,6 +103,7 @@ class guestController extends Controller
             // Save free trial to DB if not already used
             UserSubscriptionFreeTrial::create([
                 'user_id' => Auth::user()->id,
+                'plan_id' => $plan_id,
                 'payment_method_id' => null, // Will be updated later during form submission
                 'started_at' => now(),
             ]);
