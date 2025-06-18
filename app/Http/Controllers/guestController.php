@@ -36,7 +36,7 @@ class guestController extends Controller
         $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
         $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
         $is_trial = false;
-        if($check_trial) {
+        if ($check_trial) {
             $is_trial = true;
         }
         $data['is_trial'] = $is_trial;
@@ -50,40 +50,94 @@ class guestController extends Controller
         return view('customer/guest/trail_payment_form', with($data));
     }
 
+    // public function guestSubscriptions(Request $request)
+    // {
+
+    //     $data['page'] = 'Payment Form';
+    //     $plans = Pricing_plan::all();
+    //     $trialPlan = Pricing_plan::where('free_trial', 1)->first();
+    //     $plan_id = $trialPlan->id;
+    //     $data['plans'] = $plans;
+    //     $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
+    //     $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
+    //     $is_trial = false;
+    //     if ($check_trial) {
+    //         $is_trial = true;
+    //     }
+    //     $data['is_trial'] = $is_trial;
+    //     $data['plan_id'] =
+    //         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
+    //     $plan_detail = Pricing_plan::findOrFail($plan_id);
+    //     \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+    //     $data['plan_detail'] = $plan_detail;
+    //     $intent = \Stripe\SetupIntent::create();
+
+    //     return view('customer/guest/trail_payment_form', ['data' => $data, 'plan_id' => $plan_id, 'clientSecret' => $intent->client_secret]);
+    // }
+
+
     public function guestSubscriptions(Request $request)
     {
-    
         $data['page'] = 'Payment Form';
-        $plans= Pricing_plan::all();
-        $trialPlan=Pricing_plan::where('free_trial',1)->first();
-        $plan_id=$trialPlan->id;
-         $data['plans'] = $plans;
-        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
+
+        // Get all plans
+        $plans = Pricing_plan::all();
+        $data['plans'] = $plans;
+
+        // Get the free trial plan
+        $trialPlan = Pricing_plan::where('free_trial', 1)->firstOrFail();
+        $plan_id = $trialPlan->id;
+        $data['plan_id'] = $plan_id;
+
+        // Get user's latest subscription
+        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $data['currentPlan'] = $currentPlan ?? '';
+
+        // Check if the user has already used free trial
         $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
         $is_trial = false;
-        if($check_trial) {
+
+        if (!$check_trial) {
+            // Save free trial to DB if not already used
+            UserSubscriptionFreeTrial::create([
+                'user_id' => Auth::user()->id,
+                'payment_method_id' => null, // Will be updated later during form submission
+                'started_at' => now(),
+            ]);
+            $is_trial = true;
+        } else {
             $is_trial = true;
         }
+
         $data['is_trial'] = $is_trial;
-        $data['plan_id'] =
-        $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
+
+        // Plan details (e.g. pricing for summary section)
         $plan_detail = Pricing_plan::findOrFail($plan_id);
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
         $data['plan_detail'] = $plan_detail;
-      $intent = \Stripe\SetupIntent::create();
-      
-        return view('customer/guest/trail_payment_form', ['data'=>$data,'plan_id'=>$plan_id,'clientSecret' => $intent->client_secret]);
+
+        // Create Stripe SetupIntent
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $intent = \Stripe\SetupIntent::create();
+
+        return view('customer/guest/trail_payment_form', [
+            'data' => $data,
+            'plan_id' => $plan_id,
+            'clientSecret' => $intent->client_secret,
+        ]);
     }
 
 
 
+
     public function guestCardProcess(Request $request)
-    {  
+    {
         $data = $request->all();
-        
+
         $data['user_id'] = Auth::user()->id;
-        $plan_id =$request->plan_id;
-       
+        $plan_id = $request->plan_id;
+
         CustomerCardProcess::create([
             'customer_id' => $data['user_id'],
             'card_number' => Crypt::encryptString($data['card_number']),
@@ -154,18 +208,18 @@ class guestController extends Controller
 
     public function guestTrailCardProcess(Request $request)
     {
-        
+
         $data = $request->all();
-        
+
         $data['user_id'] = Auth::user()->id;
         $plan_id = $data['plan_id'];
-        
+
         if (Session::has('trialData')) {
             $trialData = Session::get('trialData');
             $plan_id = $trialData['plan'] == null ? 1 : $trialData['plan'];
             Session::forget('trialData');
         }
-        
+
         CustomerCardProcess::create([
             'customer_id' => $data['user_id'],
             'card_number' => Crypt::encryptString($data['card_number']),
@@ -174,22 +228,22 @@ class guestController extends Controller
             'zip' => Crypt::encryptString($data['card_zip']),
             'status' => '1',
         ]);
-      
+
 
         $existingTrial = UserSubscriptionFreeTrial::where('user_id', $data['user_id'])->first();
         if ($existingTrial) {
             $existingTrial->delete();
         }
-       
-       
+
+
         UserSubscriptionFreeTrial::create([
             'user_id' => $data['user_id'],
             'plan_id' => $plan_id,
         ]);
         $user = User::find(Auth::user()->id);
-        
+
         $plan_detail = Pricing_plan::findOrFail($plan_id);
-        
+
         $payment = new UserPayments();
         $payment->user_subscription_id = null;
         $payment->user_id = Auth::user()->id;
@@ -235,12 +289,12 @@ class guestController extends Controller
         $Notification->read_flag =  '0';
         $Notification->created_by =  Auth::user()->id;
         $Notification->save();
-          // dd('Payment Success');
-         // set user on session
+        // dd('Payment Success');
+        // set user on session
         $request->session()->put('user', Auth::user());
 
         // Log::info('User logged in: ' . Auth::user()->id);
-       
+
         return redirect()->intended('/customer/mySubscription'); //dashboard
     }
 
@@ -249,51 +303,49 @@ class guestController extends Controller
 
 
 
-public function stripeCardStore(Request $request)
-{
-    
-    Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-    $user = Auth::user();
-    $paymentMethodId = $request->input('payment_method');
-    try {
-        // Step 1: Create a Stripe Customer if not already
-        if (!$user->stripe_customer_id) {
-            $customer = Customer::create([
-                'email' => $user->email,
-                'name'  => $user->name,
+    public function stripeCardStore(Request $request)
+    {
+
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $user = Auth::user();
+        $paymentMethodId = $request->input('payment_method');
+        try {
+            // Step 1: Create a Stripe Customer if not already
+            if (!$user->stripe_customer_id) {
+                $customer = Customer::create([
+                    'email' => $user->email,
+                    'name'  => $user->name,
+                ]);
+                $user->stripe_customer_id = $customer->id;
+            } else {
+                $customer = Customer::retrieve($user->stripe_customer_id);
+            }
+
+            // Step 2: Attach payment method to customer
+            PaymentMethod::retrieve($paymentMethodId)->attach([
+                'customer' => $customer->id
             ]);
-            $user->stripe_customer_id = $customer->id;
-        } else {
-            $customer = Customer::retrieve($user->stripe_customer_id);
+
+            // Step 3: Set as default payment method
+            Customer::update($customer->id, [
+                'invoice_settings' => [
+                    'default_payment_method' => $paymentMethodId,
+                ],
+            ]);
+
+            // Step 4: Save to database
+            $user->stripe_payment_method_id = $paymentMethodId;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Card saved successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Stripe Error: ' . $e->getMessage(),
+            ], 500);
         }
-
-        // Step 2: Attach payment method to customer
-        PaymentMethod::retrieve($paymentMethodId)->attach([
-            'customer' => $customer->id
-        ]);
-
-        // Step 3: Set as default payment method
-        Customer::update($customer->id, [
-            'invoice_settings' => [
-                'default_payment_method' => $paymentMethodId,
-            ],
-        ]);
-
-        // Step 4: Save to database
-        $user->stripe_payment_method_id = $paymentMethodId;
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Card saved successfully.',
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Stripe Error: ' . $e->getMessage(),
-        ], 500);
     }
-} 
-
 }

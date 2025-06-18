@@ -25,6 +25,11 @@
     <!-- Favicon -->
     <link type="image/png" rel="icon" href="{{ asset('assets/images/favicon.png') }}">
 
+
+
+
+
+
 </head>
 <script>
     var base_url = "{{ url('/') }}";
@@ -45,21 +50,28 @@
 
         <section id="plan">
             <div class="contain-fluid">
-              
+
 
                 <!--Form for inserting data--->
                 <div class="container my-5">
-                    <div class="row g-4" style="background-color: #fff; border-radius: 8px; padding: 4rem; display: flex; align-items: center !important">
+                    <div class="row g-4"
+                        style="background-color: #fff; border-radius: 8px; padding: 4rem; display: flex; align-items: center !important">
                         <div class="col-lg-5">
-                            <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
-                                <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740" style="width: 200px" alt="">
+                            <div class="border rounded p-5 shadow-sm bg-light"
+                                style="border-radius: 20px; background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%); border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6); position: relative; overflow: hidden;">
+                                <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740"
+                                    style="width: 200px" alt="">
+
+
                                 <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
                                 <ul class="list-unstyled">
-                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{$data['plan_detail']->title ?? 'N/A'}}</li>
-                                    <li style="margin-bottom: .6rem"><strong>Price:</strong> £{{$data['plan_detail']->monthly_price ?? '0.00'}} / month</li>
+                                    <li style="margin-bottom: .6rem"><strong>Plan:</strong>
+                                        {{ $data['plan_detail']->title ?? 'N/A' }}</li>
+                                    <li style="margin-bottom: .6rem"><strong>Price:</strong>
+                                        £{{ $data['plan_detail']->monthly_price ?? '0.00' }} / month</li>
                                     <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
                                     <ul class="mb-0">
-                                        <li>✔️ Number of matches: {{$data['plan_detail']->number_of_matches}}</li>
+                                        <li>✔️ Number of matches: {{ $data['plan_detail']->number_of_matches }}</li>
                                         <li>✔️ 24/7 Support</li>
                                         <li>✔️ Priority Features</li>
                                     </ul>
@@ -70,33 +82,56 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-7" style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
-                            <div class="addPricing_section" style="background-color: #ffffffb0">
+                        <div class="col-lg-7"
+                            style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover; padding: 3rem; ">
+                            <div class="addPricing_section"
+                                style="background-color: #ffffffb0; padding: 2rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+
                                 <div class="table_dv">
                                     <div class="table_cell">
                                         <div class="contain">
                                             <div class="_inner">
                                                 @if (isset($plan_id) && $plan_id != null)
-                                                    <a href="{{ route('guest.guestSubscriptions') }}"
-                                                        class="x_btn" style="top: -2rem !important; right: -4rem !important"></a>
+                                                    <a href="{{ route('guest.guestSubscriptions') }}" class="x_btn"
+                                                        style="top: -2rem !important; right: -4rem !important; background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease; border: none; color: #64748b; font-size: 1.2rem;"
+                                                        onmouseover="this.style.background='#051855'; this.style.color='#ef4444'; this.style.transform='rotate(90deg)'"
+                                                        onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.color='#64748b'; this.style.transform='rotate(0deg)'"></a>
                                                 @else
-                                                    <button type="button" class="x_btn"
-                                                        onclick="backToList();"></button>
+                                                    <button type="button" class="x_btn" onclick="backToList();"
+                                                        style="background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease; border: none; color: #64748b; font-size: 1.2rem;"
+                                                        onmouseover="this.style.background='#051855'; this.style.color='#ef4444'; this.style.transform='rotate(90deg)'"
+                                                        onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.color='#64748b'; this.style.transform='rotate(0deg)'"></button>
                                                 @endif
 
-                                              
+
+
                                                 <!-- Payment form -->
-                                                            <form id="payment-form" method="POST" action="{{route('guest.stripe.payment_card.store')}}">
-                                                                @csrf
+                                                <form id="payment-form" method="POST"
+                                                    action="{{ route('guest.stripe.payment_card.store') }}">
+                                                    @csrf
 
-                                                                <!-- Stripe will inject the card UI here -->
-                                                                <div id="card-element"></div>
+                                                    <!-- Stripe will inject the card UI here -->
+                                                    <div id="card-element"></div>
 
-                                                                <!-- Display card errors here -->
-                                                                <div id="card-errors" role="alert" style="color: red;"></div>
+                                                    <!-- Display card errors here -->
+                                                    <div id="card-errors" role="alert" style="color: red;"></div>
 
-                                                                <button type="submit">Submit Payment</button>
-                                                            </form>
+                                                    <button type="submit"
+                                                        style="margin-top: 1.5rem;
+                                                        background: #051855;
+                                                        color: #fff;
+                                                        border: 1px solid #051855;
+                                                        border-radius: 5px;
+                                                        padding: 3px 6px;
+                                                        font-size: 14px;
+                                                        font-weight: 500;
+                                                        cursor: pointer;
+                                                        transition: all 0.3s ease-in-out;"
+                                                        onmouseover=" this.style.color='#05d9e8'; this.style.borderColor='#122c84';"
+                                                        onmouseout="this.style.background='#051855'; this.style.color='#fff'; this.style.borderColor='#051855';">Submit
+                                                        Payment</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -140,7 +175,10 @@
     form.addEventListener("submit", async function(event) {
         event.preventDefault();
 
-        const { error, setupIntent } = await stripe.confirmCardSetup(clientSecret, {
+        const {
+            error,
+            setupIntent
+        } = await stripe.confirmCardSetup(clientSecret, {
             payment_method: {
                 card: card,
                 billing_details: {
@@ -150,18 +188,18 @@
             }
         });
 
-      if (error) {
-    let errorMessage = error.message;
+        if (error) {
+            let errorMessage = error.message;
 
-    // Stripe returns a generic message in this specific case
-        if (error.code === 'setup_intent_unexpected_state') {
-            errorMessage = "You cannot confirm this SetupIntent because it has already succeeded.";
-        }
+            // Stripe returns a generic message in this specific case
+            if (error.code === 'setup_intent_unexpected_state') {
+                errorMessage = "You cannot confirm this SetupIntent because it has already succeeded.";
+            }
 
-        document.getElementById("card-errors").textContent = errorMessage;
-        toastr.error(`❌ ${errorMessage}`);
-        console.error("Stripe error:", error);
-        }        else {
+            document.getElementById("card-errors").textContent = errorMessage;
+            toastr.error(`❌ ${errorMessage}`);
+            console.error("Stripe error:", error);
+        } else {
             try {
                 const response = await fetch(form.action, {
                     method: "POST",
@@ -181,12 +219,14 @@
                     toastr.info("✅ You've been subscribed to a free 30-day trial.");
                     setTimeout(() => {
                         toastr.warning("Redirecting....");
-                    },3000); 
+                    }, 3000);
                     setTimeout(() => {
-                        window.location.href="/customer/mySubscription";
+                        window.location.href = "/customer/mySubscription";
                     }, 6000);
                 } else {
-                    toastr.error(`❌ ${result?.error?.message || "Failed to save card details. Please try again."}`);
+                    toastr.error(
+                        `❌ ${result?.error?.message || "Failed to save card details. Please try again."}`
+                    );
                     toastr.error("ℹ️ Please contact support if the issue persists.");
                     // console.error("Error storing payment method:", result);
                 }
@@ -195,7 +235,7 @@
                 // console.error("Exception:", e);
             }
         }
-        });
+    });
 </script>
 
 

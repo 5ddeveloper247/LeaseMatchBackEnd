@@ -120,7 +120,7 @@
 
                                         <div class="btn_blk form_btn">
                                             <button type="button" class="site_btn block"><a class="site_btn block"
-                                                    href="https://www.leasematch.nyc/pricing"
+                                                    href="https://www.leasematch.nyc/registerForm"
                                                     style="text-decoration: none">Register Now
                                                 </a></button>
                                         </div>

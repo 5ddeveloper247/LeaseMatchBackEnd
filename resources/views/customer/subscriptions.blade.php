@@ -92,10 +92,34 @@
                                                 @endif
                                             </div>
                                         @endif
-                                    @else
+                                        {{-- @else
                                         <div class="btn_blk">
+                                            @php dd($plan); @endphp
                                             <a href="javascript:;"
                                                 @if ($key == 0) onclick="buyPlan({{ @$plan->id }});" @endif>{{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}</a>
+                                        </div>
+                                    @endif --}}
+                                    @else
+                                        <div class="btn_blk">
+                                            @if ($plan->free_trial == 1)
+                                                @if (!$is_trial)
+                                                    <a href="{{ route('guest.guestSubscriptions') }}"
+                                                        >
+                                                        Buy Now
+                                                    </a>
+                                                @else
+                                                    <a href="javascript:;" class="disabled"
+                                                        
+                                                        >
+                                                        Free Trial
+                                                    </a>
+                                                @endif
+                                            @else
+                                                <a href="javascript:;"
+                                                    @if ($key == 0) onclick="buyPlan({{ $plan->id }});" @endif>
+                                                    {{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}
+                                                </a>
+                                            @endif
                                         </div>
                                     @endif
 
@@ -115,7 +139,8 @@
 
             </div>
 
-            <div class="row addPricing_section " style="display:none; background-color: #fff; border-radius: 8px; padding: 4rem; ">
+            <div class="row addPricing_section "
+                style="display:none; background-color: #fff; border-radius: 8px; padding: 4rem; ">
                 <div class="col-lg-5">
                     <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
                         <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740"
@@ -159,7 +184,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-        
+
                                                 <div class="col-sm-4">
                                                     <h6>Expiration Date</h6>
                                                     <div class="form_blk">
@@ -168,34 +193,36 @@
                                                         </div>
                                                     </div>
                                                 </div>
-        
+
                                                 <div class="col-sm-4">
                                                     <h6>CVC</h6>
                                                     <div class="form_blk">
-                                                        <div id="card-cvc-element" class="form-control text_box stripe-element">
+                                                        <div id="card-cvc-element"
+                                                            class="form-control text_box stripe-element">
                                                         </div>
                                                     </div>
                                                 </div>
-        
+
                                                 <div class="col-sm-4">
                                                     <h6>ZIP Code</h6>
                                                     <div class="form_blk">
-                                                        <div id="card-zip-element" class="form-control text_box stripe-element">
+                                                        <div id="card-zip-element"
+                                                            class="form-control text_box stripe-element">
                                                         </div>
                                                     </div>
                                                 </div>
-        
+
                                                 <div class="col-sm-2">
                                                     <div class="btn_blk">
                                                         <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy
                                                             Now</button>
-        
+
                                                     </div>
                                                 </div>
-        
+
                                             </div>
                                         </form>
-        
+
                                     </div>
                                 </div>
                             </div>
