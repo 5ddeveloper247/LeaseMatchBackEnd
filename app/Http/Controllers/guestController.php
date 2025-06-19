@@ -20,11 +20,6 @@ use Stripe\Customer;
 use Stripe\PaymentMethod;
 
 
-
-
-
-
-
 class guestController extends Controller
 {
     // customer.guest.payment_form
@@ -50,34 +45,12 @@ class guestController extends Controller
         return view('customer/guest/trail_payment_form', with($data));
     }
 
-    // public function guestSubscriptions(Request $request)
-    // {
-
-    //     $data['page'] = 'Payment Form';
-    //     $plans = Pricing_plan::all();
-    //     $trialPlan = Pricing_plan::where('free_trial', 1)->first();
-    //     $plan_id = $trialPlan->id;
-    //     $data['plans'] = $plans;
-    //     $currentPlan = UserSubscription::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
-    //     $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
-    //     $is_trial = false;
-    //     if ($check_trial) {
-    //         $is_trial = true;
-    //     }
-    //     $data['is_trial'] = $is_trial;
-    //     $data['plan_id'] =
-    //         $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
-    //     $plan_detail = Pricing_plan::findOrFail($plan_id);
-    //     \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-    //     $data['plan_detail'] = $plan_detail;
-    //     $intent = \Stripe\SetupIntent::create();
-
-    //     return view('customer/guest/trail_payment_form', ['data' => $data, 'plan_id' => $plan_id, 'clientSecret' => $intent->client_secret]);
-    // }
 
 
     public function guestSubscriptions(Request $request)
     {
+
+        // dd("ok");
         $data['page'] = 'Payment Form';
 
         // Get all plans
@@ -128,9 +101,6 @@ class guestController extends Controller
             'clientSecret' => $intent->client_secret,
         ]);
     }
-
-
-
 
     public function guestCardProcess(Request $request)
     {
@@ -299,17 +269,28 @@ class guestController extends Controller
         return redirect()->intended('/customer/mySubscription'); //dashboard
     }
 
-
-
-
-
-
+    
     public function stripeCardStore(Request $request)
     {
-
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
         $user = Auth::user();
         $paymentMethodId = $request->input('payment_method');
+
+        // Get plan_id from session first, then fallback to request input
+        $planId = $request->session()->get('plan_id');
+
+        // Validate that we have a plan_id
+        if (!$planId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Plan ID is required for subscription.',
+            ], 400);
+        }
+
+        
+
+
         try {
             // Step 1: Create a Stripe Customer if not already
             if (!$user->stripe_customer_id) {
@@ -334,13 +315,88 @@ class guestController extends Controller
                 ],
             ]);
 
-            // Step 4: Save to database
+            // Step 4: Get plan details
+            $plan_detail = Pricing_plan::findOrFail($planId);
+
+            // Step 5: Handle existing free trial
+            $existingTrial = UserSubscriptionFreeTrial::where('user_id', $user->id)->first();
+            if ($existingTrial) {
+                $existingTrial->update(['payment_method_id' => $paymentMethodId]);
+            }
+
+            // Step 6: End current subscription if exists
+            $currentPlan = UserSubscription::where('user_id', $user->id)
+                ->where('status', 'active')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if ($currentPlan) {
+                $currentPlan->end_date = Carbon::now()->format('Y-m-d');
+                $currentPlan->status = 'ended';
+                $currentPlan->save();
+            }
+
+            // Step 7: Create UserPayments record
+            $payment = new UserPayments();
+            $payment->user_id = $user->id;
+            $payment->plan_id = $plan_detail->id;
+            $payment->payment_method_id = NULL;
+            $payment->amount = $plan_detail->monthly_price;
+            $payment->stripe_customer_id = $customer->id;
+            $payment->status = $existingTrial ? 'free' : 'active'; // Free if trial exists, otherwise active
+            $payment->response = json_encode([
+                "type" => $existingTrial ? "free_trial_with_card" : "paid_subscription",
+                "payment_method_id" => $paymentMethodId,
+                "customer_id" => $customer->id,
+                "plan_id" => $planId
+            ]);
+            $payment->reason = $existingTrial ? "free trial with card setup" : "paid subscription";
+            $payment->date = Carbon::now()->format('Y-m-d');
+            $payment->save();
+
+            // Step 8: Create UserSubscription record
+            $duration_days = $existingTrial ? 30 : 30; // You can adjust this based on plan
+            $start_date = Carbon::now()->format('Y-m-d');
+            $end_date = Carbon::now()->addDays($duration_days)->format('Y-m-d');
+
+            $userSubscription = new UserSubscription();
+            $userSubscription->user_id = $user->id;
+            $userSubscription->plan_id = $plan_detail->id;
+            $userSubscription->start_date = $start_date;
+            $userSubscription->end_date = $end_date;
+            $userSubscription->duration_days = $duration_days;
+            $userSubscription->status = $existingTrial ? 'free' : 'active';
+            $userSubscription->save();
+
+            // Step 9: Update payment with subscription ID
+            $payment->user_subscription_id = $userSubscription->id;
+            $payment->save();
+
+            // Step 10: Save user's Stripe info
             $user->stripe_payment_method_id = $paymentMethodId;
             $user->save();
 
+            // Step 11: Create notification
+            $Notification = new Notifications();
+            $Notification->module_code = 'CARD_SETUP';
+            $Notification->from_user_id = $user->id;
+            $Notification->to_user_id = '1'; // for admin notification
+            $Notification->subject = "Payment Method Setup";
+            $Notification->message = "User has successfully set up payment method for " . $plan_detail->title . " plan.";
+            $Notification->read_flag = '0';
+            $Notification->created_by = $user->id;
+            $Notification->save();
+
+            // Step 12: IMPORTANT - Remove plan_id from session after successful payment setup
+            $request->session()->forget('plan_id');
+
             return response()->json([
                 'success' => true,
-                'message' => 'Card saved successfully.',
+                'message' => 'Card saved and subscription activated successfully.',
+                'subscription_id' => $userSubscription->id,
+                'payment_id' => $payment->id,
+                'plan_id' => $planId,
+                'plan_title' => $plan_detail->title
             ]);
         } catch (\Exception $e) {
             return response()->json([

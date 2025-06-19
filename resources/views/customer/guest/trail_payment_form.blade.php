@@ -209,6 +209,7 @@
                     },
                     body: JSON.stringify({
                         payment_method: setupIntent.payment_method
+                        // plan_id: selectedPlanId
                     })
                 });
 

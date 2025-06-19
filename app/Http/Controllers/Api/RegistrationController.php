@@ -28,12 +28,18 @@ use App\Models\Api\AdditionalNotes;
 use App\Models\Api\UserDocuments;
 use App\Rules\PreviousDate;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 class RegistrationController extends Controller
 {
 
     public function storeRegistration(Request $request)
     {
         $input = $request->all();
+
+        $planId = $request->input('plan_id');
+        // return response()->json(['inputs'=> $input]);
+        
+
         // dd($input);
         // Sanitize all numeric fields
         $numericFields = [
@@ -43,6 +49,7 @@ class RegistrationController extends Controller
             'rental_budget', // Step 3
             'number_of_pets', // Step 7
             'max_rent_to_pay', // Step 9
+
         ];
 
         foreach ($numericFields as $field) {
@@ -149,6 +156,9 @@ class RegistrationController extends Controller
         try {
 
             $password = $request->input('password');
+
+            
+            
             // If validation passes, handle the incoming request data and save it accordingly
             $User = new User();
             $User->type = '3';
@@ -156,6 +166,8 @@ class RegistrationController extends Controller
             $User->email = $request->input('user_email');
             $User->password = bcrypt($password);
             $User->status = '1';
+
+            
             $User->save();
             // automatically login
             // Auth::login($User);
@@ -297,7 +309,7 @@ class RegistrationController extends Controller
             $Notification = new Notifications();
             $Notification->module_code =  'TENANT REGISTRATION';
             $Notification->from_user_id =  $User->id;
-            $Notification->to_user_id =  '1'; 
+            $Notification->to_user_id =  '1';
             $Notification->subject =  "Tenant Registration";
             $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
             $Notification->read_flag =  '0';
@@ -313,16 +325,20 @@ class RegistrationController extends Controller
             sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
             // create a session for the user
             // $request->session()->put('user', $User);
+
+           
+
             return response()->json([
                 'success' => true,
                 'message' => 'User created successfully',
-                'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')). "&user_id=" . $User->id,
+                'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')) . "&user_id=" . $User->id . "&plan_id=" . $planId,
                 'data' => [
                     'user_id' => $User->id,
                     'user_name' => $User->first_name,
                     'user_email' => $User->email,
-                    'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')). "&user_id=" . $User->id,
+                    'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')) . "&user_id=" . $User->id,
                     'password' => $request->input('password'),
+                    
                     'created_at' => $User->created_at,
                 ]
             ], 200);

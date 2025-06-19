@@ -68,58 +68,43 @@
 
 
                                     </ul>
-                                    @if (@$currentPlan->plan_id == $plan->id)
-                                        <!-- Debug information -->
-                                        <!-- Current date: {{ Carbon::now()->format('Y-m-d') }} -->
-                                        <!-- End date: {{ $currentPlan->end_date }} -->
-                                        <!-- Is expired: {{ Carbon::now()->format('Y-m-d') > $currentPlan->end_date ? 'Yes' : 'No' }} -->
+                                    {{-- Add this debug section at the top of your loop to see what's happening --}}
+                                    @if ($key == 0)
+                                        {{-- Only show debug for first plan --}}
+                                        <!-- DEBUG INFO -->
+                                        <!-- Current Plan: {{ $currentPlan ? 'EXISTS' : 'NULL' }} -->
+                                        <!-- Current Plan ID: {{ $currentPlan ? $currentPlan->plan_id : 'N/A' }} -->
+                                        <!-- Current Plan Status: {{ $currentPlan ? $currentPlan->status : 'N/A' }} -->
+                                        <!-- Plan ID: {{ $plan->id }} -->
+                                        <!-- Is Trial: {{ $is_trial ? 'TRUE' : 'FALSE' }} -->
+                                        <!-- Trial Plan ID: {{ $trial_plan_id ?? 'NULL' }} -->
+                                        <!-- Match: {{ $currentPlan && $currentPlan->plan_id == $plan->id ? 'YES' : 'NO' }} -->
+                                    @endif
 
-                                        @if (Carbon::now()->format('Y-m-d') > $currentPlan->end_date)
-                                            <div class="btn_blk">
-                                                <a href="javascript:;"
-                                                    onclick="buyPlan({{ @$plan->id }});">{{ $key == 0 ? 'Renew' : 'Coming Soon' }}</a>
-                                            </div>
-                                        @else
-                                            <div class="btn_blk">
-                                                @if ($currentPlan->status == 'pending')
-                                                    <a href="javascript:;" class="disabled"
-                                                        style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">{{ $key == 0 ? 'Pending Cancellation' : 'Coming Soon' }}</a>
-                                                @else
-                                                    <a href="javascript:;">{{ $key == 0 ? 'Selected' : 'Coming Soon' }}</a>
-                                                    {!! $key == 0
-                                                        ? "<a href='javascript:;' class='cancel_subscription_confirm' data-id='" . @$currentPlan->id . "'>Cancel</a>"
-                                                        : '' !!}
-                                                @endif
-                                            </div>
-                                        @endif
-                                        {{-- @else
+                                    {{-- Updated condition with more explicit checks --}}
+                                    @if ($currentPlan && $currentPlan->status == 'active' && $currentPlan->plan_id == $plan->id)
+                                        {{-- Customer has ACTIVE subscription for this plan --}}
                                         <div class="btn_blk">
-                                            @php dd($plan); @endphp
-                                            <a href="javascript:;"
-                                                @if ($key == 0) onclick="buyPlan({{ @$plan->id }});" @endif>{{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}</a>
+                                            <a href="javascript:;">{{ $key == 0 ? 'Selected' : 'Coming Soon' }}</a>
+                                            {!! $key == 0
+                                                ? "<a href='javascript:;' class='cancel_subscription_confirm' data-id='" . $currentPlan->id . "'>Cancel</a>"
+                                                : '' !!}
                                         </div>
-                                    @endif --}}
-                                    @else
+                                    @elseif (!$currentPlan && $is_trial && $trial_plan_id == $plan->id)
+                                        {{-- Customer has NO active subscription BUT has used free trial for this plan --}}
                                         <div class="btn_blk">
-                                            @if ($plan->free_trial == 1)
-                                                @if (!$is_trial)
-                                                    <a href="{{ route('guest.guestSubscriptions') }}"
-                                                        >
-                                                        Buy Now
-                                                    </a>
-                                                @else
-                                                    <a href="javascript:;" class="disabled"
-                                                        
-                                                        >
-                                                        Free Trial
-                                                    </a>
-                                                @endif
-                                            @else
-                                                <a href="javascript:;"
-                                                    @if ($key == 0) onclick="buyPlan({{ $plan->id }});" @endif>
-                                                    {{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}
-                                                </a>
-                                            @endif
+                                            <a href="javascript:;" class="disabled"
+                                                style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">
+                                                {{ $key == 0 ? 'Free Trial' : 'Coming Soon' }}
+                                            </a>
+                                        </div>
+                                    @else
+                                        {{-- Customer can buy this plan --}}
+                                        <div class="btn_blk">
+                                            <a href="javascript:;"
+                                                @if ($key == 0) onclick="buyPlan({{ $plan->id }});" @endif>
+                                                {{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}
+                                            </a>
                                         </div>
                                     @endif
 
