@@ -45,8 +45,6 @@ class guestController extends Controller
         return view('customer/guest/trail_payment_form', with($data));
     }
 
-
-
     public function guestSubscriptions(Request $request)
     {
 
@@ -278,7 +276,7 @@ class guestController extends Controller
         $paymentMethodId = $request->input('payment_method');
 
         // Get plan_id from session first, then fallback to request input
-        $planId = $request->session()->get('plan_id');
+        $planId = $request->session()->get('plan_id') ?? 1;
 
         // Validate that we have a plan_id
         if (!$planId) {
@@ -288,9 +286,7 @@ class guestController extends Controller
             ], 400);
         }
 
-        
-
-
+    
         try {
             // Step 1: Create a Stripe Customer if not already
             if (!$user->stripe_customer_id) {

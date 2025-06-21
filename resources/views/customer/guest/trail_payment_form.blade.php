@@ -222,7 +222,7 @@
                         toastr.warning("Redirecting....");
                     }, 3000);
                     setTimeout(() => {
-                        window.location.href = "/customer/mySubscription";
+                        window.location.href = "/customer/myAccount";
                     }, 6000);
                 } else {
                     toastr.error(
@@ -238,6 +238,9 @@
         }
     });
 </script>
+
+
+
 
 
 {{-- <script>

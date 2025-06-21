@@ -44,7 +44,7 @@ class CustomerController extends Controller
     {
         $type = $request->has('type') ? $request->query('type') : null;
         $plan = $request->has('plan') ? $request->query('plan') : null;
-        $Selectedplan = $request->has('plan_id') ? $request->query('plan_id') : null;
+        $Selectedplan = $request->has('plan_id') ? $request->query('plan_id') : 1;
 
         $trialData = [  // Ensure consistent variable name
             'type' => $type,
@@ -58,6 +58,7 @@ class CustomerController extends Controller
         // check if request contains query string with these params then auto login customer http://127.0.0.1:8000/customer/login?email=user13@example.com&password=QWRtaW4xMjMj&user_id=32
         if ($request->has('email') && $request->has('password') && $request->has('user_id')) {
             $plainId = $request->query('plainId');
+            // dd("plainID");
             $email = $request->query('email');
             $password = base64_decode($request->query('password'));
             $user_id = $request->query('user_id');
@@ -78,7 +79,8 @@ class CustomerController extends Controller
                         if ($checkFreeTrialExist) {
                             Session::forget('trialData');
                             if (checkUserSubscription() == true) {
-                                return redirect()->intended('/customer/mySubscription');
+                                // return redirect()->intended('/customer/mySubscription');
+                                return redirect()->intended('/customer/myAccount');
                             } else {
                                 return redirect('/customer/guest/subscriptions')->with('error', 'No active subscription found. Please subscribe to a plan to continue.');
                             }
@@ -88,7 +90,8 @@ class CustomerController extends Controller
                     } else {
                         Session::forget('trialData');
                         if (checkUserSubscription() == true) {
-                            return redirect()->intended('/customer/mySubscription');
+                            // return redirect()->intended('/customer/mySubscription');
+                            return redirect()->intended('/customer/myAccount');
                         } else {
                             if ($plainId > 0) {
                                 return redirect('customer/guest/trail/payment/form/' . $plainId); // Updated to redirect to the payment form with plan_id
@@ -130,7 +133,8 @@ class CustomerController extends Controller
                         Session::forget('trialData');
                         if (checkUserSubscription() == true) {
                             $request->session()->flash('success', 'You have active subscription');
-                            return redirect()->intended('/customer/mySubscription'); //dashboard
+                            // return redirect()->intended('/customer/mySubscription'); //dashboard
+                            return redirect()->intended('/customer/myAccount');
                         } else {
                             $request->session()->flash('error', 'No active subscription found. Please subscribe to a plan to continue.');
                             return redirect('/customer/guest/subscriptions');
@@ -141,7 +145,8 @@ class CustomerController extends Controller
                 } else {
                     Session::forget('trialData');
                     if (checkUserSubscription() == true) {
-                        return redirect()->intended('/customer/mySubscription'); //dashboard
+                        // return redirect()->intended('/customer/mySubscription'); //dashboard
+                        return redirect()->intended('/customer/myAccount');
                     } else {
                         $request->session()->flash('error', 'No active subscription found. Please subscribe to a plan to continue.');
                         return redirect('/customer/guest/subscriptions');
@@ -172,106 +177,30 @@ class CustomerController extends Controller
     }
 
 
-    // public function my_subscription(Request $request)
-    // {
-    //     $data['page'] = 'Subscription';
-    //     $data['plans'] = Pricing_plan::get();
-
-    //     // $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
-    //     //     ->orderBy('created_at', 'desc')
-    //     //     ->first();
-
-    //     $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
-    //                 ->where('status', 'active')
-    //                 ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
-    //                 ->orderBy('created_at', 'desc')
-    //                 ->first();
-
-    //     $data['currentPlan'] = isset($currentPlan->plan_id) ? $currentPlan : '';
-
-    //     if (isset($request->plan_id)) {
-    //         $data['plan_detail'] = Pricing_plan::find($request->plan_id);
-    //     } elseif (!empty($currentPlan)) {
-    //         $data['plan_detail'] = Pricing_plan::find($currentPlan->plan_id);
-    //     }
-
-    //     // ✅ Trial check
-    //     $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
-    //     $is_trial  = false;
-    //     $trial_plan_id = null;
-
-    //     if ($check_trial) {
-    //         $is_trial = true;
-    //         $trial_plan_id = $check_trial->plan_id; // Make sure this column exists in DB
-    //     }
-
-    //     // ✅ Pass everything to the view
-    //     return view('customer/subscriptions', [
-    //         'data' => $data,
-    //         'is_trial' => $is_trial,
-    //         'trial_plan_id' => $trial_plan_id,
-    //         'plans' => $data['plans'],
-    //         'page' => $data['page'],
-    //         'currentPlan' => $currentPlan
-    //     ]);
-    // }
-
-
-    //     public function my_subscription(Request $request)
-    // {
-    //     $data['page'] = 'Subscription';
-    //     $data['plans'] = Pricing_plan::get();
-
-    //     // Check for active subscription first
-    //     $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
-    //                 ->where('status', 'active')
-    //                 ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
-    //                 ->orderBy('created_at', 'desc')
-    //                 ->first();
-
-    //     $data['currentPlan'] = $currentPlan ?? '';
-
-    //     if (isset($request->plan_id)) {
-    //         $data['plan_detail'] = Pricing_plan::find($request->plan_id);
-    //     } elseif (!empty($currentPlan)) {
-    //         $data['plan_detail'] = Pricing_plan::find($currentPlan->plan_id);
-    //     }
-
-    //     // Check for free trial only if no active subscription
-    //     $is_trial = false;
-    //     $trial_plan_id = null;
-
-    //     if (!$currentPlan) {
-    //         $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
-
-    //         if ($check_trial) {
-    //             $is_trial = true;
-    //             $trial_plan_id = $check_trial->plan_id;
-    //         }
-    //     }
-
-    //     return view('customer/subscriptions', [
-    //         'data' => $data,
-    //         'is_trial' => $is_trial,
-    //         'trial_plan_id' => $trial_plan_id,
-    //         'plans' => $data['plans'],
-    //         'page' => $data['page'],
-    //         'currentPlan' => $currentPlan
-    //     ]);
-    // }
-
-
     public function my_subscription(Request $request)
     {
         $data['page'] = 'Subscription';
         $data['plans'] = Pricing_plan::get();
- 
+
         // Check for active subscription first
-        $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
+        $activePlan = UserSubscription::where('user_id', Auth::user()->id)
             ->where('status', 'active')
-            // ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
             ->orderBy('created_at', 'desc')
             ->first();
+
+        // If no active plan, check for cancelled/expired plans
+        $currentPlan = $activePlan;
+        if (!$activePlan) {
+            $currentPlan = UserSubscription::where('user_id', Auth::user()->id)
+                ->whereIn('status', ['cancelled', 'expired'])
+                ->orWhere(function ($query) {
+                    $query->where('user_id', Auth::user()->id)
+                        ->where('end_date', '<', Carbon::now()->format('Y-m-d'));
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+        }
 
         $data['currentPlan'] = $currentPlan ?? '';
 
@@ -285,20 +214,12 @@ class CustomerController extends Controller
         $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
         $is_trial = false;
         $trial_plan_id = null;
-
         if ($check_trial) {
             $is_trial = true;
             $trial_plan_id = $check_trial->plan_id;
         }
 
-        // Debug: Add these to see what's happening
-        // dd([
-        //     'currentPlan' => $currentPlan,
-        //     'currentPlan_plan_id' => $currentPlan ? $currentPlan->plan_id : 'null',
-        //     'is_trial' => $is_trial,
-        //     'trial_plan_id' => $trial_plan_id,
-        //     'user_id' => Auth::user()->id
-        // ]);
+
 
         return view('customer/subscriptions', [
             'data' => $data,

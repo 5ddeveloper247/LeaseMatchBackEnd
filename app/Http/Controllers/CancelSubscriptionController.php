@@ -30,8 +30,8 @@ class CancelSubscriptionController extends Controller
                     'message' => $validator->errors()->first()
                 ]);
             }
-            
-            $user = Auth::user();  
+
+            $user = Auth::user();
             $subscription = UserSubscription::findOrFail($request->id);
 
             // Verify the subscription belongs to the current user
@@ -49,9 +49,9 @@ class CancelSubscriptionController extends Controller
                     'message' => 'This subscription is already cancelled or expired'
                 ]);
             }
-            if(is_null($subscription->stripe_subscription_id)){
+            if (is_null($subscription->stripe_subscription_id) || $subscription->status == 'free') {
                 $subscription->status = 'free-expired';
-                $subscription->end_date = Carbon::now()->subDay()->format('Y-m-d H:i:s');  // Set end date to today
+                $subscription->end_date = Carbon::now()->subDay()->format('Y-m-d H:i:s');
                 $subscription->cancelled_at = Carbon::now()->format('Y-m-d H:i:s');
                 $subscription->cancellation_reason = $request->cancellation_reason;
                 $subscription->save();
@@ -75,7 +75,6 @@ class CancelSubscriptionController extends Controller
                     'message' => 'There was an error cancelling your subscription. Please try again later.'
                 ]);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
@@ -83,7 +82,10 @@ class CancelSubscriptionController extends Controller
             ]);
         }
     }
-    
+
+
+
+
     private function cancelStripeSubscription(User $user, UserSubscription $currentSubscription, $reason = null)
     {
         try {

@@ -26,7 +26,7 @@
 
                             <div class="in_blk">
                                 <div class="title">
-                                    <h4>{{ $plan->title != null ? $plan->title : 'Tier ' . $key + 1 }}</h4>
+                                    <h4>{{ $plan->title != null ? $plan->title : 'Tier ' . ($key + 1) }}</h4>
                                     <span>30 Days</span>
                                 </div>
                                 @if ($plan->initial_price != null)
@@ -65,9 +65,8 @@
                                         @else
                                             <li>They will able to upload document.</li>
                                         @endif
-
-
                                     </ul>
+
                                     {{-- Add this debug section at the top of your loop to see what's happening --}}
                                     @if ($key == 0)
                                         {{-- Only show debug for first plan --}}
@@ -81,7 +80,7 @@
                                         <!-- Match: {{ $currentPlan && $currentPlan->plan_id == $plan->id ? 'YES' : 'NO' }} -->
                                     @endif
 
-                                    {{-- Updated condition with more explicit checks --}}
+                                    {{-- Updated condition with cancelled/expired subscription handling --}}
                                     @if ($currentPlan && $currentPlan->status == 'active' && $currentPlan->plan_id == $plan->id)
                                         {{-- Customer has ACTIVE subscription for this plan --}}
                                         <div class="btn_blk">
@@ -90,16 +89,46 @@
                                                 ? "<a href='javascript:;' class='cancel_subscription_confirm' data-id='" . $currentPlan->id . "'>Cancel</a>"
                                                 : '' !!}
                                         </div>
-                                    @elseif (!$currentPlan && $is_trial && $trial_plan_id == $plan->id)
-                                        {{-- Customer has NO active subscription BUT has used free trial for this plan --}}
+                                    @elseif (
+                                        $currentPlan &&
+                                            ($currentPlan->status == 'cancelled' ||
+                                                $currentPlan->status == 'expired' ||
+                                                Carbon::now()->format('Y-m-d') > $currentPlan->end_date) &&
+                                            $currentPlan->plan_id == $plan->id)
+                                        {{-- Customer had subscription for this plan but it's cancelled/expired --}}
                                         <div class="btn_blk">
-                                            <a href="javascript:;" class="disabled"
-                                                style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">
-                                                {{ $key == 0 ? 'Free Trial' : 'Coming Soon' }}
-                                            </a>
+                                            <a href="javascript:;"
+                                                onclick="buyPlan({{ $plan->id }});">{{ $key == 0 ? 'Renew' : 'Coming Soon' }}</a>
+                                        </div>
+                                    @elseif (!$currentPlan && $is_trial && $trial_plan_id == $plan->id)
+    {{-- Customer has NO active subscription BUT has used free trial for this plan --}}
+    <div class="btn_blk">
+        <a href="javascript:;" class="disabled"
+            style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">
+            {{ $key == 0 ? 'Free Trial Used' : 'Coming Soon' }}
+        </a>
+
+        @if ($key == 0)
+            @php
+                // Get the actual subscription ID for the free trial
+                $trialSubscription = App\Models\UserSubscription::where('user_id', Auth::user()->id)
+                    ->where('plan_id', $trial_plan_id)
+                    ->where('status', 'free') // Look for free status
+                    ->first();
+            @endphp
+            
+            @if($trialSubscription)
+                <a href="javascript:;" class="cancel_subscription_confirm"
+                    data-id="{{ $trialSubscription->id }}">
+                    Cancel
+                </a>
+            @endif
+        @endif
+    
+
                                         </div>
                                     @else
-                                        {{-- Customer can buy this plan --}}
+                                        {{-- Customer can buy this plan (new customer or different plan) --}}
                                         <div class="btn_blk">
                                             <a href="javascript:;"
                                                 @if ($key == 0) onclick="buyPlan({{ $plan->id }});" @endif>
@@ -107,7 +136,6 @@
                                             </a>
                                         </div>
                                     @endif
-
                                 </div>
                                 <div class="off">
                                     <!-- 50% off if price is under £1000 -->
@@ -122,140 +150,123 @@
                     </div>
                 @endforeach
             </div>
-            <div class="off">
-                <!-- 50% off if price is under £1000 -->
-            </div>
-            <div class="price_blk">
-                <div class="price">£{{ $plan->monthly_price != null ? $plan->monthly_price : '0.00' }}
-                </div>
-                <span>30 Days</span>
-            </div>
-        </div>
-        </div>
-        </div>
-        @endforeach
 
-        </div>
-
-        <div class="row addPricing_section "
-            style="display:none; background-color: #fff; border-radius: 8px; padding: 4rem; ">
-            <div class="col-lg-5">
-                <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
-                    <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740"
-                        style="width: 200px" alt="">
-                    <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
-                    <ul class="list-unstyled">
-                        <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{ $plan_detail->title ?? 'N/A' }}</li>
-                        <li style="margin-bottom: .6rem"><strong>Price:</strong>
-                            £{{ $plan_detail->monthly_price ?? '0.00' }} / month</li>
-                        <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
-                        <ul class="mb-0">
-                            <li>✔️ Unlimited Access</li>
-                            <li>✔️ 24/7 Support</li>
-                            <li>✔️ Priority Features</li>
+            <div class="row addPricing_section"
+                style="display:none; background-color: #fff; border-radius: 8px; padding: 4rem;">
+                <div class="col-lg-5">
+                    <div class="border rounded p-5 shadow-sm bg-light" style="border-radius: 8px">
+                        <img src="https://img.freepik.com/free-vector/innovation-concept-illustration_114360-5848.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740"
+                            style="width: 200px" alt="">
+                        <h4 style="margin-bottom: 2rem; font-weight: 700">Payment Summary</h4>
+                        <ul class="list-unstyled">
+                            <li style="margin-bottom: .6rem"><strong>Plan:</strong> {{ $plan_detail->title ?? 'N/A' }}</li>
+                            <li style="margin-bottom: .6rem"><strong>Price:</strong>
+                                £{{ $plan_detail->monthly_price ?? '0.00' }} / month</li>
+                            <li style="margin-bottom: .6rem"><strong>Features:</strong></li>
+                            <ul class="mb-0">
+                                <li>✔️ Unlimited Access</li>
+                                <li>✔️ 24/7 Support</li>
+                                <li>✔️ Priority Features</li>
+                            </ul>
                         </ul>
-                    </ul>
-                    <hr>
-                    <p class="text-muted small mb-0">Your card will be charged after your 30-day free trial
-                        ends.</p>
+                        <hr>
+                        <p class="text-muted small mb-0">Your card will be charged after your 30-day free trial
+                            ends.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-lg-7"
-                style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
-                <div class=" p-5" style=" background-color: #ffffffb0">
-                    <div class="table_dv">
-                        <div class="table_cell">
-                            <div class="contain">
-                                <div class="_inner">
-                                    <button type="button" class="x_btn" onclick="backToList();"></button>
-                                    <h4>Buy Plan</h4>
-                                    <form action="{{ route('subscribe.process') }}" method="POST" id="payment-form">
-                                        @csrf
-                                        <div class="form_row row">
-                                            <input type="hidden" id="plan_id" name="plan_id" value="">
-                                            <div class="col-sm-12">
-                                                <h6>Card Number</h6>
-                                                <div class="form_blk">
-                                                    <div id="card-number-element"
-                                                        class="form-control text_box stripe-element">
+                <div class="col-lg-7"
+                    style="background-image: url('https://img.freepik.com/free-vector/wallet-concept-illustration_114360-2805.jpg?ga=GA1.1.1410736458.1721019759&semt=ais_hybrid&w=740'); background-position: center; background-size: cover;">
+                    <div class="p-5" style="background-color: #ffffffb0">
+                        <div class="table_dv">
+                            <div class="table_cell">
+                                <div class="contain">
+                                    <div class="_inner">
+                                        <button type="button" class="x_btn" onclick="backToList();"></button>
+                                        <h4>Buy Plan</h4>
+                                        <form action="{{ route('subscribe.process') }}" method="POST" id="payment-form">
+                                            @csrf
+                                            <div class="form_row row">
+                                                <input type="hidden" id="plan_id" name="plan_id" value="">
+                                                <div class="col-sm-12">
+                                                    <h6>Card Number</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-number-element"
+                                                            class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <h6>Expiration Date</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-expiry-element"
+                                                            class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <h6>CVC</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-cvc-element"
+                                                            class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <h6>ZIP Code</h6>
+                                                    <div class="form_blk">
+                                                        <div id="card-zip-element"
+                                                            class="form-control text_box stripe-element">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-2">
+                                                    <div class="btn_blk">
+                                                        <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy
+                                                            Now</button>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="col-sm-4">
-                                                <h6>Expiration Date</h6>
-                                                <div class="form_blk">
-                                                    <div id="card-expiry-element"
-                                                        class="form-control text_box stripe-element">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4">
-                                                <h6>CVC</h6>
-                                                <div class="form_blk">
-                                                    <div id="card-cvc-element" class="form-control text_box stripe-element">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4">
-                                                <h6>ZIP Code</h6>
-                                                <div class="form_blk">
-                                                    <div id="card-zip-element" class="form-control text_box stripe-element">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-2">
-                                                <div class="btn_blk">
-                                                    <button type="submit" class="site_btn md auto" id="buyNow_btn">Buy
-                                                        Now</button>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </form>
-
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> <!-- /.addPricing_section -->
+                </div>
             </div>
-        </div>
 
-        <!-- my code -->
-        <!-- Confirmation Popup -->
-        <div class="popup" id="cancel_confirm_popup" style="display: none;">
-            <div class="table_dv">
-                <div class="table_cell">
-                    <div class="contain">
-                        <div class="_inner">
-                            <button type="button" class="x_btn close_cancel_confirm"></button>
-                            <h3>Cancel Subscription</h3>
-                            <p>Are you sure you want to cancel this subscription?</p>
+            <!-- Confirmation Popup -->
+            <div class="popup" id="cancel_confirm_popup" style="display: none;">
+                <div class="table_dv">
+                    <div class="table_cell">
+                        <div class="contain">
+                            <div class="_inner">
+                                <button type="button" class="x_btn close_cancel_confirm"></button>
+                                <h3>Cancel Subscription</h3>
+                                <p>Are you sure you want to cancel this subscription?</p>
 
-                            <!-- Cancellation Reason -->
-                            <div class="form_blk">
-                                <h6>Reason for cancellation (optional)</h6>
-                                <textarea id="cancellation_reason" class="form-control" placeholder="Please let us know why you're cancelling"
-                                    rows="3"></textarea>
-                            </div>
+                                <!-- Cancellation Reason -->
+                                <div class="form_blk">
+                                    <h6>Reason for cancellation (optional)</h6>
+                                    <textarea id="cancellation_reason" class="form-control" placeholder="Please let us know why you're cancelling"
+                                        rows="3"></textarea>
+                                </div>
 
-                            <div class="btn_blk">
-                                <button type="button" class="site_btn light close_cancel_confirm">No</button>
-                                <button type="button" class="site_btn cancel_subscription_confirmed"
-                                    data-id="">Yes</button>
+                                <div class="btn_blk">
+                                    <button type="button" class="site_btn light close_cancel_confirm">No</button>
+                                    <button type="button" class="site_btn cancel_subscription_confirmed"
+                                        data-id="">Yes</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
         </div>
     </section>
 @endsection

@@ -32,13 +32,343 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class RegistrationController extends Controller
 {
 
+    // public function storeRegistration(Request $request)
+    // {
+    //     $input = $request->all();
+
+    //     $planId = $request->input('plan_id');
+    //     // return response()->json(['inputs'=> $input]);
+
+
+    //     // dd($input);
+    //     // Sanitize all numeric fields
+    //     $numericFields = [
+    //         'phone_number', // Step 1
+    //         'min_bedrooms_needed',
+    //         'min_bathrooms_needed', // Step 2
+    //         'rental_budget', // Step 3
+    //         'number_of_pets', // Step 7
+    //         'max_rent_to_pay', // Step 9
+
+    //     ];
+
+    //     foreach ($numericFields as $field) {
+    //         if (isset($input[$field])) {
+    //             // Remove all non-numeric characters
+    //             $input[$field] = preg_replace('/\D/', '', $input[$field]);
+    //         }
+    //     }
+
+    //     // Replace the sanitized input back into the request for validation
+    //     $request->merge($input);
+
+    //     // Define validation rules
+    //     $validator = Validator::make($request->all(), [
+    //         //personal Information
+    //         'name' => 'required|max:100',
+    //         'date_of_birth' => 'required|date_format:Y-m-d|before:today',
+    //         'email' => 'required|email|max:100',
+    //         'phone_number' => 'required|numeric|digits_between:7,18',
+
+    //         // Residential Preference
+    //         'preferred_location' => 'required|max:100',
+    //         'preferred_property_type' => 'required|max:100',
+    //         'min_bedrooms_needed' => 'required|numeric|digits_between:1,10',
+    //         'min_bathrooms_needed' => 'required|numeric|digits_between:1,10',
+
+    //         // Financial Information
+    //         'annual_income' => 'required|max:100',
+    //         'employment_status' => 'required|max:100',
+    //         'employer_name' => 'nullable|max:100',
+    //         'income_type' => 'required|max:100',
+    //         'rental_budget' => 'required|numeric|digits_between:1,10',
+
+    //         // Rental Assistance
+    //         'rental_voucher' => 'required|max:10',
+    //         'voucher_type' => 'required_if:rental_voucher,Yes|max:100',
+    //         'certification_detail' => 'nullable|max:255',
+    //         // 'certification_detail' => 'required_if:rental_voucher,Yes|max:255',
+    //         // 'certification_expiry' => 'required|date_format:Y-m-d',
+
+    //         // Current/Previous Living Situation
+    //         'current_address' => 'required|max:255',
+    //         'moving_reason' => 'nullable|max:255',
+    //         'prev_landlord_contact' => 'nullable|max:100',
+    //         'lease_violation' => 'max:255',
+
+    //         // Household Info
+    //         'household_size' => 'required|max:100',
+    //         'number_of_adults' => 'required|string',
+    //         'number_of_child' => 'required|string',
+
+    //         // Pet Information
+    //         'has_pets' => 'required|max:10',
+    //         'pet_type' => 'required_if:has_pets,Yes|max:100',
+    //         'number_of_pets' => 'required_if:has_pets,Yes', //|digits_between:1,10
+    //         'pet_size' => 'required_if:has_pets,Yes|max:100',
+
+    //         // Accommodation Requirements
+    //         // Accommodation Requirements
+    //         'disability' => 'required|max:10',
+    //         'disability_type' => 'required_if:disability,Yes|max:100',
+    //         'special_accomodation' => 'required_if:disability,Yes|max:255',
+
+    //         // Additional Requirements
+    //         'max_rent_to_pay' => 'required|numeric|digits_between:1,10',
+    //         'preffered_move_in_date' => 'date_format:Y-m-d',
+    //         'lease_length_preference' => 'required|max:100',
+
+    //         // Legal & Compliance
+    //         'criminal_record' => 'required|max:10',
+    //         'legal_right' => 'required|max:100',
+
+    //         // References
+    //         'reference_name' => 'nullable|string|max:100',
+    //         'reference_relationship' => 'nullable|string|max:100',
+    //         'contact_information' => 'nullable|string|max:255',
+
+    //         // Additional Notes
+    //         'general_note' => 'nullable|max:255',
+    //         'work_with_broker' => 'required|max:10',
+
+    //         // 'documents' => 'required',
+    //         'user_name' => 'required|max:100',
+    //         'user_email' => 'required|email|unique:users,email',
+    //         'password' => [
+    //             'required',
+    //             'string',
+    //             'min:8', // Minimum length of 8 characters
+    //             'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+    //             'confirmed',
+    //         ],
+    //     ], [
+    //         'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+    //     ]);
+
+    //     // Check if validation fails
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'errors' => $validator->errors(),
+    //         ], 422);
+    //     }
+
+    //     try {
+
+    //         $password = $request->input('password');
+
+
+
+    //         // If validation passes, handle the incoming request data and save it accordingly
+    //         $User = new User();
+    //         $User->type = '3';
+    //         $User->first_name = $request->input('user_name');
+    //         $User->email = $request->input('user_email');
+    //         $User->password = bcrypt($password);
+    //         $User->status = '1';
+
+
+    //         $User->save();
+    //         // automatically login
+    //         // Auth::login($User);
+    //         // $redictUrl to redirect to the dashboard http://127.0.0.1:8000/customer/login
+    //         $redictUrl = route('customer.login');
+    //         // Set the user as the currently authenticated user
+    //         // $request->session()->put('user', $User);
+    //         // Set the user as the currently authenticated user
+
+    //         //personal Information
+    //         $UserPersonal = new UserPersonalInfo();
+    //         $UserPersonal->user_id = $User->id;
+    //         $UserPersonal->name = $request->input('name');
+    //         $UserPersonal->date_of_birth = $request->input('date_of_birth');
+    //         $UserPersonal->email = $request->input('email');
+    //         $UserPersonal->phone_number = $request->input('phone_number');
+    //         $UserPersonal->save();
+
+    //         // Residential Preference
+    //         $UserResidential = new ResidentialPreference();
+    //         $UserResidential->user_id = $User->id;
+    //         $UserResidential->preferred_location = $request->input('preferred_location');
+    //         $UserResidential->preferred_property_type = $request->input('preferred_property_type');
+    //         $UserResidential->min_bedrooms_needed = $request->input('min_bedrooms_needed');
+    //         $UserResidential->min_bathrooms_needed = $request->input('min_bathrooms_needed');
+    //         $UserResidential->save();
+
+    //         // Financial Information
+    //         $UserFinancialInfo = new FinancialInfo();
+    //         $UserFinancialInfo->user_id = $User->id;
+    //         $UserFinancialInfo->annual_income = $request->input('annual_income');
+    //         $UserFinancialInfo->employment_status = $request->input('employment_status');
+    //         $UserFinancialInfo->employer_name = $request->input('employer_name');
+    //         $UserFinancialInfo->income_type = $request->input('income_type');
+    //         $UserFinancialInfo->rental_budget = $request->input('rental_budget');
+    //         $UserFinancialInfo->save();
+
+    //         // Rental Assistance
+    //         $UserRentalAssistance = new RentalAssistance();
+    //         $UserRentalAssistance->user_id = $User->id;
+    //         $UserRentalAssistance->rental_voucher = $request->input('rental_voucher');
+    //         $UserRentalAssistance->voucher_type = $request->input('voucher_type');
+    //         $UserRentalAssistance->certification_detail = $request->input('certification_detail');
+    //         $UserRentalAssistance->certification_expiry = $request->input('certification_expiry');
+    //         $UserRentalAssistance->save();
+
+    //         // Current/Previous Living Situation
+    //         $UserLivingSituation = new LivingSituation();
+    //         $UserLivingSituation->user_id = $User->id;
+    //         $UserLivingSituation->current_address = $request->input('current_address');
+    //         $UserLivingSituation->moving_reason = $request->input('moving_reason');
+    //         $UserLivingSituation->prev_landlord_contact = $request->input('prev_landlord_contact');
+    //         $UserLivingSituation->lease_violation = $request->input('lease_violation');
+    //         $UserLivingSituation->save();
+
+    //         // Household Info
+    //         $UserHouseholdInfo = new HouseholdInfo();
+    //         $UserHouseholdInfo->user_id = $User->id;
+    //         // Sanitize the inputs by removing everything except numbers, then cast them to integers
+    //         $UserHouseholdInfo->household_size = (int) preg_replace('/\D/', '', $request->input('household_size'));
+    //         $UserHouseholdInfo->number_of_adults = (int) preg_replace('/\D/', '', $request->input('number_of_adults'));
+    //         $UserHouseholdInfo->number_of_children = (int) preg_replace('/\D/', '', $request->input('number_of_child'));
+
+    //         $UserHouseholdInfo->save();
+
+    //         // Pet Information
+    //         $UserPetInformation = new PetInformation();
+    //         $UserPetInformation->user_id = $User->id;
+    //         $UserPetInformation->has_pets = $request->input('has_pets');
+    //         $UserPetInformation->pet_type = $request->input('pet_type');
+    //         $UserPetInformation->number_of_pets = $request->input('number_of_pets');
+    //         $UserPetInformation->pet_size = $request->input('pet_size');
+    //         $UserPetInformation->save();
+
+    //         // Accommodation Requirements
+    //         $UserAccomodation = new AccommodationRequirements();
+    //         $UserAccomodation->user_id = $User->id;
+    //         $UserAccomodation->disability = $request->input('disability');
+    //         $UserAccomodation->disability_type = $request->input('disability_type');
+    //         $UserAccomodation->special_accomodation = $request->input('special_accomodation');
+    //         $UserAccomodation->save();
+
+    //         // Additional Requirements
+    //         $UserAdditionalInfo = new AdditionalInfo();
+    //         $UserAdditionalInfo->user_id = $User->id;
+    //         $UserAdditionalInfo->max_rent_to_pay = $request->input('max_rent_to_pay');
+    //         $UserAdditionalInfo->preffered_move_in_date = $request->input('preffered_move_in_date');
+    //         $UserAdditionalInfo->lease_length_preference = $request->input('lease_length_preference');
+    //         $UserAdditionalInfo->save();
+
+    //         // Legal & Compliance
+    //         $UserLegalCompliance = new LegalCompliance();
+    //         $UserLegalCompliance->user_id = $User->id;
+    //         $UserLegalCompliance->criminal_record = $request->input('criminal_record');
+    //         $UserLegalCompliance->legal_right = $request->input('legal_right');
+    //         $UserLegalCompliance->save();
+
+    //         // References
+    //         $UserReferences = new UserReferences();
+    //         $UserReferences->user_id = $User->id;
+    //         $UserReferences->reference_name = $request->input('reference_name');
+    //         $UserReferences->reference_relationship = $request->input('reference_relationship');
+    //         $UserReferences->contact_information = $request->input('contact_information');
+    //         $UserReferences->save();
+
+    //         // Additional Notes
+    //         $UserAdditionalNotes = new AdditionalNotes();
+    //         $UserAdditionalNotes->user_id = $User->id;
+    //         $UserAdditionalNotes->general_note = $request->input('general_note');
+    //         $UserAdditionalNotes->work_with_broker = $request->input('work_with_broker');
+    //         $UserAdditionalNotes->save();
+
+    //         $req_file = 'documents';
+    //         $path = '/uploads/user_documents';
+
+    //         if ($request->hasFile($req_file)) {
+
+    //             if (!File::isDirectory(public_path($path))) {
+    //                 File::makeDirectory(public_path($path), 0777, true);
+    //             }
+
+    //             $uploadedFiles = $request->file($req_file);
+
+    //             foreach ($uploadedFiles as $file) {
+    //                 $file_extension = $file->getClientOriginalExtension();
+    //                 $date_append = Str::random(32);
+    //                 $file->move(public_path($path), $date_append . '.' . $file_extension);
+
+    //                 $savedFilePaths = '/public' . $path . '/' . $date_append . '.' . $file_extension;
+
+    //                 $UserDocuments = new UserDocuments();
+    //                 $UserDocuments->user_id = $User->id;
+    //                 $UserDocuments->doc_name = $file->getClientOriginalName();
+    //                 $UserDocuments->doc_url = $savedFilePaths;
+    //                 $UserDocuments->save();
+    //             }
+    //         }
+
+    //         $Notification = new Notifications();
+    //         $Notification->module_code =  'TENANT REGISTRATION';
+    //         $Notification->from_user_id =  $User->id;
+    //         $Notification->to_user_id =  '1';
+    //         $Notification->subject =  "Tenant Registration";
+    //         $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
+    //         $Notification->read_flag =  '0';
+    //         $Notification->created_by =  $User->id;
+    //         $Notification->save();
+
+    //         $mailData['name'] = $User->first_name;
+    //         $mailData['email'] = $User->email;
+    //         $mailData['password'] = $password;
+    //         $body = view('emails.tenant_created', $mailData);
+    //         $userEmailsSend[] = $User->email; //'hamza@5dsolutions.ae';//
+    //         // to username, to email, from username, subject, body html
+    //         sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
+    //         // create a session for the user
+    //         // $request->session()->put('user', $User);
+
+    //         $mailData['plan_id'] = $planId;
+    //         $mailData['trial_start_date'] = now()->format('Y-m-d');
+    //         $mailData['trial_end_date'] = now()->addDays(30)->format('Y-m-d'); 
+    //         $mailData['trial_duration'] = '30 days';
+
+    //         $trialBody = view('emails.trial_started', $mailData);
+    //         $trialEmailsSend = [$User->email]; // Reset array for trial email
+    //         sendMail($User->first_name, $trialEmailsSend, 'LEASE MATCH', 'Your Trial Has Started!', $trialBody);
+
+
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'User created successfully',
+    //             'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')) . "&user_id=" . $User->id . "&plan_id=" . $planId,
+    //             'data' => [
+    //                 'user_id' => $User->id,
+    //                 'user_name' => $User->first_name,
+    //                 'user_email' => $User->email,
+    //                 'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')) . "&user_id=" . $User->id,
+    //                 'password' => $request->input('password'),
+
+    //                 'created_at' => $User->created_at,
+    //             ]
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         // Log the error for debugging purposes
+    //         Log::error('Error storing user info: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => "Oops! Network Error",
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
+
     public function storeRegistration(Request $request)
     {
         $input = $request->all();
 
         $planId = $request->input('plan_id');
         // return response()->json(['inputs'=> $input]);
-        
 
         // dd($input);
         // Sanitize all numeric fields
@@ -49,7 +379,6 @@ class RegistrationController extends Controller
             'rental_budget', // Step 3
             'number_of_pets', // Step 7
             'max_rent_to_pay', // Step 9
-
         ];
 
         foreach ($numericFields as $field) {
@@ -108,7 +437,6 @@ class RegistrationController extends Controller
             'pet_size' => 'required_if:has_pets,Yes|max:100',
 
             // Accommodation Requirements
-            // Accommodation Requirements
             'disability' => 'required|max:10',
             'disability_type' => 'required_if:disability,Yes|max:100',
             'special_accomodation' => 'required_if:disability,Yes|max:255',
@@ -154,11 +482,15 @@ class RegistrationController extends Controller
         }
 
         try {
-
             $password = $request->input('password');
 
-            
-            
+            // Log the start of user creation process
+            Log::info('Starting user registration process', [
+                'user_email' => $request->input('user_email'),
+                'user_name' => $request->input('user_name'),
+                'plan_id' => $planId
+            ]);
+
             // If validation passes, handle the incoming request data and save it accordingly
             $User = new User();
             $User->type = '3';
@@ -167,15 +499,21 @@ class RegistrationController extends Controller
             $User->password = bcrypt($password);
             $User->status = '1';
 
-            
             $User->save();
+
+            // Log successful user creation
+            Log::info('User created successfully', [
+                'user_id' => $User->id,
+                'user_email' => $User->email,
+                'user_name' => $User->first_name
+            ]);
+
             // automatically login
             // Auth::login($User);
             // $redictUrl to redirect to the dashboard http://127.0.0.1:8000/customer/login
             $redictUrl = route('customer.login');
             // Set the user as the currently authenticated user
             // $request->session()->put('user', $User);
-            // Set the user as the currently authenticated user
 
             //personal Information
             $UserPersonal = new UserPersonalInfo();
@@ -230,7 +568,6 @@ class RegistrationController extends Controller
             $UserHouseholdInfo->household_size = (int) preg_replace('/\D/', '', $request->input('household_size'));
             $UserHouseholdInfo->number_of_adults = (int) preg_replace('/\D/', '', $request->input('number_of_adults'));
             $UserHouseholdInfo->number_of_children = (int) preg_replace('/\D/', '', $request->input('number_of_child'));
-
             $UserHouseholdInfo->save();
 
             // Pet Information
@@ -280,10 +617,20 @@ class RegistrationController extends Controller
             $UserAdditionalNotes->work_with_broker = $request->input('work_with_broker');
             $UserAdditionalNotes->save();
 
+            // Log completion of user data saving
+            Log::info('All user data saved successfully', [
+                'user_id' => $User->id,
+                'user_email' => $User->email
+            ]);
+
             $req_file = 'documents';
             $path = '/uploads/user_documents';
 
             if ($request->hasFile($req_file)) {
+                Log::info('Processing file uploads', [
+                    'user_id' => $User->id,
+                    'file_count' => count($request->file($req_file))
+                ]);
 
                 if (!File::isDirectory(public_path($path))) {
                     File::makeDirectory(public_path($path), 0777, true);
@@ -304,29 +651,115 @@ class RegistrationController extends Controller
                     $UserDocuments->doc_url = $savedFilePaths;
                     $UserDocuments->save();
                 }
+
+                Log::info('File uploads completed', [
+                    'user_id' => $User->id,
+                    'files_uploaded' => count($uploadedFiles)
+                ]);
             }
 
             $Notification = new Notifications();
-            $Notification->module_code =  'TENANT REGISTRATION';
-            $Notification->from_user_id =  $User->id;
-            $Notification->to_user_id =  '1';
-            $Notification->subject =  "Tenant Registration";
-            $Notification->message =  "Tenant is successfully registered to you portal, kindly review tenant details.";
-            $Notification->read_flag =  '0';
-            $Notification->created_by =  $User->id;
+            $Notification->module_code = 'TENANT REGISTRATION';
+            $Notification->from_user_id = $User->id;
+            $Notification->to_user_id = '1';
+            $Notification->subject = "Tenant Registration";
+            $Notification->message = "Tenant is successfully registered to you portal, kindly review tenant details.";
+            $Notification->read_flag = '0';
+            $Notification->created_by = $User->id;
             $Notification->save();
 
+            // Log notification creation
+            Log::info('Notification created for tenant registration', [
+                'user_id' => $User->id,
+                'notification_id' => $Notification->id
+            ]);
+
+            // Prepare and send welcome email
             $mailData['name'] = $User->first_name;
             $mailData['email'] = $User->email;
             $mailData['password'] = $password;
             $body = view('emails.tenant_created', $mailData);
-            $userEmailsSend[] = $User->email; //'hamza@5dsolutions.ae';//
-            // to username, to email, from username, subject, body html
-            sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body); // send_to_name, send_to_email, email_from_name, subject, body
-            // create a session for the user
-            // $request->session()->put('user', $User);
+            $userEmailsSend[] = $User->email;
 
-           
+            // Log email sending attempt
+            Log::info('Attempting to send welcome email', [
+                'user_id' => $User->id,
+                'recipient_email' => $User->email,
+                'recipient_name' => $User->first_name,
+                'email_type' => 'welcome_email'
+            ]);
+
+            try {
+                // Send welcome email
+                $emailResult = sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body);
+
+                // Log successful email sending
+                Log::info('Welcome email sent successfully', [
+                    'user_id' => $User->id,
+                    'recipient_email' => $User->email,
+                    'email_type' => 'welcome_email',
+                    'email_result' => $emailResult
+                ]);
+            } catch (\Exception $emailException) {
+                // Log email sending failure
+                Log::error('Failed to send welcome email', [
+                    'user_id' => $User->id,
+                    'recipient_email' => $User->email,
+                    'email_type' => 'welcome_email',
+                    'error_message' => $emailException->getMessage(),
+                    'error_trace' => $emailException->getTraceAsString()
+                ]);
+            }
+
+            // Prepare and send trial email
+            $mailData['plan_id'] = $planId;
+            $mailData['trial_start_date'] = now()->format('Y-m-d');
+            $mailData['trial_end_date'] = now()->addDays(30)->format('Y-m-d');
+            $mailData['trial_duration'] = '30 days';
+
+            $trialBody = view('emails.trial_started', $mailData);
+            $trialEmailsSend = [$User->email];
+
+            // Log trial email sending attempt
+            Log::info('Attempting to send trial email', [
+                'user_id' => $User->id,
+                'recipient_email' => $User->email,
+                'recipient_name' => $User->first_name,
+                'email_type' => 'trial_email',
+                'plan_id' => $planId,
+                'trial_start_date' => $mailData['trial_start_date'],
+                'trial_end_date' => $mailData['trial_end_date']
+            ]);
+
+            try {
+                // Send trial email
+                $trialEmailResult = sendMail($User->first_name, $trialEmailsSend, 'LEASE MATCH', 'Your Trial Has Started!', $trialBody);
+
+                // Log successful trial email sending
+                Log::info('Trial email sent successfully', [
+                    'user_id' => $User->id,
+                    'recipient_email' => $User->email,
+                    'email_type' => 'trial_email',
+                    'email_result' => $trialEmailResult
+                ]);
+            } catch (\Exception $trialEmailException) {
+                // Log trial email sending failure
+                Log::error('Failed to send trial email', [
+                    'user_id' => $User->id,
+                    'recipient_email' => $User->email,
+                    'email_type' => 'trial_email',
+                    'error_message' => $trialEmailException->getMessage(),
+                    'error_trace' => $trialEmailException->getTraceAsString()
+                ]);
+            }
+
+            // Log successful completion of registration process
+            Log::info('User registration process completed successfully', [
+                'user_id' => $User->id,
+                'user_email' => $User->email,
+                'plan_id' => $planId,
+                'redirect_url' => $redictUrl
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -338,13 +771,19 @@ class RegistrationController extends Controller
                     'user_email' => $User->email,
                     'redirect_url' => $redictUrl . "?email=" . $User->email . "&password=" . base64_encode($request->input('password')) . "&user_id=" . $User->id,
                     'password' => $request->input('password'),
-                    
                     'created_at' => $User->created_at,
                 ]
             ], 200);
         } catch (\Exception $e) {
             // Log the error for debugging purposes
-            Log::error('Error storing user info: ' . $e->getMessage());
+            Log::error('Error storing user info', [
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString(),
+                'user_email' => $request->input('user_email', 'N/A'),
+                'user_name' => $request->input('user_name', 'N/A'),
+                'plan_id' => $planId
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
