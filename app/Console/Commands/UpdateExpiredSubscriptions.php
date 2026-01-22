@@ -78,6 +78,16 @@ class UpdateExpiredSubscriptions extends Command
             $user = User::find($subscription->user_id);
             $plan_detail = Pricing_plan::findOrFail($subscription->plan_id);
 
+            // Check if user exists
+            if (!$user) {
+                Log::warning('User not found for subscription', [
+                    'subscription_id' => $subscription->id,
+                    'user_id' => $subscription->user_id
+                ]);
+                $this->warn("User not found for subscription ID {$subscription->id} (user_id: {$subscription->user_id}). Skipping...");
+                continue;
+            }
+
             // Check if user has a valid Stripe customer ID and can be charged
             if ($user->stripe_customer_id) {
                 try {

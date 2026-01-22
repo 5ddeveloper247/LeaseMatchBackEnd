@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         $schedule->command('subscriptions:update-expired')->dailyAt('00:00');
+        $schedule->command('trials:send-pre-expiry-notifications')->dailyAt('09:00');
     }
 
     /**
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
 
     protected $commands = [
         Commands\UpdateExpiredSubscriptions::class,
+        Commands\SendTrialPreExpiryNotifications::class,
     ];
     
 }

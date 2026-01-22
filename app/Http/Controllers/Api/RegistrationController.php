@@ -491,6 +491,22 @@ class RegistrationController extends Controller
                 'plan_id' => $planId
             ]);
 
+            // Additional safety check: Verify email doesn't belong to an admin
+            $userEmail = $request->input('user_email');
+            $adminUser = User::where('email', $userEmail)
+                ->whereIn('type', ['1', '2'])
+                ->first();
+            
+            if ($adminUser) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This email already exists.',
+                    'errors' => [
+                        'user_email' => ['This email already exists.']
+                    ]
+                ], 422);
+            }
+
             // If validation passes, handle the incoming request data and save it accordingly
             $User = new User();
             $User->type = '3';
@@ -829,6 +845,20 @@ class RegistrationController extends Controller
                 'email' => 'required|email|unique:users,email|max:100|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'phone_number' => 'required|numeric|digits_between:7,18',
             ]);
+            
+            // Check if email belongs to an admin user
+            $validator->after(function ($validator) use ($request) {
+                $email = $request->input('email');
+                if ($email) {
+                    $adminUser = User::where('email', $email)
+                        ->whereIn('type', ['1', '2'])
+                        ->first();
+                    
+                    if ($adminUser) {
+                        $validator->errors()->add('email', 'This email already exists.');
+                    }
+                }
+            });
         }
 
         if ($request->input('step') == '2') {
@@ -962,6 +992,20 @@ class RegistrationController extends Controller
             ], [
                 'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
             ]);
+            
+            // Check if email belongs to an admin user
+            $validator->after(function ($validator) use ($request) {
+                $userEmail = $request->input('user_email');
+                if ($userEmail) {
+                    $adminUser = User::where('email', $userEmail)
+                        ->whereIn('type', ['1', '2'])
+                        ->first();
+                    
+                    if ($adminUser) {
+                        $validator->errors()->add('user_email', 'This email already exists.');
+                    }
+                }
+            });
         }
 
         // Check if validation fails

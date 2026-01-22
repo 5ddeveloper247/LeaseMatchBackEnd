@@ -68,6 +68,12 @@ class CustomerController extends Controller
             $user = User::where('id', $user_id)->where('email', $email)->first();
             // dd($user);
             if ($user && Hash::check($password, $user->password)) {
+                // Check if user is a customer (type 3), block admin users
+                if ($user->type != '3') {
+                    $request->session()->flash('error', 'This email is registered as an administrator. Please use the admin portal to log in.');
+                    return redirect('customer/login');
+                }
+                
                 Auth::login($user);
                 // set user session 
                 $request->session()->put('user', $user);
@@ -122,6 +128,14 @@ class CustomerController extends Controller
         // dd($credentials);
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            
+            // Check if user is a customer (type 3), block admin users
+            if ($user->type != '3') {
+                Auth::logout();
+                $request->session()->flash('error', 'This email is registered as an administrator. Please use the admin portal to log in.');
+                return redirect('customer/login');
+            }
+            
             if ($user->status == 1) {
                 $request->session()->put('user', $user);
 
@@ -214,17 +228,44 @@ class CustomerController extends Controller
         $check_trial = UserSubscriptionFreeTrial::where('user_id', Auth::user()->id)->first();
         $is_trial = false;
         $trial_plan_id = null;
+        $activeTrialSubscription = null;
+        $trialDaysRemaining = null;
+        $trialExpiresIn = null;
+        $isTrialExpiringSoon = false;
+        
         if ($check_trial) {
             $is_trial = true;
             $trial_plan_id = $check_trial->plan_id;
+            
+            // Get active free trial subscription
+            $activeTrialSubscription = UserSubscription::where('user_id', Auth::user()->id)
+                ->where('plan_id', $trial_plan_id)
+                ->where('status', 'free')
+                ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            if ($activeTrialSubscription) {
+                $today = Carbon::now();
+                $endDate = Carbon::createFromFormat('Y-m-d', $activeTrialSubscription->end_date);
+                $trialDaysRemaining = $today->diffInDays($endDate, false);
+                $trialExpiresIn = $endDate->format('Y-m-d');
+                
+                // Check if trial expires in 1 day
+                if ($trialDaysRemaining == 1) {
+                    $isTrialExpiringSoon = true;
+                }
+            }
         }
-
-
 
         return view('customer/subscriptions', [
             'data' => $data,
             'is_trial' => $is_trial,
             'trial_plan_id' => $trial_plan_id,
+            'activeTrialSubscription' => $activeTrialSubscription,
+            'trialDaysRemaining' => $trialDaysRemaining,
+            'trialExpiresIn' => $trialExpiresIn,
+            'isTrialExpiringSoon' => $isTrialExpiringSoon,
             'plans' => $data['plans'],
             'page' => $data['page'],
             'currentPlan' => $currentPlan

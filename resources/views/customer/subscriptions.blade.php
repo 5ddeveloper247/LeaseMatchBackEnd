@@ -80,52 +80,45 @@
                                         <!-- Match: {{ $currentPlan && $currentPlan->plan_id == $plan->id ? 'YES' : 'NO' }} -->
                                     @endif
 
-                                    {{-- Updated condition with cancelled/expired subscription handling --}}
-                                    @if ($currentPlan && $currentPlan->status == 'active' && $currentPlan->plan_id == $plan->id)
-                                        {{-- Customer has ACTIVE subscription for this plan --}}
+                                    {{-- Updated condition with free trial and subscription handling --}}
+                                    @if ($currentPlan && $currentPlan->status == 'active' && $currentPlan->plan_id == $plan->id && $currentPlan->status != 'free')
+                                        {{-- Customer has ACTIVE PAID subscription for this plan --}}
                                         <div class="btn_blk">
-                                            <a href="javascript:;">{{ $key == 0 ? 'Selected' : 'Coming Soon' }}</a>
+                                            <a href="javascript:;" style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">
+                                                {{ $key == 0 ? 'Selected Plan' : 'Coming Soon' }}
+                                            </a>
                                             {!! $key == 0
                                                 ? "<a href='javascript:;' class='cancel_subscription_confirm' data-id='" . $currentPlan->id . "'>Cancel</a>"
                                                 : '' !!}
+                                        </div>
+                                    @elseif ($activeTrialSubscription && $activeTrialSubscription->plan_id == $plan->id && $activeTrialSubscription->status == 'free')
+                                        {{-- Customer has ACTIVE FREE TRIAL for this plan --}}
+                                        <div class="btn_blk">
+                                            <a href="javascript:;" style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">
+                                                Free Trial
+                                            </a>
+                                            <a href="javascript:;" class="cancel_subscription_confirm"
+                                                data-id="{{ $activeTrialSubscription->id }}">
+                                                Cancel
+                                            </a>
                                         </div>
                                     @elseif (
                                         $currentPlan &&
                                             ($currentPlan->status == 'cancelled' ||
                                                 $currentPlan->status == 'expired' ||
+                                                $currentPlan->status == 'free-expired' ||
                                                 Carbon::now()->format('Y-m-d') > $currentPlan->end_date) &&
                                             $currentPlan->plan_id == $plan->id)
                                         {{-- Customer had subscription for this plan but it's cancelled/expired --}}
                                         <div class="btn_blk">
                                             <a href="javascript:;"
-                                                onclick="buyPlan({{ $plan->id }});">{{ $key == 0 ? 'Renew' : 'Coming Soon' }}</a>
+                                                onclick="buyPlan({{ $plan->id }});">{{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}</a>
                                         </div>
-                                    @elseif (!$currentPlan && $is_trial && $trial_plan_id == $plan->id)
-    {{-- Customer has NO active subscription BUT has used free trial for this plan --}}
-    <div class="btn_blk">
-        <a href="javascript:;" class="disabled"
-            style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">
-            {{ $key == 0 ? 'Free Trial Used' : 'Coming Soon' }}
-        </a>
-
-        @if ($key == 0)
-            @php
-                // Get the actual subscription ID for the free trial
-                $trialSubscription = App\Models\UserSubscription::where('user_id', Auth::user()->id)
-                    ->where('plan_id', $trial_plan_id)
-                    ->where('status', 'free') // Look for free status
-                    ->first();
-            @endphp
-            
-            @if($trialSubscription)
-                <a href="javascript:;" class="cancel_subscription_confirm"
-                    data-id="{{ $trialSubscription->id }}">
-                    Cancel
-                </a>
-            @endif
-        @endif
-    
-
+                                    @elseif ($is_trial && $trial_plan_id == $plan->id && !$activeTrialSubscription)
+                                        {{-- Customer used free trial but it's expired - show Buy Plan button --}}
+                                        <div class="btn_blk">
+                                            <a href="javascript:;"
+                                                onclick="buyPlan({{ $plan->id }});">{{ $key == 0 ? 'Buy Plan' : 'Coming Soon' }}</a>
                                         </div>
                                     @else
                                         {{-- Customer can buy this plan (new customer or different plan) --}}
