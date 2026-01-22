@@ -33,6 +33,16 @@ Route::get('/', function () {
     return redirect('/customer/login'); // view('welcome');
 });
 
+Route::get('dev-cmd/{cmd}', function ($cmd) {
+    Artisan::call($cmd); // clears cache, config, route, view
+    return 'command executed successfully';
+  });
+
+  Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear'); // clears cache, config, route, view
+    return 'Cache cleared successfully';
+  });
+
 Route::group(['prefix' => 'admin'], function () {
 
     Route::get('/', [AdminController::class, 'login'])->name('/');
