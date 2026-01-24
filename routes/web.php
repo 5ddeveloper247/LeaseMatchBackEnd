@@ -33,10 +33,107 @@ Route::get('/', function () {
     return redirect('/customer/login'); // view('welcome');
 });
 
-Route::get('dev-cmd/{cmd}', function ($cmd) {
-    Artisan::call($cmd); // clears cache, config, route, view
-    return 'command executed successfully';
-  });
+
+Route::get('dev-cmd/{action}', function (string $action) {
+
+    // ⚠️ Re-enable this later (recommended)
+    // abort_unless(app()->isLocal(), 403, 'Forbidden');
+
+    $allowedActions = [
+        'cache-clear',
+        'config-clear',
+        'route-clear',
+        'view-clear',
+        'optimize-clear',
+
+        'migrate',
+        'migrate-fresh',
+        'migrate-refresh',   // ✅ ADDED
+
+        'rollback',          // optional ?step=1
+        'reset',
+
+        'migrate-file',      // required ?file=xxxx.php
+    ];
+
+    // ⚠️ Re-enable this later (recommended)
+    // abort_if(!in_array($action, $allowedActions, true), 403, 'Action not allowed');
+
+    switch ($action) {
+
+        case 'cache-clear':
+            Artisan::call('cache:clear');
+            break;
+
+        case 'config-clear':
+            Artisan::call('config:clear');
+            break;
+
+        case 'route-clear':
+            Artisan::call('route:clear');
+            break;
+
+        case 'view-clear':
+            Artisan::call('view:clear');
+            break;
+
+        case 'optimize-clear':
+            Artisan::call('optimize:clear');
+            break;
+
+        case 'migrate':
+            Artisan::call('migrate', ['--force' => true]);
+            break;
+
+        case 'migrate-fresh':
+            Artisan::call('migrate:fresh', ['--force' => true]);
+            break;
+
+        case 'migrate-refresh': // ✅ NEW
+            Artisan::call('migrate:refresh', ['--force' => true]);
+            break;
+
+        case 'rollback':
+            $step = (int) request()->query('step', 1);
+            if ($step < 1 || $step > 10) $step = 1;
+
+            Artisan::call('migrate:rollback', [
+                '--step'  => $step,
+                '--force' => true,
+            ]);
+            break;
+
+        case 'reset':
+            Artisan::call('migrate:reset', ['--force' => true]);
+            break;
+
+        case 'migrate-file':
+            $file = (string) request()->query('file', '');
+
+            abort_if(
+                $file === '' ||
+                str_contains($file, '/') ||
+                str_contains($file, '\\') ||
+                str_contains($file, '..') ||
+                !preg_match('/^\d{4}_\d{2}_\d{2}_\d{6}_.+\.php$/', $file),
+                422,
+                'Invalid migration file'
+            );
+
+            Artisan::call('migrate', [
+                '--path'  => "database/migrations/{$file}",
+                '--force' => true,
+            ]);
+            break;
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'action' => $action,
+        'output' => Artisan::output(),
+    ]);
+});
+
 
   Route::get('/clear-cache', function () {
     Artisan::call('optimize:clear'); // clears cache, config, route, view

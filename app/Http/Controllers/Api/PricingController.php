@@ -20,24 +20,26 @@ class PricingController extends Controller
     public function getAllPricings(Request $request)
     {
         try {
-
+            // Fixed: Added -> between Pricing_plan and get()
             $data['pricings'] = Pricing_plan::get();
             
             return response()->json([
                 'success' => true,
-                'message' => '',
+                'message' => 'Pricing plans retrieved successfully',
                 'data' => $data
             ], 200);
         } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            Log::error('Error storing user info: ' . $e->getMessage());
+            // Log the actual error with better context
+            Log::error('Error fetching pricing plans: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
 
             return response()->json([
                 'success' => false,
                 'message' => "Oops! Network Error",
+                'error' => config('app.debug') ? $e->getMessage() : null
             ], 500);
         }
     }
-
     
 }
