@@ -34,6 +34,21 @@ Route::get('/', function () {
 });
 
 
+Route::get('/dev/run-super-admin-seeder', function () {
+    // ✅ Allow only local environment
+    abort_unless(app()->isLocal(), 403, 'Forbidden');
+
+    Artisan::call('db:seed', [
+        '--class' => 'Database\\Seeders\\SuperAdminSeeder',
+        '--force' => true,
+    ]);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Super Admin seeder executed successfully'
+    ]);
+});
+
 Route::get('dev-cmd/{action}', function (string $action) {
 
     // ⚠️ Re-enable this later (recommended)
