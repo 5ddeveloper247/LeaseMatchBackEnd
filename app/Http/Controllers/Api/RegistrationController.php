@@ -425,10 +425,9 @@ class RegistrationController extends Controller
             'prev_landlord_contact' => 'nullable|max:100',
             'lease_violation' => 'max:255',
 
-            // Household Info
-            'household_size' => 'required|max:100',
-            'number_of_adults' => 'required|string',
-            'number_of_child' => 'required|string',
+            'household_size' => 'required|numeric|min:0|max:100',
+            'number_of_adults' => 'required|numeric|min:0|max:100',
+            'number_of_child' => 'required|numeric|min:0|max:100',
 
             // Pet Information
             'has_pets' => 'required|max:10',
@@ -455,11 +454,12 @@ class RegistrationController extends Controller
             'reference_relationship' => 'nullable|string|max:100',
             'contact_information' => 'nullable|string|max:255',
 
-            // Additional Notes
             'general_note' => 'nullable|max:255',
             'work_with_broker' => 'required|max:10',
 
-            // 'documents' => 'required',
+            'documents' => 'nullable',
+            'documents.*' => 'file|mimes:jpeg,png,jpg|max:10240',
+
             'user_name' => 'required|max:100',
             'user_email' => 'required|email|unique:users,email',
             'password' => [
@@ -471,6 +471,8 @@ class RegistrationController extends Controller
             ],
         ], [
             'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'documents.*.mimes' => 'Each document must be an image file (JPEG, PNG or JPG).',
+            'documents.*.max' => 'Each document must not be greater than 10 MB.',
         ]);
 
         // Check if validation fails
@@ -914,10 +916,9 @@ class RegistrationController extends Controller
 
         if ($request->input('step') == '6') {
             $validator = Validator::make($request->all(), [
-                // Household Info
-                'household_size' => 'required|numeric|max:100',
-                'number_of_adults' => 'required|numeric|string',
-                'number_of_child' => 'required|numeric|string',
+                'household_size' => 'required|numeric|min:0|max:100',
+                'number_of_adults' => 'required|numeric|min:0|max:100',
+                'number_of_child' => 'required|numeric|min:0|max:100',
             ]);
         }
 
