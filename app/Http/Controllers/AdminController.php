@@ -1758,7 +1758,6 @@ class AdminController extends Controller
             'name' => 'required',
             'title' => 'required',
             'description' => 'required',
-            'address' => 'required',
             'rating' => 'required|numeric|between:1,5',
             'profile' => 'required|image|mimes:jpeg,png,jpg|max:10240'
         ]);
@@ -1767,13 +1766,11 @@ class AdminController extends Controller
         $name = $request->name;
         $title = $request->title;
         $description = $request->description;
-        $address = $request->address;
         $rating = $request->rating;
 
         $testimonial->name = $name;
         $testimonial->title = $title;
         $testimonial->description = $description;
-        $testimonial->address = $address;
         $testimonial->rating = $rating;
         if ($request->has('status')) {
             $testimonial->status = $request->status == "on" ? 1 : 0; // Update the status field in the model
@@ -1795,7 +1792,7 @@ class AdminController extends Controller
             $date_append = Str::random(32);
             $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); // Use single dollar sign
 
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
+            $savedFilePaths = '/public/uploads/user/profile/' . $date_append . '.' . $file_extension; // Correct path for saved file
             $testimonial->path = $savedFilePaths; // Update the profile field in the model
         }
         $testimonial->save();
@@ -1807,7 +1804,10 @@ class AdminController extends Controller
     {
         $id = $request->id;
         $testimonial = Testimonial::find($id);
-        $testimonial->path = '/public'.$testimonial->path;
+        if (!$testimonial) {
+            return response()->json(['status' => 402, 'message' => 'Testimonial not found']);
+        }
+        $testimonial->image_url = $testimonial->path ? asset(ltrim($testimonial->path, '/')) : '';
         return response()->json(['status' => 200, 'data' => $testimonial]);
     }
 
@@ -1826,7 +1826,6 @@ class AdminController extends Controller
             'name_edit' => 'required',
             'title_edit' => 'required',
             'description_edit' => 'required',
-            'address_edit' => 'required',
             'rating_edit' => 'required|numeric|between:1,5',
             'profile_edit' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'edit_id' => 'required'
@@ -1835,13 +1834,11 @@ class AdminController extends Controller
         $name = $request->name_edit;
         $title = $request->title_edit;
         $description = $request->description_edit;
-        $address = $request->address_edit;
         $rating = $request->rating_edit;
 
         $testimonial->name = $name;
         $testimonial->title = $title;
         $testimonial->description = $description;
-        $testimonial->address = $address;
         $testimonial->rating = $rating;
         if ($request->has('status_edit')) {
             $testimonial->status = $request->status_edit == "on" ? 1 : 0;
@@ -1862,7 +1859,7 @@ class AdminController extends Controller
             $file_extension = $uploadedFile->getClientOriginalExtension(); 
             $date_append = Str::random(32);
             $uploadedFile->move(public_path($path), $date_append . '.' . $file_extension); 
-            $savedFilePaths = '/uploads/user/profile/' . $date_append . '.' . $file_extension; 
+            $savedFilePaths = '/public/uploads/user/profile/' . $date_append . '.' . $file_extension; 
             $testimonial->path = $savedFilePaths; 
         }
         $testimonial->save();

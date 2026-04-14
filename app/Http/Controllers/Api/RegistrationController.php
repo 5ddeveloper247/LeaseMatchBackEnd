@@ -694,8 +694,6 @@ class RegistrationController extends Controller
 
             // Prepare and send welcome email
             $mailData['name'] = $User->first_name;
-            $mailData['email'] = $User->email;
-            $mailData['password'] = $password;
             $body = view('emails.tenant_created', $mailData);
             $userEmailsSend[] = $User->email;
 
@@ -709,7 +707,7 @@ class RegistrationController extends Controller
 
             try {
                 // Send welcome email
-                $emailResult = sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'User Created', $body);
+                $emailResult = sendMail($User->first_name, $userEmailsSend, 'LEASE MATCH', 'Welcome to LeaseMatch', $body);
 
                 // Log successful email sending
                 Log::info('Welcome email sent successfully', [

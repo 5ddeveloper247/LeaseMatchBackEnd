@@ -108,7 +108,6 @@
                             <th width="40">Title</th>
                             <th width="40">Name</th>
                             <th width="40">description</th>
-                            <th width="40">Address</th>
                             <th width="40">Rating</th>
                             <th width="40">Created Date</th>
                             <th width="40" data-center>Status</th>
@@ -161,14 +160,6 @@
                                             <div class="form_blk">
                                                 <h6>Description</h6>
                                                 <textarea type="text" name="description_edit" id="description_edit"
-                                                    class="text_box" placeholder="eg: John Wick"
-                                                    maxlength="500"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12">
-                                            <div class="form_blk">
-                                                <h6>Address</h6>
-                                                <textarea type="text" name="address_edit" id="address_edit"
                                                     class="text_box" placeholder="eg: John Wick"
                                                     maxlength="500"></textarea>
                                             </div>
@@ -255,13 +246,6 @@
                                                 <textarea type="text" name="description" id="description"
                                                     class="text_box" placeholder="eg: John Wick"
                                                     maxlength="500"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12">
-                                            <div class="form_blk">
-                                                <h6>Address</h6>
-                                                <textarea type="text" name="address" id="address" class="text_box"
-                                                    placeholder="eg: John Wick" maxlength="500"></textarea>
                                             </div>
                                         </div>
                                         <div class="col-xs-12">

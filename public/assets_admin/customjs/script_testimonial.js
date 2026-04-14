@@ -37,7 +37,7 @@ function loadUsersListResponse(response) {
     if (list.length <= 0) {
         usersTableBody.append(`
             <tr>
-                <td colspan="7" class="text-center">No Data Found</td>
+                <td colspan="8" class="text-center">No Data Found</td>
             </tr>
         `);
     } else {
@@ -48,7 +48,6 @@ function loadUsersListResponse(response) {
                             <td class="grid-p-searchby">${value?.title || "N/A"}</td>
                             <td class="grid-p-searchby">${trimText(value?.name || "N/A", 20)}</td>
                             <td class="nowrap grid-p-searchby">${value?.description || "N/A"}</td>
-                            <td class="nowrap grid-p-searchby">${value?.address || "N/A"}</td>
                             <td class="nowrap grid-p-searchby">${value?.rating || "N/A"}</td>
                             <td class="nowrap grid-p-searchby">${formatDate(value?.created_at || "")}</td>
                             <td data-center>
@@ -232,17 +231,43 @@ function getUserdataResponse(response) {
         var testimonial = response.data;
 
         if (testimonial) {
-            var profile_picture = testimonial.path ? base_url + testimonial.path : ''; // Fallback to empty string
+            var profile_picture = testimonial.image_url || '';
+            var raw_path = testimonial.path || '';
+            if (raw_path && /^https?:\/\//i.test(raw_path)) {
+                try {
+                    raw_path = new URL(raw_path).pathname || '';
+                } catch (e) {
+                    raw_path = '';
+                }
+            }
+            var normalized_path = raw_path ? (raw_path.startsWith('/') ? raw_path : '/' + raw_path) : '';
+            var profile_picture_direct = normalized_path ? (base_url + normalized_path) : '';
+            var profile_picture_public = normalized_path ? (base_url + '/public' + normalized_path) : '';
             const previewDiv = document.getElementById('preview-edit');
 
             previewDiv.innerHTML = '';
-            if (profile_picture) { // Only create img element if the picture URL is valid
+            var imageCandidates = [];
+            [profile_picture, profile_picture_direct, profile_picture_public].forEach(function(url) {
+                if (url && !imageCandidates.includes(url)) {
+                    imageCandidates.push(url);
+                }
+            });
+            if (imageCandidates.length > 0) {
                 const img = document.createElement('img');
-                img.src = profile_picture;
+                var currentImageIndex = 0;
+                img.onerror = function() {
+                    currentImageIndex += 1;
+                    if (currentImageIndex < imageCandidates.length) {
+                        img.src = imageCandidates[currentImageIndex];
+                        return;
+                    }
+                    previewDiv.innerHTML = '<p>No profile picture available.</p>';
+                };
                 img.alt = 'Image Preview';
                 img.classList.add('preview-img-edit'); // Add a class to control styling
                 // Append the image to the preview div
                 previewDiv.appendChild(img);
+                img.src = imageCandidates[currentImageIndex];
             } else {
                 // Optionally handle the case where no profile picture exists
                 previewDiv.innerHTML = '<p>No profile picture available.</p>';
@@ -253,7 +278,6 @@ function getUserdataResponse(response) {
             $('#title_edit').val(testimonial.title || '');
             $('#description_edit').val(testimonial.description || '');
             $('#name_edit').val(testimonial.name || '');
-            $('#address_edit').val(testimonial.address || '');
             $('#rating_edit').val(testimonial.rating || '');
             $('#status_edit').prop('checked', function() {
                 return testimonial.status == 1;
